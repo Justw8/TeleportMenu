@@ -47,6 +47,13 @@ local toyTable = {
 	--{id = 233, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
 }
 
+local function setCombatTooltip(self)
+	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
+	GameTooltip:SetText("\124cFFFF0000<Not available in combat>\124r", 1, 1, 1)
+	GameTooltip:Show()
+end
+
 local function setToolTip(self, type, id)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
@@ -87,7 +94,6 @@ local function createCooldownFrame(frame)
 end
 
 local function createAnchors()
-	if TeleportMeButtonsFrame then return end
 	local buttonsFrame = CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
 	buttonsFrame:SetSize(1, 1)
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, 0)
@@ -159,6 +165,10 @@ local function createAnchors()
 			button:SetFrameStrata("HIGH")
 			button:SetFrameLevel(101)
 			button:SetScript("OnEnter", function(self)
+				if InCombatLockdown() then
+					setCombatTooltip(self)
+					return
+				end
 				setToolTip(self, "flyout", toy.id)
 				self.flyOutFrame:Show()
 			end)
@@ -175,7 +185,9 @@ local function createAnchors()
 			flyOutFrame.mainButton = button
 			flyOutFrame:SetScript("OnLeave", function(self)
 				GameTooltip:Hide()
-				self:Hide()
+				if not InCombatLockdown() then
+					self:Hide()
+				end
 			end)
 			flyOutFrame:Hide()
 			button.flyOutFrame = flyOutFrame
@@ -223,8 +235,6 @@ local function createAnchors()
 	buttonsFrame:Show()
 end
 
-hooksecurefunc("ToggleGameMenu", createAnchors)
-
 -- Slash Commands
 local APPEND = "\124cFFFF0000TeleportMenu:\124r "
 SLASH_TPMENU1 = "/tp"
@@ -265,6 +275,7 @@ local function OnEvent(self, event, addOnName)
 			print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
 			TeleportMenuDB.hearthstone = nil
 		end
+		createAnchors()
 	end
 end
 
