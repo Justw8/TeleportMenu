@@ -1,5 +1,9 @@
 local _, addonTbl = ...
 
+
+
+local APPEND = "\124cFFFF0000TeleportMenu:\124r "
+
 local validHearthstoneToys = {
 	[54452] = true, -- Ethereal Portal
 	[64488] = true, -- The Innkeeper's Daughter
@@ -129,7 +133,11 @@ local function createAnchors()
 			local button = CreateFrame("Button", nil, buttonsFrame," SecureActionButtonTemplate");
 			local yOffset = 40 + (-40 * created)
 			button:SetSize(40, 40)
-			button:SetNormalTexture(texture or "Interface\\Icons\\INV_Misc_QuestionMark")
+			if not texture then
+				print(APPEND.."a texture is missing for itemID: "..tp.id..", please report this to the author.")
+				texture = "Interface\\Icons\\INV_Misc_QuestionMark"
+			end
+			button:SetNormalTexture(texture)
 			if tp.type == "item" then
 				button:SetAttribute("type", tp.type)
 				button:SetAttribute(tp.type, "item:"..tp.id)
@@ -237,7 +245,6 @@ local function createAnchors()
 end
 
 -- Slash Commands
-local APPEND = "\124cFFFF0000TeleportMenu:\124r "
 SLASH_TPMENU1 = "/tp"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
