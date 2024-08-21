@@ -94,7 +94,7 @@ local function createCooldownFrame(frame)
 end
 
 local function createAnchors()
-	if InCombatLockdown() or TeleportMeButtonsFrame then return end
+	if InCombatLockdown() or TeleportMeButtonsFrame or not GameMenuFrame then return end
 	local buttonsFrame = CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
 	buttonsFrame:SetSize(1, 1)
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, 0)
