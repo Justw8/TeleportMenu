@@ -99,8 +99,40 @@ local function createCooldownFrame(frame)
 	return cooldownFrame
 end
 
-local function createAnchors()
-	if InCombatLockdown() or TeleportMeButtonsFrame or not GameMenuFrame then return end
+local function retryTexture(button, itemId, attempt)
+	local attempts = attempt or 1
+	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
+	if itemTexture then
+		button:SetNormalTexture(texture)
+		return
+	end
+	if attempts < 5 then
+		C_Timer.After(1, function()
+			retryTexture(button, itemId, attempts + 1)
+		end)
+	end
+end
+
+local function updateHearthstone()
+	local hearthstoneButton = TeleportMeButtonsFrame.hearthstoneButton
+	if not hearthstoneButton then return end
+	local texture
+	if TeleportMenuDB.hearthstone then
+		local _, _, iconId = C_ToyBox.GetToyInfo(TeleportMenuDB.hearthstone)
+		texture = iconId
+		hearthstoneButton:SetAttribute("type", "toy")
+		hearthstoneButton:SetAttribute("toy", TeleportMenuDB.hearthstone)
+	else
+		local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(6948)
+		texture = itemTexture
+		hearthstoneButton:SetAttribute("type", "item")
+		hearthstoneButton:SetAttribute("item", "item:6948")
+	end
+	hearthstoneButton:SetNormalTexture(texture)
+end
+
+local function createAnchors(run)
+	if InCombatLockdown() or TeleportMeButtonsFrame then return end
 	local buttonsFrame = CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
 	buttonsFrame:SetSize(1, 1)
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, 0)
@@ -136,7 +168,10 @@ local function createAnchors()
 			local yOffset = 40 + (-40 * created)
 			button:SetSize(40, 40)
 			if not texture then
-				print(APPEND.."a texture is missing for itemID: "..tp.id..", please report this to the author.")
+				C_Timer.After(0.7, function()
+					--print(APPEND.."a texture is missing for itemID: "..tp.id..", please report this to the author.")
+					retryTexture(button, tp.id)
+				end)
 				texture = "Interface\\Icons\\INV_Misc_QuestionMark"
 			end
 			button:SetNormalTexture(texture)
@@ -164,6 +199,9 @@ local function createAnchors()
 				self.cooldownFrame:CheckCooldown(tp.id, tp.type)
 			end)
 
+			if tp.hearthstone then -- store to replace item later
+				buttonsFrame.hearthstoneButton = button
+			end
 		elseif known and tp.type == "flyout" then
 			created = created + 1
 			local button = CreateFrame("Button", nil, buttonsFrame, "SecureActionButtonTemplate");
@@ -242,14 +280,19 @@ local function createAnchors()
 			button.flyOutButtons = flyOutButtons
 		end
 	end
-
-	buttonsFrame:Show()
 end
 
 -- Slash Commands
 SLASH_TPMENU1 = "/tp"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
+	if msg == "clear" then
+		TeleportMenuDB.hearthstone = nil
+		updateHearthstone()
+		print(APPEND.."Hearthstone reset to default!")
+		return
+	end
+
 	if msg == "list" then
 		print(APPEND.."Available Hearthstone toys: [id - name]")
 		for id, _ in pairs(validHearthstoneToys) do
@@ -265,14 +308,12 @@ SlashCmdList["TPMENU"] = function(msg)
 	if id and validHearthstoneToys[id] and PlayerHasToy(id) then
 		local _, name = C_ToyBox.GetToyInfo(id)
 		TeleportMenuDB.hearthstone = id
-		local msg = "New Hearthstone set to: "..name.."!"
-		if TeleportMeButtonsFrame then
-			msg = msg + "\nPlease reloadui or relog for it to take effect."
-		end
-		print(APPEND..msg)
+		updateHearthstone()
+		print(APPEND.."New Hearthstone set to: "..name.."!")
 	else
 		print(APPEND.."Available Commands:")
 		print("/tp list - List all valid Hearthstone toys in your collection.")
+		print("/tp clear - Reset back to the default hearthstone.")
 		print("/tp [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone.")
 	end
 end
@@ -285,6 +326,7 @@ local function OnEvent(self, event, addOnName)
 			print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
 			TeleportMenuDB.hearthstone = nil
 		end
+    elseif event == "PLAYER_LOGIN" then
 		createAnchors()
 		hooksecurefunc("ToggleGameMenu", createAnchors)
 	end
@@ -292,4 +334,5 @@ end
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", OnEvent)
