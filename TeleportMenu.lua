@@ -103,7 +103,7 @@ local function retryTexture(button, itemId, attempt)
 	local attempts = attempt or 1
 	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
 	if itemTexture then
-		button:SetNormalTexture(texture)
+		button:SetNormalTexture(itemTexture)
 		return
 	end
 	if attempts < 5 then
