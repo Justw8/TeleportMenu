@@ -63,6 +63,8 @@ local function setToolTip(self, type, id)
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
 	if type == "item" then
 		GameTooltip:SetItemByID(id)
+	elseif type == "toy" then
+		GameTooltip:SetToyByItemID(id)
 	elseif type == "spell" then
 		GameTooltip:SetSpellByID(id)
 	elseif type == "flyout" then
@@ -153,7 +155,7 @@ local function createAnchors()
 			button.cooldownFrame = createCooldownFrame(button)
 			button.cooldownFrame:CheckCooldown(tp.id, tp.type)
 			button:SetScript("OnEnter", function(self)
-				setToolTip(self, "item", tp.id)
+				setToolTip(self, tp.type, tp.id)
 			end)
 			button:SetScript("OnLeave", function()
 				GameTooltip:Hide()
@@ -178,7 +180,7 @@ local function createAnchors()
 					setCombatTooltip(self)
 					return
 				end
-				setToolTip(self, "flyout", tp.id)
+				setToolTip(self, tp.type, tp.id)
 				self.flyOutFrame:Show()
 			end)
 			button:SetScript("OnLeave", function(self)
