@@ -129,7 +129,7 @@ local function createAnchors()
 			local button = CreateFrame("Button", nil, buttonsFrame," SecureActionButtonTemplate");
 			local yOffset = 40 + (-40 * created)
 			button:SetSize(40, 40)
-			button:SetNormalTexture(texture)
+			button:SetNormalTexture(texture or "Interface\\Icons\\INV_Misc_QuestionMark")
 			if tp.type == "item" then
 				button:SetAttribute("type", tp.type)
 				button:SetAttribute(tp.type, "item:"..tp.id)
