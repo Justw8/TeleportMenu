@@ -31,7 +31,7 @@ local validHearthstoneToys = {
 	[212337] = true, -- Stone of the Hearth
 }
 
-local toyTable = {
+local tpTable = {
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
 	{id = 110560, type = "toy"}, -- Garrison Hearthstone
 	{id = 140192, type = "toy"}, -- Dalaran Hearthstone
@@ -100,42 +100,42 @@ local function createAnchors()
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, 0)
 
 	local created = 0
-	for i, toy in ipairs(toyTable) do
-		if toy.hearthstone and TeleportMenuDB.hearthstone then -- Overwrite main HS with user set HS
-			toy.id = TeleportMenuDB.hearthstone
-			toy.type = "toy"
+	for i, tp in ipairs(tpTable) do
+		if tp.hearthstone and TeleportMenuDB.hearthstone then -- Overwrite main HS with user set HS
+			tp.id = TeleportMenuDB.hearthstone
+			tp.type = "toy"
 		end
 		local texture
 		local known
 		local flyOutSpellsKnown
-		if toy.type == "item" then
-			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(toy.id)
+		if tp.type == "item" then
+			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(tp.id)
         	texture = itemTexture
-			known = GetItemCount(toy.id) > 0
-		elseif toy.type == "toy" and PlayerHasToy(toy.id) then
-			local _, name, iconId = C_ToyBox.GetToyInfo(toy.id)
+			known = GetItemCount(tp.id) > 0
+		elseif tp.type == "toy" and PlayerHasToy(tp.id) then
+			local _, name, iconId = C_ToyBox.GetToyInfo(tp.id)
 			texture = iconId
 			known = true
-		elseif toy.type == "flyout" then
-			local name, desc, amount, flyoutKnown = GetFlyoutInfo(toy.id)
+		elseif tp.type == "flyout" then
+			local name, desc, amount, flyoutKnown = GetFlyoutInfo(tp.id)
 			if flyoutKnown then
 				flyOutSpellsKnown = amount
-				texture = toy.iconId
+				texture = tp.iconId
 				known = flyoutKnown
 			end
 		end
-		if known and (toy.type == "toy" or toy.type == "item") then
+		if known and (tp.type == "toy" or tp.type == "item") then
 			created = created + 1
 			local button = CreateFrame("Button", nil, buttonsFrame," SecureActionButtonTemplate");
 			local yOffset = 40 + (-40 * created)
 			button:SetSize(40, 40)
 			button:SetNormalTexture(texture)
-			if toy.type == "item" then
-				button:SetAttribute("type", toy.type)
-				button:SetAttribute(toy.type, "item:"..toy.id)
+			if tp.type == "item" then
+				button:SetAttribute("type", tp.type)
+				button:SetAttribute(tp.type, "item:"..tp.id)
 			else
-				button:SetAttribute("type", toy.type)
-				button:SetAttribute(toy.type, toy.id)
+				button:SetAttribute("type", tp.type)
+				button:SetAttribute(tp.type, tp.id)
 			end
 			button:SetPoint("TOPLEFT", buttonsFrame, "TOPRIGHT", 0, yOffset)
 			button:EnableMouse(true)
@@ -143,18 +143,18 @@ local function createAnchors()
 			button:SetFrameStrata("HIGH")
 			button:SetFrameLevel(101)
 			button.cooldownFrame = createCooldownFrame(button)
-			button.cooldownFrame:CheckCooldown(toy.id, toy.type)
+			button.cooldownFrame:CheckCooldown(tp.id, tp.type)
 			button:SetScript("OnEnter", function(self)
-				setToolTip(self, "item", toy.id)
+				setToolTip(self, "item", tp.id)
 			end)
 			button:SetScript("OnLeave", function()
 				GameTooltip:Hide()
 			end)
 			button:SetScript("OnShow", function(self)
-				self.cooldownFrame:CheckCooldown(toy.id, toy.type)
+				self.cooldownFrame:CheckCooldown(tp.id, tp.type)
 			end)
 
-		elseif known and toy.type == "flyout" then
+		elseif known and tp.type == "flyout" then
 			created = created + 1
 			local button = CreateFrame("Button", nil, buttonsFrame, "SecureActionButtonTemplate");
 			local yOffset = 40 + (-40 * created)
@@ -170,7 +170,7 @@ local function createAnchors()
 					setCombatTooltip(self)
 					return
 				end
-				setToolTip(self, "flyout", toy.id)
+				setToolTip(self, "flyout", tp.id)
 				self.flyOutFrame:Show()
 			end)
 			button:SetScript("OnLeave", function(self)
@@ -196,7 +196,7 @@ local function createAnchors()
 			local flyOutButtons = {}
 			local flyoutsCreated = 0
 			for i = 1, flyOutSpellsKnown do
-				local spellID = select(1, GetFlyoutSlotInfo(toy.id, i))
+				local spellID = select(1, GetFlyoutSlotInfo(tp.id, i))
 				if IsSpellKnown(spellID) then
 					flyoutsCreated = flyoutsCreated + 1
 					local xOffset = 40 * flyoutsCreated
