@@ -1,0 +1,11 @@
+## Interface: 110200
+## Title: Teleport Menu
+## Notes: Hearthstone and teleport buttons attached to the game menu.
+## IconTexture: Interface\Icons\inv_hearthstonepet
+## Author: Justwait
+## Version: @project-version@
+## SavedVariables: TeleportMenuDB
+
+## X-Curse-Project-ID: 1087836
+
+TeleportMenu.lua
