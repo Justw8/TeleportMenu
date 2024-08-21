@@ -322,10 +322,13 @@ end
 local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		TeleportMenuDB = TeleportMenuDB or {}
-		if TeleportMenuDB.hearthstone and not PlayerHasToy(TeleportMenuDB.hearthstone) then
-			print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
-			TeleportMenuDB.hearthstone = nil
-		end
+		C_Timer.After(5, function()
+			if TeleportMenuDB.hearthstone and not PlayerHasToy(TeleportMenuDB.hearthstone) then
+				print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
+				TeleportMenuDB.hearthstone = nil
+				updateHearthstone()
+			end
+		end)
     elseif event == "PLAYER_LOGIN" then
 		createAnchors()
 		hooksecurefunc("ToggleGameMenu", createAnchors)
