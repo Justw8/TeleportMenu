@@ -1,9 +1,9 @@
-local _, addonTbl = ...
+local _, tp = ...
 
 
 
 local APPEND = "\124cFFFF0000TeleportMenu:\124r "
-
+local availableHearthstones = {}
 local validHearthstoneToys = {
 	[54452] = true, -- Ethereal Portal
 	[64488] = true, -- The Innkeeper's Daughter
@@ -19,19 +19,34 @@ local validHearthstoneToys = {
 	[166747] = true, -- Brewfest Reveler's Hearthstone
 	[168907] = true, -- Holographic Digitalization Hearthstone
 	[172179] = true, -- Eternal Traveler's Hearthstone
-	[180290] = true, -- Night Fae Hearthstone
-	[182773] = true, -- Necrolord Hearthstone
-	[183716] = true, -- Venthyr Sinstone
-	[184353] = true, -- Kyrian Hearthstone
+	[180290] = function() -- Night Fae Hearthstone
+		local covenantID = C_Covenants.GetActiveCovenantID()
+		if covenantID == 3 then return true end
+	end,
+	[182773] = function() -- Necrolord Hearthstone
+		local covenantID = C_Covenants.GetActiveCovenantID()
+		if covenantID == 4 then return true end
+	end,
+	[183716] = function() -- Venthyr Sinstone
+		local covenantID = C_Covenants.GetActiveCovenantID()
+		if covenantID == 2 then return true end
+	end,
+	[184353] = function() -- Kyrian Hearthstone
+		local covenantID = C_Covenants.GetActiveCovenantID()
+		if covenantID == 1 then return true end
+	end,
 	[188952] = true, -- Dominated Hearthstone
 	[190196] = true, -- Enlightened Hearthstone
 	[190237] = true, -- Broker Translocation Matrix
-	[193588] = true, -- Timewalker's Hearthstone x
-	[200630] = true, -- Ohnir Windsage's Hearthstone x
+	[193588] = true, -- Timewalker's Hearthstone
+	[200630] = true, -- Ohnir Windsage's Hearthstone
 	[206195] = true, -- Path of the Naaru
-	[208704] = true, -- Deepdweller's Earthen Hearthstone x
-	[209035] = true, -- Hearthstone of the Flame x
-	[210455] = true, -- Draenic Hologem
+	[208704] = true, -- Deepdweller's Earthen Hearthstone
+	[209035] = true, -- Hearthstone of the Flame
+	[210455] = function() -- Draenic Hologem (Draenei and Lightforged Draenei only)
+		local _, _, raceId = UnitRace("player")
+		if raceId == 11 or raceId == 30 then return true end
+	end,
 	[212337] = true, -- Stone of the Hearth
 }
 
@@ -55,6 +70,19 @@ local tpTable = {
 	--{id = 233, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
 }
 
+local function updateAvailableHearthstones()
+	availableHearthstones = {}
+	for id, usable in pairs(validHearthstoneToys) do
+		if PlayerHasToy(id) then
+			if type(usable) == "function" and usable() then
+				table.insert(availableHearthstones, id)
+			elseif usable == true then
+				table.insert(availableHearthstones, id)
+			end
+		end
+	end
+end
+
 local function setCombatTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
@@ -62,10 +90,14 @@ local function setCombatTooltip(self)
 	GameTooltip:Show()
 end
 
-local function setToolTip(self, type, id)
+local function setToolTip(self, type, id, hs)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
-	if type == "item" then
+	if hs and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
+		GameTooltip:SetText("Random Hearthstone", 1, 1, 1)
+		GameTooltip:AddLine("\124cFF34B7EBClick to cast a random hearthstone.\nIt will pick a new hearthstone when you re-open the menu.\124r", 1, 1, 1)
+		GameTooltip:Show()
+	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
 	elseif type == "toy" then
 		GameTooltip:SetToyByItemID(id)
@@ -86,7 +118,7 @@ local function createCooldownFrame(frame)
 	function cooldownFrame:CheckCooldown(id, type)
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
-			start, duration, enabled = GetItemCooldown(id)
+			start, duration, enabled = C_Item.GetItemCooldown(id)
 		else
 			local cooldown = C_Spell.GetSpellCooldown(id)
 			start = cooldown.startTime
@@ -114,6 +146,8 @@ local function retryTexture(button, itemId, attempt)
 		C_Timer.After(1, function()
 			retryTexture(button, itemId, attempts + 1)
 		end)
+	else
+		print(APPEND.."a texture is missing for itemID: "..itemId..", please report this to the author.")
 	end
 end
 
@@ -121,7 +155,12 @@ local function updateHearthstone()
 	local hearthstoneButton = TeleportMeButtonsFrame.hearthstoneButton
 	if not hearthstoneButton then return end
 	local texture
-	if TeleportMenuDB.hearthstone then
+	if TeleportMenuDB.hearthstone == "rng" then
+		texture = 1669494 -- misc_rune_pvp_random
+		local rng = math.random(#availableHearthstones)
+		hearthstoneButton:SetAttribute("type", "toy")
+		hearthstoneButton:SetAttribute("toy", availableHearthstones[rng])
+	elseif TeleportMenuDB.hearthstone then
 		local _, _, iconId = C_ToyBox.GetToyInfo(TeleportMenuDB.hearthstone)
 		texture = iconId
 		hearthstoneButton:SetAttribute("type", "toy")
@@ -135,8 +174,28 @@ local function updateHearthstone()
 	hearthstoneButton:SetNormalTexture(texture)
 end
 
-local function createAnchors(run)
-	if InCombatLockdown() or TeleportMeButtonsFrame then return end
+local function GetRandomHearthstone(retry)
+	if #availableHearthstones == 0 then return end
+	if #availableHearthstones == 1 then return availableHearthstones[1] end -- Don't even bother
+	local randomHs = availableHearthstones[math.random(#availableHearthstones)]
+	if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
+		randomHs = GetRandomHearthstone(true)
+	end
+	if not retry then
+		lastRandomHearthstone = randomHs
+	end
+	return randomHs
+end
+
+local function createAnchors()
+	if InCombatLockdown() then
+		return
+	elseif TeleportMeButtonsFrame then
+		if TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
+			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", GetRandomHearthstone())
+		end
+		return
+	end
 	local buttonsFrame = CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
 	buttonsFrame:SetSize(1, 1)
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, 0)
@@ -144,13 +203,20 @@ local function createAnchors(run)
 	local created = 0
 	for i, tp in ipairs(tpTable) do
 		if tp.hearthstone and TeleportMenuDB.hearthstone then -- Overwrite main HS with user set HS
-			tp.id = TeleportMenuDB.hearthstone
 			tp.type = "toy"
+			if TeleportMenuDB.hearthstone == "rng" then
+				tp.id = GetRandomHearthstone()
+			else
+				tp.id = TeleportMenuDB.hearthstone
+			end
 		end
 		local texture
 		local known
 		local flyOutSpellsKnown
-		if tp.type == "item" then
+		if tp.hearthstone and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
+			texture = 1669494 -- misc_rune_pvp_random
+			known = true
+		elseif tp.type == "item" then
 			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(tp.id)
         	texture = itemTexture
 			known = GetItemCount(tp.id) > 0
@@ -173,7 +239,6 @@ local function createAnchors(run)
 			button:SetSize(40, 40)
 			if not texture then
 				C_Timer.After(0.7, function()
-					--print(APPEND.."a texture is missing for itemID: "..tp.id..", please report this to the author.")
 					retryTexture(button, tp.id)
 				end)
 				texture = "Interface\\Icons\\INV_Misc_QuestionMark"
@@ -194,7 +259,7 @@ local function createAnchors(run)
 			button.cooldownFrame = createCooldownFrame(button)
 			button.cooldownFrame:CheckCooldown(tp.id, tp.type)
 			button:SetScript("OnEnter", function(self)
-				setToolTip(self, tp.type, tp.id)
+				setToolTip(self, tp.type, tp.id, tp.hearthstone)
 			end)
 			button:SetScript("OnLeave", function()
 				GameTooltip:Hide()
@@ -308,6 +373,16 @@ SlashCmdList["TPMENU"] = function(msg)
 		return
 	end
 
+	if msg == "rng" then
+		if not availableHearthstones or #availableHearthstones == 0 then
+			print(APPEND.."You don't have any valid Hearthstone toys to randomize in your collection.")
+			return
+		end
+		TeleportMenuDB.hearthstone = msg
+		updateHearthstone()
+		return
+	end
+
     local id = tonumber(msg)
 	if id and validHearthstoneToys[id] and PlayerHasToy(id) then
 		local _, name = C_ToyBox.GetToyInfo(id)
@@ -319,6 +394,7 @@ SlashCmdList["TPMENU"] = function(msg)
 		print("/tp list - List all valid Hearthstone toys in your collection.")
 		print("/tp clear - Reset back to the default hearthstone.")
 		print("/tp [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone.")
+		print("/tp rng - Randomize a Hearthstone toy from your collection every time you open the game menu.")
 	end
 end
 
@@ -327,13 +403,14 @@ local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		TeleportMenuDB = TeleportMenuDB or {}
 		C_Timer.After(5, function()
-			if TeleportMenuDB.hearthstone and not PlayerHasToy(TeleportMenuDB.hearthstone) then
+			if TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone ~= "rng" and not PlayerHasToy(TeleportMenuDB.hearthstone) then
 				print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
 				TeleportMenuDB.hearthstone = nil
 				updateHearthstone()
 			end
 		end)
     elseif event == "PLAYER_LOGIN" then
+		updateAvailableHearthstones()
 		createAnchors()
 		hooksecurefunc("ToggleGameMenu", createAnchors)
 	end
