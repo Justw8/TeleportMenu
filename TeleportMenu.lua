@@ -1,7 +1,5 @@
 local _, tp = ...
 
-
-
 local APPEND = "\124cFFFF0000TeleportMenu:\124r "
 local availableHearthstones = {}
 local validHearthstoneToys = {
@@ -50,6 +48,17 @@ local validHearthstoneToys = {
 	[212337] = true, -- Stone of the Hearth
 }
 
+local wormholes = {
+	[48933] = true, -- Wormhole Generator: Northrend
+	[87215] = true, -- Wormhole Generator: Pandaria
+	[112059] = true, -- Wormhole Centrifuge (Dreanor)
+	[151652] = true, -- Wormhole Generator: Argus
+	[168807] = true, -- Wormhole Generator: Kul Tiras
+	[168808] = true, -- Wormhole Generator: Zandalar
+	[172924] = true, -- Wormhole Generator: Shadowlands
+	[221966] = true, -- Wormhole Generator: Khaz Algar
+}
+
 local tpTable = {
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
 	{id = 110560, type = "toy"}, -- Garrison Hearthstone
@@ -79,6 +88,14 @@ local function updateAvailableHearthstones()
 			elseif usable == true then
 				table.insert(availableHearthstones, id)
 			end
+		end
+	end
+end
+
+local function updateAvailableWormholes()
+	for id, _ in pairs(wormholes) do
+		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
+			table.insert(tpTable, {id = id, type = "toy"})
 		end
 	end
 end
@@ -411,6 +428,7 @@ local function OnEvent(self, event, addOnName)
 		end)
     elseif event == "PLAYER_LOGIN" then
 		updateAvailableHearthstones()
+		updateAvailableWormholes()
 		createAnchors()
 		hooksecurefunc("ToggleGameMenu", createAnchors)
 	end
