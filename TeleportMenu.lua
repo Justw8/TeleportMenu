@@ -39,6 +39,10 @@ local tpTable = {
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
 	{id = 110560, type = "toy"}, -- Garrison Hearthstone
 	{id = 140192, type = "toy"}, -- Dalaran Hearthstone
+	{id = 1, type = "flyout", iconId = 237509}, -- Teleport (Mages)
+	{id = 8, type = "flyout", iconId = 237509}, -- Teleport (Mages)
+	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mages)
+	{id = 12, type = "flyout", iconId = 135748}, -- Portals (Mages)
 	{id = 230, type = "flyout", iconId = 574788}, -- Hero's Path: Cataclysm
 	{id = 84, type = "flyout", iconId = 626190}, -- Hero's Path: Mists of Pandaria
 	{id = 96, type = "flyout", iconId = 896622}, -- Hero's Path: Warlords of Draenor
