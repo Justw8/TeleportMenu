@@ -1,4 +1,4 @@
-local _, tp = ...
+local _, tpm = ...
 
 local APPEND = "\124cFFFF0000TeleportMenu:\124r "
 local availableHearthstones = {}
@@ -79,7 +79,7 @@ local tpTable = {
 	--{id = 233, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
 }
 
-local function updateAvailableHearthstones()
+function tpm:updateAvailableHearthstones()
 	availableHearthstones = {}
 	for id, usable in pairs(validHearthstoneToys) do
 		if PlayerHasToy(id) then
@@ -92,7 +92,7 @@ local function updateAvailableHearthstones()
 	end
 end
 
-local function updateAvailableWormholes()
+function tpm:updateAvailableWormholes()
 	for id, _ in pairs(wormholes) do
 		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
 			table.insert(tpTable, {id = id, type = "toy"})
@@ -100,7 +100,7 @@ local function updateAvailableWormholes()
 	end
 end
 
-local function checkQuestCompletion(quest)
+function tpm:checkQuestCompletion(quest)
 	if type(quest) == "table" then
 		for _, questID in ipairs(quest) do
 			if C_QuestLog.IsQuestFlaggedCompleted(questID) then
@@ -203,12 +203,12 @@ local function updateHearthstone()
 	hearthstoneButton:SetNormalTexture(texture)
 end
 
-local function GetRandomHearthstone(retry)
+function tpm:GetRandomHearthstone(retry)
 	if #availableHearthstones == 0 then return end
 	if #availableHearthstones == 1 then return availableHearthstones[1] end -- Don't even bother
 	local randomHs = availableHearthstones[math.random(#availableHearthstones)]
 	if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
-		randomHs = GetRandomHearthstone(true)
+		randomHs = self:GetRandomHearthstone(true)
 	end
 	if not retry then
 		lastRandomHearthstone = randomHs
@@ -221,7 +221,7 @@ local function createAnchors()
 		return
 	elseif TeleportMeButtonsFrame then
 		if TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
-			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", GetRandomHearthstone())
+			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", tpm:GetRandomHearthstone())
 		end
 		return
 	end
@@ -230,59 +230,59 @@ local function createAnchors()
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, 0)
 
 	local created = 0
-	for i, tp in ipairs(tpTable) do
-		if tp.hearthstone and TeleportMenuDB.hearthstone then -- Overwrite main HS with user set HS
-			tp.type = "toy"
+	for i, teleport in ipairs(tpTable) do
+		if teleport.hearthstone and TeleportMenuDB.hearthstone then -- Overwrite main HS with user set HS
+			teleport.type = "toy"
 			if TeleportMenuDB.hearthstone == "rng" then
-				tp.id = GetRandomHearthstone()
+				teleport.id = tpm:GetRandomHearthstone()
 			else
-				tp.id = TeleportMenuDB.hearthstone
+				teleport.id = TeleportMenuDB.hearthstone
 			end
 		end
 		local texture
 		local known
 		local flyOutSpellsKnown
-		if tp.hearthstone and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
+		if teleport.hearthstone and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
 			texture = 1669494 -- misc_rune_pvp_random
 			known = true
-		elseif tp.type == "item" then
-			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(tp.id)
+		elseif teleport.type == "item" then
+			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(teleport.id)
         	texture = itemTexture
-			known = GetItemCount(tp.id) > 0
-		elseif tp.type == "toy" and PlayerHasToy(tp.id) then
-			local _, name, iconId = C_ToyBox.GetToyInfo(tp.id)
+			known = GetItemCount(teleport.id) > 0
+		elseif teleport.type == "toy" and PlayerHasToy(teleport.id) then
+			local _, name, iconId = C_ToyBox.GetToyInfo(teleport.id)
 			texture = iconId
-			if tp.quest then
-				known = checkQuestCompletion(tp.quest)
+			if teleport.quest then
+				known = tpm:checkQuestCompletion(teleport.quest)
 			else
 				known = true
 			end
-		elseif tp.type == "flyout" then
-			local name, desc, amount, flyoutKnown = GetFlyoutInfo(tp.id)
+		elseif teleport.type == "flyout" then
+			local name, desc, amount, flyoutKnown = GetFlyoutInfo(teleport.id)
 			if flyoutKnown then
 				flyOutSpellsKnown = amount
-				texture = tp.iconId
+				texture = teleport.iconId
 				known = flyoutKnown
 			end
 		end
-		if known and (tp.type == "toy" or tp.type == "item") then
+		if known and (teleport.type == "toy" or teleport.type == "item") then
 			created = created + 1
 			local button = CreateFrame("Button", nil, buttonsFrame," SecureActionButtonTemplate");
 			local yOffset = 40 + (-40 * created)
 			button:SetSize(40, 40)
 			if not texture then
 				C_Timer.After(0.7, function()
-					retryTexture(button, tp.id)
+					retryTexture(button, teleport.id)
 				end)
 				texture = "Interface\\Icons\\INV_Misc_QuestionMark"
 			end
 			button:SetNormalTexture(texture)
-			if tp.type == "item" then
-				button:SetAttribute("type", tp.type)
-				button:SetAttribute(tp.type, "item:"..tp.id)
+			if teleport.type == "item" then
+				button:SetAttribute("type", teleport.type)
+				button:SetAttribute(teleport.type, "item:"..teleport.id)
 			else
-				button:SetAttribute("type", tp.type)
-				button:SetAttribute(tp.type, tp.id)
+				button:SetAttribute("type", teleport.type)
+				button:SetAttribute(teleport.type, teleport.id)
 			end
 			button:SetPoint("TOPLEFT", buttonsFrame, "TOPRIGHT", 0, yOffset)
 			button:EnableMouse(true)
@@ -290,21 +290,21 @@ local function createAnchors()
 			button:SetFrameStrata("HIGH")
 			button:SetFrameLevel(101)
 			button.cooldownFrame = createCooldownFrame(button)
-			button.cooldownFrame:CheckCooldown(tp.id, tp.type)
+			button.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
 			button:SetScript("OnEnter", function(self)
-				setToolTip(self, tp.type, tp.id, tp.hearthstone)
+				setToolTip(self, teleport.type, teleport.id, teleport.hearthstone)
 			end)
 			button:SetScript("OnLeave", function()
 				GameTooltip:Hide()
 			end)
 			button:SetScript("OnShow", function(self)
-				self.cooldownFrame:CheckCooldown(tp.id, tp.type)
+				self.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
 			end)
 
-			if tp.hearthstone then -- store to replace item later
+			if teleport.hearthstone then -- store to replace item later
 				buttonsFrame.hearthstoneButton = button
 			end
-		elseif known and tp.type == "flyout" then
+		elseif known and teleport.type == "flyout" then
 			created = created + 1
 			local button = CreateFrame("Button", nil, buttonsFrame, "SecureActionButtonTemplate");
 			local yOffset = 40 + (-40 * created)
@@ -320,7 +320,7 @@ local function createAnchors()
 					setCombatTooltip(self)
 					return
 				end
-				setToolTip(self, tp.type, tp.id)
+				setToolTip(self, teleport.type, teleport.id)
 				self.flyOutFrame:Show()
 			end)
 			button:SetScript("OnLeave", function(self)
@@ -346,7 +346,7 @@ local function createAnchors()
 			local flyOutButtons = {}
 			local flyoutsCreated = 0
 			for i = 1, flyOutSpellsKnown do
-				local spellID = select(1, GetFlyoutSlotInfo(tp.id, i))
+				local spellID = select(1, GetFlyoutSlotInfo(teleport.id, i))
 				if IsSpellKnown(spellID) then
 					flyoutsCreated = flyoutsCreated + 1
 					local xOffset = 40 * flyoutsCreated
@@ -385,7 +385,7 @@ local function createAnchors()
 end
 
 -- Slash Commands
-SLASH_TPMENU1 = "/tp"
+SLASH_TPMENU1 = "/tpm"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
 	if msg == "clear" then
@@ -424,10 +424,10 @@ SlashCmdList["TPMENU"] = function(msg)
 		print(APPEND.."New Hearthstone set to: "..name.."!")
 	else
 		print(APPEND.."Available Commands:")
-		print("/tp list - List all valid Hearthstone toys in your collection.")
-		print("/tp clear - Reset back to the default hearthstone.")
-		print("/tp [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone.")
-		print("/tp rng - Randomize a Hearthstone toy from your collection every time you open the game menu.")
+		print("/tpm list - List all valid Hearthstone toys in your collection.")
+		print("/tpm clear - Reset back to the default hearthstone.")
+		print("/tpm [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone.")
+		print("/tpm rng - Randomize a Hearthstone toy from your collection every time you open the game menu.")
 	end
 end
 
@@ -443,8 +443,8 @@ local function OnEvent(self, event, addOnName)
 			end
 		end)
     elseif event == "PLAYER_LOGIN" then
-		updateAvailableHearthstones()
-		updateAvailableWormholes()
+		tpm:updateAvailableHearthstones()
+		tpm:updateAvailableWormholes()
 		createAnchors()
 		hooksecurefunc("ToggleGameMenu", createAnchors)
 	end
