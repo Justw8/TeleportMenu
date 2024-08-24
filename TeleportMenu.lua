@@ -235,7 +235,6 @@ function tpm:CreateWormholeFlyout(iconId)
 	local flyOutButtons = {}
 	local flyoutsCreated = 0
 	for _, wormholeId in ipairs(availableWormholes) do
-		print(wormholeId)
 		local flyOutButton = CreateFrame("Button", nil, flyOutFrame," SecureActionButtonTemplate")
 		local _, name, iconId = C_ToyBox.GetToyInfo(wormholeId)
 		local xOffset = 40 + (40 * flyoutsCreated)
@@ -381,8 +380,9 @@ local function createAnchors()
 	if InCombatLockdown() then
 		return
 	elseif TeleportMeButtonsFrame then
-		if TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
-			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", tpm:GetRandomHearthstone())
+		if TeleportMeButtonsFrame:IsVisible() and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
+			local rng = tpm:GetRandomHearthstone()
+			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", rng)
 		end
 		return
 	end
@@ -405,14 +405,16 @@ local function createAnchors()
 
 		-- Checks and overwrites
 		if teleport.hearthstone and TeleportMenuDB.hearthstone then -- Overwrite main HS with user set HS
+			tpm:DebugPrint("Overwriting main HS with user set HS")
 			teleport.type = "toy"
+			known = true
 			if TeleportMenuDB.hearthstone == "rng" then
 				texture = 1669494 -- misc_rune_pvp_random
-				known = true
 				teleport.id = tpm:GetRandomHearthstone()
 			else
 				teleport.id = TeleportMenuDB.hearthstone
 			end
+			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
 		elseif teleport.type == "item" then
 			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(teleport.id)
         	texture = itemTexture
@@ -429,6 +431,7 @@ local function createAnchors()
 
 		-- Create Stuff
 		if known and (teleport.type == "toy" or teleport.type == "item") then
+			tpm:DebugPrint(teleport.hearthstone)
 			local button = CreateFrame("Button", nil, buttonsFrame," SecureActionButtonTemplate")
 			local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
 			button:SetSize(40, 40)
@@ -485,6 +488,15 @@ end
 SLASH_TPMENU1 = "/tpm"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
+	if msg == "current" then
+		if not TeleportMenuDB.hearthstone then
+			print(APPEND.."No alternative Hearthstone set.")
+		else
+			print(APPEND.."Current Hearthstone is set to: "..TeleportMenuDB.hearthstone)
+		end
+		return
+	end
+
 	if msg == "clear" then
 		TeleportMenuDB.hearthstone = nil
 		updateHearthstone()
@@ -522,6 +534,7 @@ SlashCmdList["TPMENU"] = function(msg)
 	else
 		print(APPEND.."Available Commands:")
 		print("/tpm list - List all valid Hearthstone toys in your collection.")
+		print("/tpm current - Show the currently set alternative Hearthstone.")
 		print("/tpm clear - Reset back to the default hearthstone.")
 		print("/tpm [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone.")
 		print("/tpm rng - Randomize a Hearthstone toy from your collection every time you open the game menu.")
@@ -532,6 +545,7 @@ end
 local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		TeleportMenuDB = TeleportMenuDB or {}
+		TeleportMenuDB.debug = false
 		C_Timer.After(5, function()
 			if TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone ~= "rng" and not PlayerHasToy(TeleportMenuDB.hearthstone) then
 				print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
@@ -551,3 +565,9 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", OnEvent)
+
+-- Debug Functions
+function tpm:DebugPrint(...)
+	if not TeleportMenuDB.debug then return end
+	print(APPEND, ...)
+end
