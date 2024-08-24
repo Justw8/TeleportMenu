@@ -68,12 +68,12 @@ local tpTable = {
 	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mages)
 	{id = 12, type = "flyout", iconId = 135748}, -- Portals (Mages)
 	{id = 230, type = "flyout", iconId = 574788}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 626190}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 896622}, -- Hero's Path: Warlords of Draenor
-	{id = 223, type = "flyout", iconId = 2967107}, -- Hero's Path: Battle for Azeroth
-	{id = 224, type = "flyout", iconId = 237559}, -- Hero's Path: Legion
-	{id = 220, type = "flyout", iconId = 2998183}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4254080}, -- Hero's Path: Shadowlands Raids
+	{id = 84, type = "flyout", iconId = 328269}, -- Hero's Path: Mists of Pandaria
+	{id = 96, type = "flyout", iconId = 1413856}, -- Hero's Path: Warlords of Draenor
+	{id = 224, type = "flyout", iconId = 1260827}, -- Hero's Path: Legion
+	{id = 223, type = "flyout", iconId = 1869493}, -- Hero's Path: Battle for Azeroth
+	{id = 220, type = "flyout", iconId = 236798}, -- Hero's Path: Shadowlands
+	{id = 222, type = "flyout", iconId = 4062765}, -- Hero's Path: Shadowlands Raids
 	{id = 227, type = "flyout", iconId = 4640496}, -- Hero's Path: Dragonflight
 	{id = 231, type = "flyout", iconId = 5342925}, -- Hero's Path: Dragonflight Raids
 	--{id = 233, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
