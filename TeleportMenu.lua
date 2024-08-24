@@ -554,10 +554,12 @@ local function OnEvent(self, event, addOnName)
 			end
 		end)
     elseif event == "PLAYER_LOGIN" then
-		tpm:updateAvailableHearthstones()
-		tpm:updateAvailableWormholes()
-		createAnchors()
-		hooksecurefunc("ToggleGameMenu", createAnchors)
+		C_Timer.After(0.5, function() -- Delay so things can load?
+			tpm:updateAvailableHearthstones()
+			tpm:updateAvailableWormholes()
+			createAnchors()
+			hooksecurefunc("ToggleGameMenu", createAnchors)
+		end)
 	end
 end
 
