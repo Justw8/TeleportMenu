@@ -61,8 +61,8 @@ local wormholes = {
 
 local tpTable = {
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
-	{id = 110560, type = "toy"}, -- Garrison Hearthstone
-	{id = 140192, type = "toy"}, -- Dalaran Hearthstone
+	{id = 110560, type = "toy", quest={34378, 34586}}, -- Garrison Hearthstone
+	{id = 140192, type = "toy", quest={44184, 44663}}, -- Dalaran Hearthstone
 	{id = 1, type = "flyout", iconId = 237509}, -- Teleport (Mages)
 	{id = 8, type = "flyout", iconId = 237509}, -- Teleport (Mages)
 	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mages)
@@ -97,6 +97,18 @@ local function updateAvailableWormholes()
 		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
 			table.insert(tpTable, {id = id, type = "toy"})
 		end
+	end
+end
+
+local function checkQuestCompletion(quest)
+	if type(quest) == "table" then
+		for _, questID in ipairs(quest) do
+			if C_QuestLog.IsQuestFlaggedCompleted(questID) then
+				return true
+			end
+		end
+	else
+		return C_QuestLog.IsQuestFlaggedCompleted(quest)
 	end
 end
 
@@ -240,7 +252,11 @@ local function createAnchors()
 		elseif tp.type == "toy" and PlayerHasToy(tp.id) then
 			local _, name, iconId = C_ToyBox.GetToyInfo(tp.id)
 			texture = iconId
-			known = true
+			if tp.quest then
+				known = checkQuestCompletion(tp.quest)
+			else
+				known = true
+			end
 		elseif tp.type == "flyout" then
 			local name, desc, amount, flyoutKnown = GetFlyoutInfo(tp.id)
 			if flyoutKnown then
