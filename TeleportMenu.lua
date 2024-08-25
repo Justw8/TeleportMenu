@@ -66,14 +66,25 @@ local wormholes = {
 }
 
 local tpTable = {
+	-- Hearthstones
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
+	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
 	{id = 110560, type = "toy", quest={34378, 34586}}, -- Garrison Hearthstone
 	{id = 140192, type = "toy", quest={44184, 44663}}, -- Dalaran Hearthstone
+
+	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
-	{id = 1, type = "flyout", iconId = 237509}, -- Teleport (Mages)
-	{id = 8, type = "flyout", iconId = 237509}, -- Teleport (Mages)
-	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mages)
-	{id = 12, type = "flyout", iconId = 135748}, -- Portals (Mages)
+
+	-- Class Teleports
+	{id = 1, type = "flyout", iconId = 237509}, -- Teleport (Mage)
+	{id = 8, type = "flyout", iconId = 237509}, -- Teleport (Mage)
+	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mage)
+	{id = 12, type = "flyout", iconId = 135748}, -- Portals (Mage)
+	{id = 126892, type = "spell"}, -- Zen Pilgrimage (Monk)
+	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
+	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
+
+	-- Dungeon/Raid Teleports
 	{id = 230, type = "flyout", iconId = 574788}, -- Hero's Path: Cataclysm
 	{id = 84, type = "flyout", iconId = 328269}, -- Hero's Path: Mists of Pandaria
 	{id = 96, type = "flyout", iconId = 1413856}, -- Hero's Path: Warlords of Draenor
@@ -360,12 +371,18 @@ local function updateHearthstone()
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", TeleportMenuDB.hearthstone)
 	else
+		if GetItemCount(6948) == 0 then
+			print(APPEND.."You don't have a hearthstone in your bags or set a custom one. Please use /tpm for the commands to set one.")
+			hearthstoneButton:Hide()
+			return
+		end
 		local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(6948)
 		texture = itemTexture
 		hearthstoneButton:SetAttribute("type", "item")
 		hearthstoneButton:SetAttribute("item", "item:6948")
 	end
 	hearthstoneButton:SetNormalTexture(texture)
+	hearthstoneButton:Show()
 end
 
 function tpm:GetRandomHearthstone(retry)
@@ -420,10 +437,10 @@ local function createAnchors()
 				teleport.id = TeleportMenuDB.hearthstone
 			end
 			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
-		elseif teleport.type == "item" then
+		elseif teleport.type == "item" and GetItemCount(teleport.id) > 0 then
 			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(teleport.id)
         	texture = itemTexture
-			known = GetItemCount(teleport.id) > 0
+			known = true
 		elseif teleport.type == "toy" and PlayerHasToy(teleport.id) then
 			local _, name, iconId = C_ToyBox.GetToyInfo(teleport.id)
 			texture = iconId
@@ -432,10 +449,17 @@ local function createAnchors()
 			else
 				known = true
 			end
+		elseif teleport.type == "spell" and IsSpellKnown(teleport.id) then
+			texture = C_Spell.GetSpellTexture(teleport.id)
+			known = true
+		end
+
+		if not known and teleport.hearthstone then -- Player has no HS in bags and not set a custom TP.
+			print(APPEND.."You don't have a hearthstone in your bags or set a custom one. Please use /tpm for the commands to set one.")
 		end
 
 		-- Create Stuff
-		if known and (teleport.type == "toy" or teleport.type == "item") then
+		if known and (teleport.type == "toy" or teleport.type == "item" or teleport.type == "spell") then
 			tpm:DebugPrint(teleport.hearthstone)
 			local button = CreateFrame("Button", nil, buttonsFrame," SecureActionButtonTemplate")
 			local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
@@ -503,9 +527,13 @@ SlashCmdList["TPMENU"] = function(msg)
 	end
 
 	if msg == "clear" then
-		TeleportMenuDB.hearthstone = nil
-		updateHearthstone()
-		print(APPEND.."Hearthstone reset to default!")
+		if not InCombatLockdown() then
+			TeleportMenuDB.hearthstone = nil
+			updateHearthstone()
+			print(APPEND.."Hearthstone reset to default!")
+		else
+			print(APPEND.."You can't do that in combat.")
+		end
 		return
 	end
 
@@ -526,6 +554,7 @@ SlashCmdList["TPMENU"] = function(msg)
 			return
 		end
 		TeleportMenuDB.hearthstone = msg
+		print(APPEND.."Hearthstone set to be random!")
 		updateHearthstone()
 		return
 	end
