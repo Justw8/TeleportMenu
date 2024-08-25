@@ -50,14 +50,19 @@ local validHearthstoneToys = {
 
 local availableWormholes = {}
 local wormholes = {
-	[48933] = true, -- Wormhole Generator: Northrend
-	[87215] = true, -- Wormhole Generator: Pandaria
-	[112059] = true, -- Wormhole Centrifuge (Dreanor)
-	[151652] = true, -- Wormhole Generator: Argus
-	[168807] = true, -- Wormhole Generator: Kul Tiras
-	[168808] = true, -- Wormhole Generator: Zandalar
-	[172924] = true, -- Wormhole Generator: Shadowlands
-	[221966] = true, -- Wormhole Generator: Khaz Algar
+	30542, -- Dimensional Ripper - Area 52
+	18984, -- Dimensional Ripper - Everlook
+	18986, -- Ultrasafe Transporter: Gadgetzan
+	30544, -- Ultrasafe Transporter: Toshley's Station
+	48933, -- Wormhole Generator: Northrend
+	87215, -- Wormhole Generator: Pandaria
+	112059, -- Wormhole Centrifuge (Dreanor) 6
+	151652, -- Wormhole Generator: Argus
+	168807, -- Wormhole Generator: Kul Tiras 5
+	168808, -- Wormhole Generator: Zandalar
+	172924, -- Wormhole Generator: Shadowlands 3
+	198156, -- Wyrmhole Generator: Dragon Isles 4
+	221966, -- Wormhole Generator: Khaz Algar
 }
 
 local tpTable = {
@@ -78,7 +83,7 @@ local tpTable = {
 	{id = 222, type = "flyout", iconId = 4062765}, -- Hero's Path: Shadowlands Raids
 	{id = 227, type = "flyout", iconId = 4640496}, -- Hero's Path: Dragonflight
 	{id = 231, type = "flyout", iconId = 5342925}, -- Hero's Path: Dragonflight Raids
-	--{id = 233, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
+	{id = 232, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
 }
 
 function tpm:updateAvailableHearthstones()
@@ -95,7 +100,7 @@ function tpm:updateAvailableHearthstones()
 end
 
 function tpm:updateAvailableWormholes()
-	for id, _ in pairs(wormholes) do
+	for _, id in ipairs(wormholes) do
 		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
 			table.insert(availableWormholes, id)
 		end
