@@ -541,6 +541,13 @@ SlashCmdList["TPMENU"] = function(msg)
 	end
 end
 
+function tpm:Setup()
+	tpm:updateAvailableHearthstones()
+	tpm:updateAvailableWormholes()
+	createAnchors()
+	hooksecurefunc("ToggleGameMenu", createAnchors)
+end
+
 -- Loading
 local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
@@ -554,11 +561,8 @@ local function OnEvent(self, event, addOnName)
 			end
 		end)
     elseif event == "PLAYER_LOGIN" then
-		C_Timer.After(0.5, function() -- Delay so things can load?
-			tpm:updateAvailableHearthstones()
-			tpm:updateAvailableWormholes()
-			createAnchors()
-			hooksecurefunc("ToggleGameMenu", createAnchors)
+		C_Timer.After(3, function() -- Delay so things can load?
+			tpm:Setup()
 		end)
 	end
 end
