@@ -294,8 +294,10 @@ function tpm:setToolTip(self, type, id, hs)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
 	if hs and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
+		local bindLocation = GetBindLocation()
 		GameTooltip:SetText("Random Hearthstone", 1, 1, 1)
 		GameTooltip:AddLine("\124cFF34B7EBClick to cast a random hearthstone.\nIt will pick a new hearthstone when you re-open the menu.\124r", 1, 1, 1)
+		GameTooltip:AddLine("\n\124cFF34B7EBHearthstone Location:\124r \124cFF1EFF0C"..bindLocation.."\124r", 1, 1, 1)
 		GameTooltip:Show()
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
