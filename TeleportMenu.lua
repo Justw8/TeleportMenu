@@ -1,6 +1,12 @@
 local _, tpm = ...
 
-local APPEND = "\124cFFFF0000TeleportMenu:\124r "
+--------------------------------------
+-- Libraries
+--------------------------------------
+
+local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
+
+local APPEND = L["AddonNamePrint"]
 local availableHearthstones = {}
 local hearthstoneToys = {
 	[54452] = true, -- Ethereal Portal
@@ -380,7 +386,7 @@ end
 function tpm:setCombatTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
-	GameTooltip:SetText("\124cFFFF0000<Not available in combat>\124r", 1, 1, 1)
+	GameTooltip:SetText(L["Not In Combat Tooltip"], 1, 1, 1)
 	GameTooltip:Show()
 end
 
@@ -389,9 +395,9 @@ function tpm:setToolTip(self, type, id, hs)
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
 	if hs and TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone == "rng" then
 		local bindLocation = GetBindLocation()
-		GameTooltip:SetText("Random Hearthstone", 1, 1, 1)
-		GameTooltip:AddLine("\124cFF34B7EBClick to cast a random hearthstone.\nIt will pick a new hearthstone when you re-open the menu.\124r", 1, 1, 1)
-		GameTooltip:AddLine("\n\124cFF34B7EBHearthstone Location:\124r \124cFF1EFF0C"..bindLocation.."\124r", 1, 1, 1)
+		GameTooltip:SetText(L["Random Hearthstone"], 1, 1, 1)
+		GameTooltip:AddLine(L["Random Hearthstone Tooltip"], 1, 1, 1)
+		GameTooltip:AddLine(L["Random Hearthstone Location"]:format(bindLocation), 1, 1, 1)
 		GameTooltip:Show()
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
@@ -408,8 +414,8 @@ function tpm:setToolTip(self, type, id, hs)
 			GameTooltip:SetText(professionInfo.professionName, 1, 1, 1)
 		end
 	elseif type == "bonusheartsones" then
-		GameTooltip:SetText("Bonus Hearthstones", 1, 1, 1)
-		GameTooltip:AddLine("\124cFF34B7EBThese Hearthstones do not share cooldown with the other toys.\124r", 1, 1, 1)
+		GameTooltip:SetText(L["Bonus Hearthstones"], 1, 1, 1)
+		GameTooltip:AddLine(L["Bonus Hearthstones Tooltip"], 1, 1, 1)
 		GameTooltip:Show()
 	end
 	GameTooltip:Show()
@@ -452,7 +458,7 @@ local function retryTexture(button, itemId, attempt)
 			retryTexture(button, itemId, attempts + 1)
 		end)
 	else
-		print(APPEND.."a texture is missing for itemID: "..itemId..", please report this to the author.")
+		print(APPEND..L["Missing Texture"]:format(itemId))
 	end
 end
 
@@ -472,7 +478,7 @@ local function updateHearthstone()
 		hearthstoneButton:SetAttribute("toy", TeleportMenuDB.hearthstone)
 	else
 		if GetItemCount(6948) == 0 then
-			print(APPEND.."You don't have a hearthstone in your bags or set a custom one. Please use /tpm for the commands to set one.")
+			print(APPEND..L["No Hearthtone in Bags"])
 			hearthstoneButton:Hide()
 			return
 		end
@@ -555,7 +561,7 @@ local function createAnchors()
 		end
 
 		if not known and teleport.hearthstone then -- Player has no HS in bags and not set a custom TP.
-			print(APPEND.."You don't have a hearthstone in your bags or set a custom one. Please use /tpm for the commands to set one.")
+			print(APPEND..L["No Hearthtone In Bags"])
 		end
 
 		-- Create Stuff
@@ -624,9 +630,9 @@ SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
 	if msg == "current" then
 		if not TeleportMenuDB.hearthstone then
-			print(APPEND.."No alternative Hearthstone set.")
+			print(APPEND..L["No alternative Hearthstone"])
 		else
-			print(APPEND.."Current Hearthstone is set to: "..TeleportMenuDB.hearthstone)
+			print(APPEND..L["Current Hearthstone"]:format(TeleportMenuDB.hearthstone))
 		end
 		return
 	end
@@ -635,15 +641,15 @@ SlashCmdList["TPMENU"] = function(msg)
 		if not InCombatLockdown() then
 			TeleportMenuDB.hearthstone = nil
 			updateHearthstone()
-			print(APPEND.."Hearthstone reset to default!")
+			print(APPEND..L["Hearthstone Reset"])
 		else
-			print(APPEND.."You can't do that in combat.")
+			print(APPEND..L["Not In Combat Print"])
 		end
 		return
 	end
 
 	if msg == "list" then
-		print(APPEND.."Available Hearthstone toys: [id - name]")
+		print(APPEND..L["Available Hearthstones Print"])
 		for id, _ in pairs(hearthstoneToys) do
 			if PlayerHasToy(id) then
 				local _, name = C_ToyBox.GetToyInfo(id)
@@ -655,11 +661,11 @@ SlashCmdList["TPMENU"] = function(msg)
 
 	if msg == "rng" then
 		if not availableHearthstones or #availableHearthstones == 0 then
-			print(APPEND.."You don't have any valid Hearthstone toys to randomize in your collection.")
+			print(APPEND..L["No Hearthone Toys"])
 			return
 		end
 		TeleportMenuDB.hearthstone = msg
-		print(APPEND.."Hearthstone set to be random!")
+		print(APPEND..L["Hearthstone Random Set"])
 		updateHearthstone()
 		return
 	end
@@ -669,14 +675,14 @@ SlashCmdList["TPMENU"] = function(msg)
 		local _, name = C_ToyBox.GetToyInfo(id)
 		TeleportMenuDB.hearthstone = id
 		updateHearthstone()
-		print(APPEND.."New Hearthstone set to: "..name.."!")
+		print(APPEND..L["New Hearthstone Set"]:format(name))
 	else
-		print(APPEND.."Available Commands:")
-		print("/tpm list - List all valid Hearthstone toys in your collection.")
-		print("/tpm current - Show the currently set alternative Hearthstone.")
-		print("/tpm clear - Reset back to the default hearthstone.")
-		print("/tpm [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone.")
-		print("/tpm rng - Randomize a Hearthstone toy from your collection every time you open the game menu.")
+		print(APPEND..L["Available Commands"])
+		print(L["List Command"])
+		print(L["Current Command"])
+		print(L["Clear Command"])
+		print(L["ItemId Command"])
+		print(L["Rng Command"])
 	end
 end
 
@@ -695,7 +701,7 @@ local function OnEvent(self, event, addOnName)
 		TeleportMenuDB.debug = false
 		C_Timer.After(5, function()
 			if TeleportMenuDB.hearthstone and TeleportMenuDB.hearthstone ~= "rng" and not PlayerHasToy(TeleportMenuDB.hearthstone) then
-				print(APPEND.."We reset your heartstone to default because the toy with itemID: "..TeleportMenuDB.hearthstone.." is not in your collection.")
+				print(APPEND..L["Hearthone Reset Error"]:format(TeleportMenuDB.hearthstone))
 				TeleportMenuDB.hearthstone = nil
 				updateHearthstone()
 			end

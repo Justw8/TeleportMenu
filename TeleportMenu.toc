@@ -10,4 +10,5 @@
 
 ## X-Curse-Project-ID: 1087836
 
+Locales\Locales.xml
 TeleportMenu.lua
