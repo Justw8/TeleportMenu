@@ -24,3 +24,9 @@ L["Current Command"] = "/tpm current - Show the currently set alternative Hearth
 L["Clear Command"] = "/tpm clear - Reset back to the default hearthstone."
 L["ItemId Command"] = "/tpm [itemId] - Set a valid Hearthstone toy as your alternative Hearthstone."
 L["Rng Command"] = "/tpm rng - Randomize a Hearthstone toy from your collection every time you open the game menu."
+
+-- Options
+L["Enabled"] = "Enabled"
+L["Enable Tooltip"] = "Enable/Disable the Teleport Menu."
+L["Hearthstone Toy"] = "Hearthstone Toy"
+L["Hearthstone Toy Tooltip"] = "Sets the preferred hearthstone toy to use.\n\nIf set to Random, a random hearthstone toy will be choosen every time you open the game menu."
