@@ -40,6 +40,7 @@ local hearthstoneToys = {
 	[206195] = true, -- Path of the Naaru
 	[208704] = true, -- Deepdweller's Earthen Hearthstone
 	[209035] = true, -- Hearthstone of the Flame
+	[228940] = true, -- Notorious Thread's Hearthstone
 }
 
 local availableBonusHearthstones = {}
