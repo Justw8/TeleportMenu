@@ -740,7 +740,7 @@ local function checkItemsLoaded(self)
 		if allLoaded then
 			tpm:Setup()
 		else
-			StartUpdate(self)
+			checkItemsLoaded(self)
 		end
 	end
 
