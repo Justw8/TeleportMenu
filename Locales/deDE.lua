@@ -9,7 +9,7 @@ if not L then return end
 --L["Bonus Hearthstones"] = "Bonus Hearthstones"
 --L["Bonus Hearthstones Tooltip"] = "\124cFF34B7EBThese Hearthstones do not share cooldown with the other toys.\124r"
 --L["Missing Texture"] = "a texture is missing for itemID: %s, please report this to the author."
---L["No Hearthtone in Bags"] = "You don't have a hearthstone in your bags or set a custom one. Please use /tpm for the commands to set one."
+--L["No Hearthtone In Bags"] = "You don't have a hearthstone in your bags or set a custom one. Please use /tpm for the commands to set one."
 --L["No Alternative Hearthstone"] = "No alternative Hearthstone set."
 --L["Current Hearthstone"] = "Current Hearthstone is set to: %s"
 --L["Hearthstone Reset"] = "Hearthstone reset to default!"
