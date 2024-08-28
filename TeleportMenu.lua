@@ -501,7 +501,7 @@ function tpm:updateHearthstone()
 		hearthstoneButton:SetAttribute("toy", db.hearthstone)
 	else
 		if GetItemCount(6948) == 0 then
-			print(APPEND..L["No Hearthtone in Bags"])
+			print(APPEND..L["No Hearthtone In Bags"])
 			hearthstoneButton:Hide()
 			return
 		end
