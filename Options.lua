@@ -88,7 +88,7 @@ function tpm:LoadOptions()
         local function GetOptions()
             local container = Settings.CreateControlTextContainer()
             container:Add("none", L["None"])
-            container:Add("rng", L["Random"])
+            container:Add("rng", "|T1669494:16:16:0:0:64:64:4:60:4:60|t "..L["Random"])
             local startOption = 2
             local hearthstones = tpm:GetAvailableHearthstoneToys()
             for id, hearthstoneInfo in pairs(hearthstones) do
