@@ -32,4 +32,4 @@ if not L then return end
 --L["Hearthstone Toy"] = "Hearthstone Toy"
 --L["Hearthstone Toy Tooltip"] = "Sets the preferred hearthstone toy to use.\n\nIf set to Random, a random hearthstone toy will be choosen every time you open the game menu."
 --L["None"] = "None"
---L["Random"] = "|T1669494:16:16:0:0:64:64:4:60:4:60|t Random"
+--L["Random"] = "Random"
