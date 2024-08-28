@@ -715,31 +715,59 @@ SlashCmdList["TPMENU"] = function(msg)
 	end
 end
 
+--------------------------------------
+-- Loading
+--------------------------------------
+
+local function checkItemsLoaded(self)
+	if self.continuableContainer then
+		self.continuableContainer:Cancel()
+	end
+
+	self.continuableContainer = ContinuableContainer:Create()
+	local function LoadItems(itemTable)
+		for _, itemId in ipairs(itemTable) do
+			self.continuableContainer:AddContinuable(Item:CreateFromItemID(itemId))
+		end
+	end
+
+	LoadItems(hearthstoneToys)
+	LoadItems(wormholes)
+	LoadItems(bonusHearthstones)
+
+	local allLoaded = true
+	local function OnItemsLoaded()
+		if allLoaded then
+			tpm:Setup()
+		else
+			checkItemsLoaded(self)
+		end
+	end
+
+	allLoaded = self.continuableContainer:ContinueOnLoad(OnItemsLoaded)
+end
+
 function tpm:Setup()
 	tpm:updateAvailableHearthstones()
 	tpm:updateAvailableBonusHeartstones()
 	tpm:updateAvailableWormholes()
+
+	if db.hearthstone and db.hearthstone ~= "rng" and db.hearthstone ~= "none" and not PlayerHasToy(db.hearthstone) then
+		print(APPEND..L["Hearthone Reset Error"]:format(db.hearthstone))
+		db.hearthstone = "none"
+		tpm:updateHearthstone()
+	end
+
 	createAnchors()
 	hooksecurefunc("ToggleGameMenu", createAnchors)
 end
 
--- Loading
 local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		db = TeleportMenuDB or {}
 		db.debug = false
-		C_Timer.After(5, function()
-			if db.hearthstone and db.hearthstone ~= "rng" and db.hearthstone ~= "none" and not PlayerHasToy(db.hearthstone) then
-				print(APPEND..L["Hearthone Reset Error"]:format(db.hearthstone))
-				db.hearthstone = "none"
-				tpm:updateHearthstone()
-			end
-		end)
+		checkItemsLoaded(self)
 		tpm:LoadOptions()
-    elseif event == "PLAYER_LOGIN" then
-		C_Timer.After(3, function() -- Delay so things can load?
-			tpm:Setup()
-		end)
 	end
 end
 
