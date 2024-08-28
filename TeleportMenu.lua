@@ -12,6 +12,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 
 local db = {}
 local APPEND = L["AddonNamePrint"]
+local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 
 --------------------------------------
 -- Teleport Tables
@@ -120,6 +121,45 @@ local tpTable = {
 }
 
 --------------------------------------
+-- Texture Stuff
+--------------------------------------
+
+local function SetTextureByItemId(frame, itemId)
+	frame:SetNormalTexture(DEFAULT_ICON) -- Temp while loading
+	local item = Item:CreateFromItemID(itemId)
+	item:ContinueOnItemLoad(function()
+		local icon = item:GetItemIcon()
+		frame:SetNormalTexture(icon)
+	end)
+end
+
+local function retrySetNormalTexture(button, itemId, attempt)
+	local attempts = attempt or 1
+	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
+	if itemTexture then
+		button:SetNormalTexture(itemTexture)
+		return
+	end
+	if attempts < 5 then
+		C_Timer.After(1, function()
+			retrySetNormalTexture(button, itemId, attempts + 1)
+		end)
+	else
+		print(APPEND..L["Missing Texture %s"]:format(itemId))
+	end
+end
+
+local function retryGetToyTexture(toyId, attempt)
+	local attempts = attempt or 1
+	local _, name, texture = C_ToyBox.GetToyInfo(toyId)
+	if attempts < 5 then
+		C_Timer.After(0.1, function()
+			retryGetToyTexture(toyId, attempts + 1)
+		end)
+	end
+end
+
+--------------------------------------
 -- Functions
 --------------------------------------
 
@@ -127,6 +167,12 @@ function tpm:GetAvailableHearthstoneToys()
 	local hearthstoneNames = {}
 	for _, toyId in pairs(availableHearthstones) do
 		local _, name, texture = C_ToyBox.GetToyInfo(toyId)
+		if not texture then
+			texture = DEFAULT_ICON
+		end
+		if not name then
+			name = tostring(toyId)
+		end
 		hearthstoneNames[toyId] = {name = name, texture = texture}
 	end
 	return hearthstoneNames
@@ -300,10 +346,9 @@ function tpm:CreateWormholeFlyout(iconId)
 	local flyoutsCreated = 0
 	for _, wormholeId in ipairs(availableWormholes) do
 		local flyOutButton = CreateFrame("Button", nil, flyOutFrame," SecureActionButtonTemplate")
-		local _, name, iconId = C_ToyBox.GetToyInfo(wormholeId)
 		local xOffset = 40 + (40 * flyoutsCreated)
 		flyOutButton:SetSize(40, 40)
-		flyOutButton:SetNormalTexture(iconId)
+		SetTextureByItemId(flyOutButton, wormholeId) -- async load texture
 		flyOutButton:SetAttribute("type", "toy")
 		flyOutButton:SetAttribute("toy", wormholeId)
 		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
@@ -374,10 +419,9 @@ function tpm:CreateBonusHearthstoneFlyout(iconId)
 	local flyoutsCreated = 0
 	for _, toyId in ipairs(availableBonusHearthstones) do
 		local flyOutButton = CreateFrame("Button", nil, flyOutFrame," SecureActionButtonTemplate")
-		local _, name, iconId = C_ToyBox.GetToyInfo(toyId)
 		local xOffset = 40 + (40 * flyoutsCreated)
 		flyOutButton:SetSize(40, 40)
-		flyOutButton:SetNormalTexture(iconId)
+		SetTextureByItemId(flyOutButton, toyId) -- async load texture
 		flyOutButton:SetAttribute("type", "toy")
 		flyOutButton:SetAttribute("toy", toyId)
 		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
@@ -469,34 +513,17 @@ function tpm:createCooldownFrame(frame)
 	return cooldownFrame
 end
 
-local function retryTexture(button, itemId, attempt)
-	local attempts = attempt or 1
-	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
-	if itemTexture then
-		button:SetNormalTexture(itemTexture)
-		return
-	end
-	if attempts < 5 then
-		C_Timer.After(1, function()
-			retryTexture(button, itemId, attempts + 1)
-		end)
-	else
-		print(APPEND..L["Missing Texture"]:format(itemId))
-	end
-end
-
 function tpm:updateHearthstone()
 	local hearthstoneButton = TeleportMeButtonsFrame.hearthstoneButton
 	if not hearthstoneButton then return end
 	local texture
 	if db.hearthstone == "rng" then
-		texture = 1669494 -- misc_rune_pvp_random
 		local rng = math.random(#availableHearthstones)
+		hearthstoneButton:SetNormalTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", availableHearthstones[rng])
 	elseif db.hearthstone ~= "none" then
-		local _, _, iconId = C_ToyBox.GetToyInfo(db.hearthstone)
-		texture = iconId
+		SetTextureByItemId(hearthstoneButton, db.hearthstone)
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", db.hearthstone)
 	else
@@ -505,12 +532,10 @@ function tpm:updateHearthstone()
 			hearthstoneButton:Hide()
 			return
 		end
-		local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(6948)
-		texture = itemTexture
+		SetTextureByItemId(hearthstoneButton, 6948)
 		hearthstoneButton:SetAttribute("type", "item")
 		hearthstoneButton:SetAttribute("item", "item:6948")
 	end
-	hearthstoneButton:SetNormalTexture(texture)
 	hearthstoneButton:Show()
 end
 
@@ -600,9 +625,9 @@ local function createAnchors()
 			button:SetSize(40, 40)
 			if not texture then
 				C_Timer.After(0.7, function()
-					retryTexture(button, teleport.id)
+					retrySetNormalTexture(button, teleport.id)
 				end)
-				texture = "Interface\\Icons\\INV_Misc_QuestionMark"
+				texture = DEFAULT_ICON
 			end
 			button:SetNormalTexture(texture)
 			if teleport.type == "item" then
@@ -739,6 +764,7 @@ local function checkItemsLoaded(self)
 	local function OnItemsLoaded()
 		if allLoaded then
 			tpm:Setup()
+			tpm:LoadOptions()
 		else
 			checkItemsLoaded(self)
 		end
@@ -766,8 +792,8 @@ local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		db = TeleportMenuDB or {}
 		db.debug = false
+    elseif event == "PLAYER_LOGIN" then
 		checkItemsLoaded(self)
-		tpm:LoadOptions()
 	end
 end
 
