@@ -18,7 +18,7 @@ local defaultsDB = {
 
 -- Get all options and verify them
 local function getOptions()
-    local db = TeleportMenuDB or {}
+    local db = TeleportMenuDB
     for k, v in pairs(db) do
         if defaultsDB[k] == nil then
             db[k] = nil

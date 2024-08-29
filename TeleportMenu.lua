@@ -791,6 +791,7 @@ end
 local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		db = TeleportMenuDB or {}
+		TeleportMenuDB = db
 		db.debug = false
     elseif event == "PLAYER_LOGIN" then
 		checkItemsLoaded(self)
