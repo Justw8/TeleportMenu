@@ -10,6 +10,9 @@
 
 ## X-Curse-Project-ID: 1087836
 
+Libs\LibStub\LibStub.lua
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+
 Locales\Locales.xml
 Options.lua
 TeleportMenu.lua
