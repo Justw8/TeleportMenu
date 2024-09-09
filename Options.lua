@@ -42,7 +42,6 @@ end
 local optionsCategory = Settings.RegisterVerticalLayoutCategory(ADDON_NAME)
 
 function tpm:GetOptionsCategory()
-    DevTool:AddData(optionsCategory, "optionsCategory")
     return optionsCategory:GetID()
 end
 
