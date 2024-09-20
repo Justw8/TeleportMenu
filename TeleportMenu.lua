@@ -87,6 +87,64 @@ local wormholes = {
 	221966, -- Wormhole Generator: Khaz Algar
 }
 
+local dungeons = {
+	-- CATA
+	{id=410080,name= "VP"},
+	{id=424142,name= "ToTT"},
+	{id=445424,name="GB"},
+	-- MoP
+	{id=131204,name= "TJS"},
+	-- WoD
+	{id=159901,name= "EB"},
+	{id=159899,name= "SBG"},
+	{id=159900,name= "GD"},
+	{id=159896,name= "ID"},
+	-- Legion
+	{id=393764,name= "HoV"},
+	{id=410078,name= "NL"},
+	{id=393766,name= "CoS"},
+	{id=373262,name= "KARA"},
+	{id=424153,name= "BRH"},
+	{id=424163,name= "DHT"},
+	-- BFA
+	{id=410071,name= "FH"},
+	{id=410074,name= "UR"},
+	{id=373274,name= "MECH"},
+	{id=424167,name= "WM"},
+	{id=424187,name= "AD"},
+	{id=445418,name="SoB"},
+	{id=464256,name="SoB"},
+	-- SL
+	{id=354462,name= "NW"},
+	{id=354463,name= "PF"},
+	{id=354464,name= "MoTS"},
+	{id=354465,name= "HoA"},
+	{id=354466,name= "SoA"},
+	{id=354467,name= "ToP"},
+	{id=354468,name= "DOS"},
+	{id=354469,name= "SD"},
+	{id=367416,name= "TAZ"},
+	-- DF
+	{id=393256,name= "RLP"},
+	{id=393262,name= "NO"},
+	{id=393267,name= "BH"},
+	{id=393273,name= "AA"},
+	{id=393276,name= "NELT"},
+	{id=393279,name= "AV"},
+	{id=393283,name= "HoI"},
+	{id=393222,name= "ULD"},
+	{id=424197,name= "DotI"},
+	-- TWW
+	{id=445416,name="CoT"},
+	{id=445414,name="DB"},
+	{id=445269,name="SV"},
+	{id=445443,name="ROOK"},
+	{id=445440,name="CBM"},
+	{id=445444,name="PoSF"},
+	{id=445417,name="AK"},
+	{id=445441,name="DFC"},
+}
+
 local tpTable = {
 	-- Hearthstones
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
@@ -108,16 +166,16 @@ local tpTable = {
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
 
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798}, -- Hero's Path: Shadowlands
+	{id = 230, type = "flyout", iconId = 574788, name = "CATA"}, -- Hero's Path: Cataclysm
+	{id = 84, type = "flyout", iconId = 328269, name = "MoP"}, -- Hero's Path: Mists of Pandaria
+	{id = 96, type = "flyout", iconId = 1413856, name = "WoD"}, -- Hero's Path: Warlords of Draenor
+	{id = 224, type = "flyout", iconId = 1260827, name = "LEGN"}, -- Hero's Path: Legion
+	{id = 223, type = "flyout", iconId = 1869493, name = "BFA"}, -- Hero's Path: Battle for Azeroth
+	{id = 220, type = "flyout", iconId = 236798, name = "SL"}, -- Hero's Path: Shadowlands
 	{id = 222, type = "flyout", iconId = 4062765}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496}, -- Hero's Path: Dragonflight
+	{id = 227, type = "flyout", iconId = 4640496, name = "DF"}, -- Hero's Path: Dragonflight
 	{id = 231, type = "flyout", iconId = 5342925}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031}, -- Hero's Path: The War Within
+	{id = 232, type = "flyout", iconId = 5872031, name = "TWW"}, -- Hero's Path: The War Within
 }
 
 --------------------------------------
@@ -224,7 +282,7 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateHerosPathFlyout(flyoutId, iconId)
+function tpm:CreateHerosPathFlyout(flyoutId, iconId, name)
 	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
 	if not flyoutKnown then return end
 	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
@@ -248,6 +306,14 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId)
 		GameTooltip:Hide()
 	end)
 
+	if db.buttonText == true and name then
+		button.text = button:CreateFontString(nil, "OVERLAY")
+		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
+		button.text:SetText(name)
+		button.text:SetTextColor(1,1,1,1)
+	end
+
 	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
 	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 	flyOutFrame:SetFrameStrata("HIGH")
@@ -267,8 +333,16 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId)
 	local flyOutButtons = {}
 	local flyoutsCreated = 0
 	for i = 1, spells do
+		local flyname = nil
 		local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
 		if IsSpellKnown(spellID) then
+
+			for _,v in pairs(dungeons) do
+				if v.id == spellID then
+					flyname = v.name
+				end
+			end
+
 			flyoutsCreated = flyoutsCreated + 1
 			local xOffset = 40 * flyoutsCreated
 			local spellName = C_Spell.GetSpellName(spellID)
@@ -294,6 +368,15 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId)
 			flyOutButton:SetScript("OnShow", function(self)
 				self.cooldownFrame:CheckCooldown(spellID)
 			end)
+
+			if db.buttonText == true and flyname then
+				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
+				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
+				flyOutButton.text:SetText(flyname)
+				flyOutButton.text:SetTextColor(1,1,1,1)
+			end
+
 			table.insert(flyOutButtons, flyOutButton)
 		end
 	end
@@ -669,7 +752,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId)
+			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId, teleport.name or nil)
 			if created then
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
