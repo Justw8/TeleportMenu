@@ -14,6 +14,7 @@ local defaultsDB = {
     enabled = true,
     iconSize = 40,
     hearthstone = "none",
+    showOnlySeasonalHerosPath = false,
 }
 
 -- Get all options and verify them
@@ -100,6 +101,14 @@ function tpm:LoadOptions()
 
         Settings.CreateDropdown(optionsCategory, setting, GetOptions, tooltip)
         Settings.SetOnValueChangedCallback("Hearthstone_Dropdown", OnSettingChanged)
+    end
+
+    do
+        local optionsKey = "showOnlySeasonalHerosPath"
+        local tooltip = L["Seasonal Teleports Toggle Tooltip"]
+        local setting = Settings.RegisterAddOnSetting(optionsCategory, "ShowOnlySeasonalHerosPath_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Seasonal Teleports"], defaultsDB[optionsKey])
+        Settings.SetOnValueChangedCallback("ShowOnlySeasonalHerosPath_Checkbox", OnSettingChanged)
+        Settings.CreateCheckbox(optionsCategory, setting, tooltip)
     end
 
 	Settings.RegisterAddOnCategory(optionsCategory)

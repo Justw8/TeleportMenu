@@ -259,6 +259,7 @@ function tpm:checkQuestCompletion(quest)
 end
 
 function tpm:CreateHerosPathFlyout(flyoutId, iconId)
+	if db.showOnlySeasonalHerosPath then return end
 	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
 	if not flyoutKnown then return end
 	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
