@@ -414,8 +414,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 	end
 	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
 
-	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
-
 	button.flyOutButtons = flyOutButtons
 	return button
 end
