@@ -581,7 +581,6 @@ function tpm:setToolTip(self, type, id, hs)
 		GameTooltip:SetText(L["Random Hearthstone"], 1, 1, 1)
 		GameTooltip:AddLine(L["Random Hearthstone Tooltip"], 1, 1, 1)
 		GameTooltip:AddLine(L["Random Hearthstone Location"]:format(bindLocation), 1, 1, 1)
-		GameTooltip:Show()
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
 	elseif type == "toy" then
@@ -599,11 +598,9 @@ function tpm:setToolTip(self, type, id, hs)
 	elseif type == "bonusheartsones" then
 		GameTooltip:SetText(L["Bonus Hearthstones"], 1, 1, 1)
 		GameTooltip:AddLine(L["Bonus Hearthstones Tooltip"], 1, 1, 1)
-		GameTooltip:Show()
 	elseif type == "seasonalteleport" then
 		GameTooltip:SetText(L["Seasonal Teleports"], 1, 1, 1)
 		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
-		GameTooltip:Show()
 	end
 	GameTooltip:Show()
 end
