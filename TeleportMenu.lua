@@ -320,6 +320,7 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId, name)
 	if db.showOnlySeasonalHerosPath then return end
 	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
 	if not flyoutKnown then return end
+
 	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
 	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
 	button:SetSize(40, 40)
@@ -446,6 +447,13 @@ function tpm:CreateSeasonalTeleportFlyout()
 		GameTooltip:Hide()
 	end)
 
+	if db.buttonText == true then
+		button.text = button:CreateFontString(nil, "OVERLAY")
+		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
+		button.text:SetText("S1")
+		button.text:SetTextColor(1,1,1,1)
+	end
 
 	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
 	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
@@ -466,7 +474,15 @@ function tpm:CreateSeasonalTeleportFlyout()
 	local flyOutButtons = {}
 	local flyoutsCreated = 0
 	for _, spellID in ipairs(availableSeasonalTeleports) do
+		local flyname = nil
 		if IsSpellKnown(spellID) then
+
+			for _,v in pairs(dungeons) do
+				if v.id == spellID then
+					flyname = v.name
+				end
+			end
+
 			flyoutsCreated = flyoutsCreated + 1
 			local xOffset = 40 * flyoutsCreated
 			local spellName = C_Spell.GetSpellName(spellID)
@@ -492,6 +508,15 @@ function tpm:CreateSeasonalTeleportFlyout()
 			flyOutButton:SetScript("OnShow", function(self)
 				self.cooldownFrame:CheckCooldown(spellID)
 			end)
+
+			if db.buttonText == true and flyname then
+				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
+				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
+				flyOutButton.text:SetText(flyname)
+				flyOutButton.text:SetTextColor(1,1,1,1)
+			end
+			
 			table.insert(flyOutButtons, flyOutButton)
 		end
 	end
