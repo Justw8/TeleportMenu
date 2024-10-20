@@ -14,7 +14,7 @@ local defaultsDB = {
     enabled = true,
     iconSize = 40,
     hearthstone = "none",
-    reverse_flyouts = false  -- Added this in your defaults
+    reverseMageFlyouts = false 
 }
 
 -- Get all options and verify them
@@ -35,8 +35,12 @@ end
 local function OnSettingChanged(_, setting, value)
 	local variable = setting:GetVariable()
 	TeleportMenuDB[variable] = value
+    print("Value changing", variable, "Is now", value )
     if variable == "Hearthstone_Dropdown" then
         tpm:updateHearthstone()
+    end
+    if variable == "reverseMageFlyouts_Checkbox" then
+        tpm:updateMageFlyouts()
     end
 end
 
@@ -107,9 +111,10 @@ function tpm:LoadOptions()
 
     -- Reverse Flyouts Checkbox
     do
-        local optionsKey = "reverse_flyouts"
-        local tooltip = L["Reverse the order of portal flyouts"]
-        local setting = Settings.RegisterAddOnSetting(optionsCategory, "Reverse_Flyouts_Toggle", optionsKey, db, type(defaultsDB[optionsKey]), L["Reverse Flyouts (requires /reload)"], defaultsDB[optionsKey])
+        local optionsKey = "reverseMageFlyouts"
+        local tooltip = L["Reverse order of flyouts for mage abilities to make most recent expansion teleports appear first"]
+        local setting = Settings.RegisterAddOnSetting(optionsCategory, "reverseMageFlyouts_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Reverse Mage Flyouts"], defaultsDB[optionsKey])
+        Settings.SetOnValueChangedCallback("reverseMageFlyouts_Checkbox", OnSettingChanged)
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
     end
 
