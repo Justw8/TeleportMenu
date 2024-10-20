@@ -334,7 +334,7 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId, yOffset)
     end
 
     -- Loop through spells, either forwards or backwards based on the setting
-    if reverseMageFlyouts then
+    if reverseMageFlyouts and (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12) then
         for i = spells, 1, -1 do
             local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
             if IsSpellKnown(spellID) then
