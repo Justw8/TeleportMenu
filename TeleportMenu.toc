@@ -4,7 +4,7 @@
 ## Notes-zhCN: 主菜单显示炉石玩具和各种传送按钮等。
 ## IconTexture: Interface\Icons\inv_hearthstonepet
 ## Author: Justwait
-## Version: v8.3
+## Version: @project-version@
 ## SavedVariables: TeleportMenuDB
 ## Dependencies: Blizzard_Collections
 

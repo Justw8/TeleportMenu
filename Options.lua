@@ -15,6 +15,7 @@ local defaultsDB = {
     iconSize = 40,
     hearthstone = "none",
     reverseMageFlyouts = false 
+    showOnlySeasonalHerosPath = false,
 }
 
 -- Get all options and verify them
@@ -35,7 +36,6 @@ end
 local function OnSettingChanged(_, setting, value)
 	local variable = setting:GetVariable()
 	TeleportMenuDB[variable] = value
-    print("Value changing", variable, "Is now", value )
     if variable == "Hearthstone_Dropdown" then
         tpm:updateHearthstone()
     end
@@ -54,7 +54,6 @@ end
 function tpm:LoadOptions()
     local db = getOptions()
 
-    -- Enabled Checkbox
     do
         local optionsKey = "enabled"
         local tooltip = L["Enable Tooltip"]
@@ -87,7 +86,6 @@ function tpm:LoadOptions()
     --     Settings.CreateSlider(optionsCategory, setting, options, tooltip)
     -- end
 
-    -- Hearthstone Dropdown
     do
         local optionsKey = "hearthstone"
         local tooltip = L["Hearthstone Toy Tooltip"]
@@ -109,7 +107,6 @@ function tpm:LoadOptions()
         Settings.SetOnValueChangedCallback("Hearthstone_Dropdown", OnSettingChanged)
     end
 
-    -- Reverse Flyouts Checkbox
     do
         local optionsKey = "reverseMageFlyouts"
         local tooltip = L["Reverse order of flyouts for mage abilities to make most recent expansion teleports appear first"]
@@ -119,4 +116,13 @@ function tpm:LoadOptions()
     end
 
     Settings.RegisterAddOnCategory(optionsCategory)
+    do
+        local optionsKey = "showOnlySeasonalHerosPath"
+        local tooltip = L["Seasonal Teleports Toggle Tooltip"]
+        local setting = Settings.RegisterAddOnSetting(optionsCategory, "ShowOnlySeasonalHerosPath_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Seasonal Teleports"], defaultsDB[optionsKey])
+        Settings.SetOnValueChangedCallback("ShowOnlySeasonalHerosPath_Checkbox", OnSettingChanged)
+        Settings.CreateCheckbox(optionsCategory, setting, tooltip)
+    end
+
+	Settings.RegisterAddOnCategory(optionsCategory)
 end

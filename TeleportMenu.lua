@@ -86,6 +86,8 @@ local wormholes = {
 	198156, -- Wyrmhole Generator: Dragon Isles 4
 	221966, -- Wormhole Generator: Khaz Algar
 }
+local availableSeasonalTeleports = {}
+
 
 local tpTable = {
 	-- Hearthstones
@@ -208,6 +210,38 @@ function tpm:updateAvailableWormholes()
 	for _, id in ipairs(wormholes) do
 		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
 			table.insert(availableWormholes, id)
+		end
+	end
+end
+
+function tpm:updateAvailableSeasonalTeleport()
+	local playerFaction = UnitFactionGroup("player")
+	local siegeOfBoralus = -1
+	if playerFaction == "Alliance" then
+		siegeOfBoralus = 445418
+	else
+		siegeOfBoralus = 464256
+	end
+
+	local challengeMapIdTospellID = {
+		[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
+		[375] = 354464, -- Mists
+		[376] = 354462, -- Necrotic Wake
+		[499] = 445444, -- Priory
+		[500] = 445443, -- The Rookery
+		[501] = 445269, -- Stonevault
+		[502] = 445416, -- City of Threads
+		[503] = 445417, -- Ara Ara
+		[504] = 445441, -- Darkflame Cleft
+		[505] = 445414, -- The Dawnbreaker
+		[506] = 445440, -- Cinderbrew Meadery
+		[507] = 445424, -- Grim Batol
+	}
+
+	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
+		local spellID = challengeMapIdTospellID[mapId]
+		if spellID and IsSpellKnown(spellID) then
+			table.insert(availableSeasonalTeleports, spellID)
 		end
 	end
 end
@@ -341,6 +375,85 @@ function tpm:updateMageFlyouts()
 
     TeleportMeButtonsFrame.mageTeleportButton = updatedTeleportButton
     TeleportMeButtonsFrame.magePortalButton = updatedPortalButton
+end
+
+function tpm:CreateSeasonalTeleportFlyout()
+	if #availableSeasonalTeleports == 0 then return end
+
+	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
+	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
+	button:SetSize(40, 40)
+	button:SetNormalTexture(5927657) -- Xal'atath Devour Affix Icon
+	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	button:EnableMouse(true)
+	button:RegisterForClicks("AnyDown", "AnyUp")
+	button:SetFrameStrata("HIGH")
+	button:SetFrameLevel(101)
+	button:SetScript("OnEnter", function(self)
+		if InCombatLockdown() then
+			tpm:setCombatTooltip(self)
+			return
+		end
+		tpm:setToolTip(self, "seasonalteleport")
+		self.flyOutFrame:Show()
+	end)
+	button:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+
+
+	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
+	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	flyOutFrame:SetFrameStrata("HIGH")
+	flyOutFrame:SetFrameLevel(103)
+	flyOutFrame:SetPropagateMouseClicks(true)
+	flyOutFrame:SetPropagateMouseMotion(true)
+	flyOutFrame.mainButton = button
+	flyOutFrame:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+		if not InCombatLockdown() then
+			self:Hide()
+		end
+	end)
+	flyOutFrame:Hide()
+	button.flyOutFrame = flyOutFrame
+
+	local flyOutButtons = {}
+	local flyoutsCreated = 0
+	for _, spellID in ipairs(availableSeasonalTeleports) do
+		if IsSpellKnown(spellID) then
+			flyoutsCreated = flyoutsCreated + 1
+			local xOffset = 40 * flyoutsCreated
+			local spellName = C_Spell.GetSpellName(spellID)
+			local spellTexture = C_Spell.GetSpellTexture(spellID)
+			local flyOutButton = CreateFrame("Button", nil, flyOutFrame," SecureActionButtonTemplate")
+			flyOutButton:SetSize(40, 40)
+			flyOutButton:SetNormalTexture(spellTexture)
+			flyOutButton:SetAttribute("type", "spell")
+			flyOutButton:SetAttribute("spell", spellID)
+			flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
+			flyOutButton:EnableMouse(true)
+			flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
+			flyOutButton:SetFrameStrata("HIGH")
+			flyOutButton:SetFrameLevel(102)
+			flyOutButton:SetScript("OnEnter", function(self)
+				tpm:setToolTip(self, "spell", spellID)
+			end)
+			flyOutButton:SetScript("OnLeave", function(self)
+				GameTooltip:Hide()
+			end)
+			flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
+			flyOutButton.cooldownFrame:CheckCooldown(spellID)
+			flyOutButton:SetScript("OnShow", function(self)
+				self.cooldownFrame:CheckCooldown(spellID)
+			end)
+			table.insert(flyOutButtons, flyOutButton)
+		end
+	end
+	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
+
+	button.flyOutButtons = flyOutButtons
+	return button
 end
 
 
@@ -506,7 +619,6 @@ function tpm:setToolTip(self, type, id, hs)
 		GameTooltip:SetText(L["Random Hearthstone"], 1, 1, 1)
 		GameTooltip:AddLine(L["Random Hearthstone Tooltip"], 1, 1, 1)
 		GameTooltip:AddLine(L["Random Hearthstone Location"]:format(bindLocation), 1, 1, 1)
-		GameTooltip:Show()
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
 	elseif type == "toy" then
@@ -524,7 +636,9 @@ function tpm:setToolTip(self, type, id, hs)
 	elseif type == "bonusheartsones" then
 		GameTooltip:SetText(L["Bonus Hearthstones"], 1, 1, 1)
 		GameTooltip:AddLine(L["Bonus Hearthstones Tooltip"], 1, 1, 1)
-		GameTooltip:Show()
+	elseif type == "seasonalteleport" then
+		GameTooltip:SetText(L["Seasonal Teleports"], 1, 1, 1)
+		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
 	end
 	GameTooltip:Show()
 end
@@ -620,8 +734,6 @@ local function createAnchors()
 	function buttonsFrame:GetButtonAmount()
 		return TeleportMeButtonsFrame.buttonAmount
 	end
-
-	
 
 	for i, teleport in ipairs(tpTable) do
 		local texture
@@ -728,6 +840,15 @@ local function createAnchors()
 			end
 		end
 	end
+
+	function CreateCurrentSeasonTeleports()
+		local created = tpm:CreateSeasonalTeleportFlyout()
+		if created then
+			TeleportMeButtonsFrame:IncrementButtons()
+		end
+	end
+
+	CreateCurrentSeasonTeleports()
 end
 
 -- Slash Commands
@@ -830,6 +951,7 @@ function tpm:Setup()
 	tpm:updateAvailableHearthstones()
 	tpm:updateAvailableBonusHeartstones()
 	tpm:updateAvailableWormholes()
+	tpm:updateAvailableSeasonalTeleport()
 
 	if db.hearthstone and db.hearthstone ~= "rng" and db.hearthstone ~= "none" and not PlayerHasToy(db.hearthstone) then
 		print(APPEND..L["Hearthone Reset Error"]:format(db.hearthstone))
@@ -845,7 +967,7 @@ local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
 		db = TeleportMenuDB or {}
 		TeleportMenuDB = db
-		db.debug = true
+		db.debug = false
     elseif event == "PLAYER_LOGIN" then
 		checkItemsLoaded(self)
 	end
