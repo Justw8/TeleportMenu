@@ -1,0 +1,35 @@
+local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhCN")
+if not L then return end
+
+L["AddonNamePrint"] = "\124cFFFF0000传送菜单：\124r " -- 1 space after the :
+L["Not In Combat Tooltip"] = "\124cFFFF0000<战斗中不可用>\124r"
+L["Random Hearthstone"] = "随机炉石"
+L["Random Hearthstone Tooltip"] = "\124cFF34B7EB点击后，会随机使用一个炉石。\n当你重新打开主菜单时，它会选择一个新炉石。\124r"
+L["Random Hearthstone Location"] = "\n\124cFF34B7EB炉石位置：\124r \124cFF1EFF0C%s\124r"
+L["Bonus Hearthstones"] = "额外炉石"
+L["Bonus Hearthstones Tooltip"] = "\124cFF34B7EB这些炉石不与其他炉石玩具共享冷却时间。\124r"
+L["Missing Texture"] = "物品ID:%s 缺少材质，请告诉作者。"
+L["No Hearthtone In Bags"] = "你背包里没有炉石，也没有设置自定义炉石，请使用 /tpm 命令设置一个炉石。"
+L["No Alternative Hearthstone"] = "没有可供选择的炉石玩具。"
+L["Current Hearthstone"] = "当前炉石玩具设置为：%s"
+L["Hearthstone Reset"] = "已重置为默认炉石！"
+L["Hearthone Reset Error"] = "我们已将你的炉石重置为默认状态，因为你的收藏中没有物品ID：%s  的炉石玩具。"
+L["Not In Combat Print"] = "你不能在战斗中这样做。"
+L["Available Hearthstones Print"] = "可用的炉石玩具：[id - name]"
+L["No Hearthone Toys"] = "您的收藏中没有任何有效的炉石玩具可供随机模式。"
+L["Hearthstone Random Set"] = "炉石玩具设置为随机！"
+L["New Hearthstone Set"] = "新炉石设置为：%s！"
+L["Available Commands"] = "可用命令："
+L["List Command"] = "/tpm list - 列出你已收藏所有可用的炉石玩具。"
+L["Current Command"] = "/tpm current - 显示当前可用的备选炉石玩具。"
+L["Clear Command"] = "/tpm clear - 重置为默认炉石。"
+L["ItemId Command"] = "/tpm [itemId] - 设定一个可用的炉石玩具为你的常用炉石。"
+L["Rng Command"] = "/tpm rng - 每次打开主菜单时，从您的收藏中随机选择一个炉石玩具。"
+
+-- Options
+L["Enabled"] = "启用"
+L["Enable Tooltip"] = "启用/禁用传送菜单"
+L["Hearthstone Toy"] = "炉石玩具"
+L["Hearthstone Toy Tooltip"] = "设置首选的炉石\n\n如果设置为随机，每次打开游戏菜单都会随机选择一个炉石玩具。"
+L["None"] = "无"
+L["Random"] = "随机"
