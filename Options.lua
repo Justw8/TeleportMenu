@@ -14,7 +14,7 @@ local defaultsDB = {
     enabled = true,
     iconSize = 40,
     hearthstone = "none",
-    reverseMageFlyouts = false 
+    reverseMageFlyouts = false,
     showOnlySeasonalHerosPath = false,
 }
 
