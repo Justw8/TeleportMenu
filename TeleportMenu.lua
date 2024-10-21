@@ -323,6 +323,7 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId, yOffset,name)
 
     local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
     yOffset = yOffset or -40 * TeleportMeButtonsFrame:GetButtonAmount()
+	print(yOffset)
     button:SetSize(40, 40)
     button:SetNormalTexture(iconId)
     button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
@@ -941,7 +942,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId, teleport.name or nil)
+			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId, nil ,teleport.name or nil)
 			if created then
 				-- Save Teleport button for replacement later
 				if teleport.id == 1 or teleport.id == 8 then
