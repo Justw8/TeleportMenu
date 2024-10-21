@@ -168,16 +168,16 @@ local tpTable = {
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
 
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788, name = "CATA"}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269, name = "MoP"}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856, name = "WoD"}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827, name = "LEGN"}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493, name = "BFA"}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798, name = "SL"}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4062765}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496, name = "DF"}, -- Hero's Path: Dragonflight
-	{id = 231, type = "flyout", iconId = 5342925}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031, name = "TWW"}, -- Hero's Path: The War Within
+	{id = 230, type = "flyout", iconId = 574788, name = "CATA", subtype = "path"}, -- Hero's Path: Cataclysm
+	{id = 84, type = "flyout", iconId = 328269, name = "MoP", subtype = "path"}, -- Hero's Path: Mists of Pandaria
+	{id = 96, type = "flyout", iconId = 1413856, name = "WoD", subtype = "path"}, -- Hero's Path: Warlords of Draenor
+	{id = 224, type = "flyout", iconId = 1260827, name = "LEGN", subtype = "path"}, -- Hero's Path: Legion
+	{id = 223, type = "flyout", iconId = 1869493, name = "BFA", subtype = "path"}, -- Hero's Path: Battle for Azeroth
+	{id = 220, type = "flyout", iconId = 236798, name = "SL", subtype = "path"}, -- Hero's Path: Shadowlands
+	{id = 222, type = "flyout", iconId = 4062765, subtype = "path"}, -- Hero's Path: Shadowlands Raids
+	{id = 227, type = "flyout", iconId = 4640496, name = "DF", subtype = "path"}, -- Hero's Path: Dragonflight
+	{id = 231, type = "flyout", iconId = 5342925, subtype = "path"}, -- Hero's Path: Dragonflight Raids
+	{id = 232, type = "flyout", iconId = 5872031, name = "TWW", subtype = "path"}, -- Hero's Path: The War Within
 }
 
 --------------------------------------
@@ -316,8 +316,8 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateHerosPathFlyout(flyoutId, iconId, yOffset,name)
-	if db.showOnlySeasonalHerosPath then return end
+function tpm:CreateFlyout(flyoutId, iconId, yOffset,name)
+	if db.showOnlySeasonalHerosPath and subtype == "path" then return end
     local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
     if not flyoutKnown then return end
 
@@ -460,11 +460,11 @@ function tpm:updateMageFlyouts()
     local _, _, _, _, portalYOffset = portalButton:GetPoint()
 
     if select(4, GetFlyoutInfo(12)) then -- Player is Alliance
-        local updatedTeleportButton = tpm:CreateHerosPathFlyout(1, 237509, teleportYOffset)
-        local updatedPortalButton = tpm:CreateHerosPathFlyout(11, 135748, portalYOffset)
+        local updatedTeleportButton = tpm:CreateFlyout(1, 237509, teleportYOffset)
+        local updatedPortalButton = tpm:CreateFlyout(11, 135748, portalYOffset)
     else -- Player is Horde
-        local updatedTeleportButton = tpm:CreateHerosPathFlyout(8, 237509, teleportYOffset)
-        local updatedPortalButton = tpm:CreateHerosPathFlyout(12, 135748, portalYOffset)
+        local updatedTeleportButton = tpm:CreateFlyout(8, 237509, teleportYOffset)
+        local updatedPortalButton = tpm:CreateFlyout(12, 135748, portalYOffset)
     end
 
     TeleportMeButtonsFrame.mageTeleportButton = updatedTeleportButton
@@ -564,7 +564,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 				flyOutButton.text:SetText(flyname)
 				flyOutButton.text:SetTextColor(1,1,1,1)
 			end
-			
 			table.insert(flyOutButtons, flyOutButton)
 		end
 	end
@@ -942,7 +941,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId, nil ,teleport.name or nil)
+			local created = tpm:CreateFlyout(teleport.id, teleport.iconId, nil ,teleport.name or nil)
 			if created then
 				-- Save Teleport button for replacement later
 				if teleport.id == 1 or teleport.id == 8 then
@@ -952,8 +951,6 @@ local function createAnchors()
 				if teleport.id == 11 or teleport == 12 then
 					buttonsFrame.magePortalButton = created
 				end
-					
-
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		end
