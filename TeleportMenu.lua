@@ -91,60 +91,60 @@ local availableSeasonalTeleports = {}
 
 local dungeons = {
 	-- CATA
-	{id=410080,name= "VP"},
-	{id=424142,name= "ToTT"},
-	{id=445424,name="GB"},
+	{id = 410080, name = L["VP"]},
+	{id = 424142, name = L["ToTT"]},
+	{id = 445424, name = L["GB"]},
 	-- MoP
-	{id=131204,name= "TJS"},
+	{id = 131204, name = L["TJS"]},
 	-- WoD
-	{id=159901,name= "EB"},
-	{id=159899,name= "SBG"},
-	{id=159900,name= "GD"},
-	{id=159896,name= "ID"},
+	{id = 159901, name = L["EB"]},
+	{id = 159899, name = L["SBG"]},
+	{id = 159900, name = L["GD"]},
+	{id = 159896, name = L["ID"]},
 	-- Legion
-	{id=393764,name= "HoV"},
-	{id=410078,name= "NL"},
-	{id=393766,name= "CoS"},
-	{id=373262,name= "KARA"},
-	{id=424153,name= "BRH"},
-	{id=424163,name= "DHT"},
+	{id = 393764, name = L["HoV"]},
+	{id = 410078, name = L["NL"]},
+	{id = 393766, name = L["CoS"]},
+	{id = 373262, name = L["KARA"]},
+	{id = 424153, name = L["BRH"]},
+	{id = 424163, name = L["DHT"]},
 	-- BFA
-	{id=410071,name= "FH"},
-	{id=410074,name= "UR"},
-	{id=373274,name= "MECH"},
-	{id=424167,name= "WM"},
-	{id=424187,name= "AD"},
-	{id=445418,name="SoB"},
-	{id=464256,name="SoB"},
+	{id = 410071, name = L["FH"]},
+	{id = 410074, name = L["UR"]},
+	{id = 373274, name = L["MECH"]},
+	{id = 424167, name = L["WM"]},
+	{id = 424187, name = L["AD"]},
+	{id = 445418, name = L["SoB"]},
+	{id = 464256, name = L["SoB"]},
 	-- SL
-	{id=354462,name= "NW"},
-	{id=354463,name= "PF"},
-	{id=354464,name= "MoTS"},
-	{id=354465,name= "HoA"},
-	{id=354466,name= "SoA"},
-	{id=354467,name= "ToP"},
-	{id=354468,name= "DOS"},
-	{id=354469,name= "SD"},
-	{id=367416,name= "TAZ"},
+	{id = 354462, name = L["NW"]},
+	{id = 354463, name = L["PF"]},
+	{id = 354464, name = L["MoTS"]},
+	{id = 354465, name = L["HoA"]},
+	{id = 354466, name = L["SoA"]},
+	{id = 354467, name = L["ToP"]},
+	{id = 354468, name = L["DOS"]},
+	{id = 354469, name = L["SD"]},
+	{id = 367416, name = L["TAZ"]},
 	-- DF
-	{id=393256,name= "RLP"},
-	{id=393262,name= "NO"},
-	{id=393267,name= "BH"},
-	{id=393273,name= "AA"},
-	{id=393276,name= "NELT"},
-	{id=393279,name= "AV"},
-	{id=393283,name= "HoI"},
-	{id=393222,name= "ULD"},
-	{id=424197,name= "DotI"},
+	{id = 393256, name = L["RLP"]},
+	{id = 393262, name = L["NO"]},
+	{id = 393267, name = L["BH"]},
+	{id = 393273, name = L["AA"]},
+	{id = 393276, name = L["NELT"]},
+	{id = 393279, name = L["AV"]},
+	{id = 393283, name = L["HoI"]},
+	{id = 393222, name = L["ULD"]},
+	{id = 424197, name = L["DotI"]},
 	-- TWW
-	{id=445416,name="CoT"},
-	{id=445414,name="DB"},
-	{id=445269,name="SV"},
-	{id=445443,name="ROOK"},
-	{id=445440,name="CBM"},
-	{id=445444,name="PoSF"},
-	{id=445417,name="AK"},
-	{id=445441,name="DFC"},
+	{id = 445416, name = L["CoT"]},
+	{id = 445414, name = L["DB"]},
+	{id = 445269, name = L["SV"]},
+	{id = 445443, name = L["ROOK"]},
+	{id = 445440, name = L["CBM"]},
+	{id = 445444, name = L["PoSF"]},
+	{id = 445417, name = L["AK"]},
+	{id = 445441, name = L["DFC"]},
 }
 
 local tpTable = {
@@ -152,8 +152,8 @@ local tpTable = {
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
 	{type = "bonusheartsones", iconId = 5524917}, -- Bonus Heartstones
 	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
-	{id = 110560, type = "toy", quest={34378, 34586}}, -- Garrison Hearthstone
-	{id = 140192, type = "toy", quest={44184, 44663}}, -- Dalaran Hearthstone
+	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
+	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
 
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
@@ -168,16 +168,16 @@ local tpTable = {
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
 
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788, name = "CATA"}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269, name = "MoP"}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856, name = "WoD"}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827, name = "LEGN"}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493, name = "BFA"}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798, name = "SL"}, -- Hero's Path: Shadowlands
+	{id = 230, type = "flyout", iconId = 574788, name = L["CATA"]}, -- Hero's Path: Cataclysm
+	{id = 84, type = "flyout", iconId = 328269, name = L["MoP"]}, -- Hero's Path: Mists of Pandaria
+	{id = 96, type = "flyout", iconId = 1413856, name = L["WoD"]}, -- Hero's Path: Warlords of Draenor
+	{id = 224, type = "flyout", iconId = 1260827, name = L["LEGN"]}, -- Hero's Path: Legion
+	{id = 223, type = "flyout", iconId = 1869493, name = L["BFA"]}, -- Hero's Path: Battle for Azeroth
+	{id = 220, type = "flyout", iconId = 236798, name = L["SL"]}, -- Hero's Path: Shadowlands
 	{id = 222, type = "flyout", iconId = 4062765}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496, name = "DF"}, -- Hero's Path: Dragonflight
+	{id = 227, type = "flyout", iconId = 4640496, name = L["DF"]}, -- Hero's Path: Dragonflight
 	{id = 231, type = "flyout", iconId = 5342925}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031, name = "TWW"}, -- Hero's Path: The War Within
+	{id = 232, type = "flyout", iconId = 5872031, name = L["TWW"]}, -- Hero's Path: The War Within
 }
 
 --------------------------------------
@@ -451,7 +451,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 		button.text = button:CreateFontString(nil, "OVERLAY")
 		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		button.text:SetText("S1")
+		button.text:SetText(L["S1"])
 		button.text:SetTextColor(1,1,1,1)
 	end
 
