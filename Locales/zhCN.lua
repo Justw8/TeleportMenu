@@ -38,3 +38,4 @@ L["None"] = "无"
 L["Random"] = "随机"
 L["ButtonText"] = "显示文本"
 L["ButtonText Tooltip"] = "启用后，地下城的缩写名称将被添加到地下城传送阵上。"
+

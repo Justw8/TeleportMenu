@@ -14,6 +14,7 @@ local defaultsDB = {
     enabled = true,
     iconSize = 40,
     hearthstone = "none",
+    buttonText = true,
     showOnlySeasonalHerosPath = false,
 }
 
@@ -55,6 +56,14 @@ function tpm:LoadOptions()
         local setting = Settings.RegisterAddOnSetting(optionsCategory, "Enabled_Toggle", optionsKey, db, type(defaultsDB[optionsKey]), L["Enabled"], defaultsDB[optionsKey])
         Settings.SetOnValueChangedCallback("Enabled_Toggle", OnSettingChanged)
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
+    end
+
+    do -- ButtonText  Checkbox
+        local optionsKey = "buttonText"
+        local buttonText = L["ButtonText Tooltip"]
+        local setting = Settings.RegisterAddOnSetting(optionsCategory, "ButtonText_Toggle", optionsKey, db, type(defaultsDB[optionsKey]), L["ButtonText"], defaultsDB[optionsKey])
+        Settings.SetOnValueChangedCallback("ButtonText_Toggle", OnSettingChanged)
+        Settings.CreateCheckbox(optionsCategory, setting, buttonText)
     end
 
     -- do -- Icon Size Slider
