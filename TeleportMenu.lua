@@ -316,32 +316,31 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateHerosPathFlyout(flyoutId, iconId, yOffset,name)
-	if db.showOnlySeasonalHerosPath then return end
-    local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
-    if not flyoutKnown then return end
+function tpm:CreateHerosPathFlyout(flyoutId, iconId, name)
+	if db.showOnlySeasonalHerosPath and not (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12)then return end
+	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
+	if not flyoutKnown then return end
 
-    local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-    yOffset = yOffset or -40 * TeleportMeButtonsFrame:GetButtonAmount()
-	print(yOffset)
-    button:SetSize(40, 40)
-    button:SetNormalTexture(iconId)
-    button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-    button:EnableMouse(true)
-    button:RegisterForClicks("AnyDown", "AnyUp")
-    button:SetFrameStrata("HIGH")
-    button:SetFrameLevel(101)
-    button:SetScript("OnEnter", function(self)
-        if InCombatLockdown() then
-            tpm:setCombatTooltip(self)
-            return
-        end
-        tpm:setToolTip(self, "flyout", flyoutId)
-        self.flyOutFrame:Show()
-    end)
-    button:SetScript("OnLeave", function(self)
-        GameTooltip:Hide()
-    end)
+	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
+	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
+	button:SetSize(40, 40)
+	button:SetNormalTexture(iconId)
+	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	button:EnableMouse(true)
+	button:RegisterForClicks("AnyDown", "AnyUp")
+	button:SetFrameStrata("HIGH")
+	button:SetFrameLevel(101)
+	button:SetScript("OnEnter", function(self)
+		if InCombatLockdown() then
+			tpm:setCombatTooltip(self)
+			return
+		end
+		tpm:setToolTip(self, "flyout", flyoutId)
+		self.flyOutFrame:Show()
+	end)
+	button:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
 
 	if db.buttonText == true and name then
 		button.text = button:CreateFontString(nil, "OVERLAY")
@@ -351,125 +350,78 @@ function tpm:CreateHerosPathFlyout(flyoutId, iconId, yOffset,name)
 		button.text:SetTextColor(1,1,1,1)
 	end
 
-    local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
-    flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-    flyOutFrame:SetFrameStrata("HIGH")
-    flyOutFrame:SetFrameLevel(103)
-    flyOutFrame:SetPropagateMouseClicks(true)
-    flyOutFrame:SetPropagateMouseMotion(true)
-    flyOutFrame.mainButton = button
-    flyOutFrame:SetScript("OnLeave", function(self)
-        GameTooltip:Hide()
-        if not InCombatLockdown() then
-            self:Hide()
-        end
-    end)
-    flyOutFrame:Hide()
-    button.flyOutFrame = flyOutFrame
+	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
+	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	flyOutFrame:SetFrameStrata("HIGH")
+	flyOutFrame:SetFrameLevel(103)
+	flyOutFrame:SetPropagateMouseClicks(true)
+	flyOutFrame:SetPropagateMouseMotion(true)
+	flyOutFrame.mainButton = button
+	flyOutFrame:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+		if not InCombatLockdown() then
+			self:Hide()
+		end
+	end)
+	flyOutFrame:Hide()
+	button.flyOutFrame = flyOutFrame
 
-    local flyOutButtons = {}
-    local flyoutsCreated = 0
+	local flyOutButtons = {}
+	local flyoutsCreated = 0
+	for i = 1, spells do
+		local flyname = nil
+		local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
+		if IsSpellKnown(spellID) then
 
-    -- Check if reverseMageFlyouts is enabled
-    local reverseMageFlyouts = TeleportMenuDB.reverseMageFlyouts
-
-    -- Function to create a flyout button
-    local function createFlyOutButton(spellID, index)
-        local spellName = C_Spell.GetSpellName(spellID)
-        local spellTexture = C_Spell.GetSpellTexture(spellID)
-        local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
-        flyOutButton:SetSize(40, 40)
-        flyOutButton:SetNormalTexture(spellTexture)
-        flyOutButton:SetAttribute("type", "spell")
-        flyOutButton:SetAttribute("spell", spellID)
-        flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + (40 * index), 0)
-        flyOutButton:EnableMouse(true)
-        flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
-        flyOutButton:SetFrameStrata("HIGH")
-        flyOutButton:SetFrameLevel(102)
-        flyOutButton:SetScript("OnEnter", function(self)
-            tpm:setToolTip(self, "spell", spellID)
-        end)
-        flyOutButton:SetScript("OnLeave", function(self)
-            GameTooltip:Hide()
-        end)
-        flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
-        flyOutButton.cooldownFrame:CheckCooldown(spellID)
-        flyOutButton:SetScript("OnShow", function(self)
-            self.cooldownFrame:CheckCooldown(spellID)
-        end)
-        return flyOutButton
-    end
-
-    -- Loop through spells, either forwards or backwards based on the setting
-    if reverseMageFlyouts and (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12) then
-        for i = spells, 1, -1 do
-			local flyname = nil
-            local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
-            if IsSpellKnown(spellID) then
-				for _,v in pairs(dungeons) do
-					if v.id == spellID then
-						flyname = v.name
-					end
+			for _,v in pairs(dungeons) do
+				if v.id == spellID then
+					flyname = v.name
 				end
-                flyoutsCreated = flyoutsCreated + 1
-                local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
-				if db.buttonText == true and flyname then
-					flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-					flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-					flyOutButton.text:SetText(flyname)
-					flyOutButton.text:SetTextColor(1,1,1,1)
-				end
-                table.insert(flyOutButtons, flyOutButton)
-            end
-        end
-    else
-        for i = 1, spells do
-			local flyname = nil
-            local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
-            if IsSpellKnown(spellID) then
-				for _,v in pairs(dungeons) do
-					if v.id == spellID then
-						flyname = v.name
-					end
-				end
-                flyoutsCreated = flyoutsCreated + 1
-                local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
-				if db.buttonText == true and flyname then
-					flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-					flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-					flyOutButton.text:SetText(flyname)
-					flyOutButton.text:SetTextColor(1,1,1,1)
-				end
-                table.insert(flyOutButtons, flyOutButton)
-            end
-        end
-    end
+			end
 
-    flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
-    button.flyOutButtons = flyOutButtons
-    return button
+			flyoutsCreated = flyoutsCreated + 1
+			local xOffset = 40 * flyoutsCreated
+			local spellName = C_Spell.GetSpellName(spellID)
+			local spellTexture = C_Spell.GetSpellTexture(spellID)
+			local flyOutButton = CreateFrame("Button", nil, flyOutFrame," SecureActionButtonTemplate")
+			flyOutButton:SetSize(40, 40)
+			flyOutButton:SetNormalTexture(spellTexture)
+			flyOutButton:SetAttribute("type", "spell")
+			flyOutButton:SetAttribute("spell", spellID)
+			flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
+			flyOutButton:EnableMouse(true)
+			flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
+			flyOutButton:SetFrameStrata("HIGH")
+			flyOutButton:SetFrameLevel(102)
+			flyOutButton:SetScript("OnEnter", function(self)
+				tpm:setToolTip(self, "spell", spellID)
+			end)
+			flyOutButton:SetScript("OnLeave", function(self)
+				GameTooltip:Hide()
+			end)
+			flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
+			flyOutButton.cooldownFrame:CheckCooldown(spellID)
+			flyOutButton:SetScript("OnShow", function(self)
+				self.cooldownFrame:CheckCooldown(spellID)
+			end)
+
+			if db.buttonText == true and flyname then
+				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
+				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
+				flyOutButton.text:SetText(flyname)
+				flyOutButton.text:SetTextColor(1,1,1,1)
+			end
+
+			table.insert(flyOutButtons, flyOutButton)
+		end
+	end
+	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
+
+	button.flyOutButtons = flyOutButtons
+	return button
 end
 
-function tpm:updateMageFlyouts()
-    local teleportButton = TeleportMeButtonsFrame.mageTeleportButton
-    local portalButton = TeleportMeButtonsFrame.magePortalButton
-    local _, _, _, _, teleportYOffset = teleportButton:GetPoint()
-    local _, _, _, _, portalYOffset = portalButton:GetPoint()
-
-    if select(4, GetFlyoutInfo(12)) then -- Player is Alliance
-        local updatedTeleportButton = tpm:CreateHerosPathFlyout(1, 237509, teleportYOffset)
-        local updatedPortalButton = tpm:CreateHerosPathFlyout(11, 135748, portalYOffset)
-    else -- Player is Horde
-        local updatedTeleportButton = tpm:CreateHerosPathFlyout(8, 237509, teleportYOffset)
-        local updatedPortalButton = tpm:CreateHerosPathFlyout(12, 135748, portalYOffset)
-    end
-
-    TeleportMeButtonsFrame.mageTeleportButton = updatedTeleportButton
-    TeleportMeButtonsFrame.magePortalButton = updatedPortalButton
-end
 
 function tpm:CreateSeasonalTeleportFlyout()
 	if #availableSeasonalTeleports == 0 then return end
@@ -942,18 +894,8 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId, nil ,teleport.name or nil)
+			local created = tpm:CreateHerosPathFlyout(teleport.id, teleport.iconId, teleport.name or nil)
 			if created then
-				-- Save Teleport button for replacement later
-				if teleport.id == 1 or teleport.id == 8 then
-					buttonsFrame.mageTeleportButton = created
-				end
-				-- Save Portal button for replacement later
-				if teleport.id == 11 or teleport == 12 then
-					buttonsFrame.magePortalButton = created
-				end
-					
-
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		end

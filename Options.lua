@@ -14,7 +14,6 @@ local defaultsDB = {
     enabled = true,
     iconSize = 40,
     hearthstone = "none",
-    reverseMageFlyouts = false,
     buttonText = true,
     showOnlySeasonalHerosPath = false,
 }
@@ -40,11 +39,7 @@ local function OnSettingChanged(_, setting, value)
     if variable == "Hearthstone_Dropdown" then
         tpm:updateHearthstone()
     end
-    if variable == "reverseMageFlyouts_Checkbox" then
-        tpm:updateMageFlyouts()
-    end
 end
-
 
 local optionsCategory = Settings.RegisterVerticalLayoutCategory(ADDON_NAME)
 
@@ -55,7 +50,7 @@ end
 function tpm:LoadOptions()
     local db = getOptions()
 
-    do
+    do -- Enabled Checkbox
         local optionsKey = "enabled"
         local tooltip = L["Enable Tooltip"]
         local setting = Settings.RegisterAddOnSetting(optionsCategory, "Enabled_Toggle", optionsKey, db, type(defaultsDB[optionsKey]), L["Enabled"], defaultsDB[optionsKey])
@@ -112,19 +107,11 @@ function tpm:LoadOptions()
         end
 
         local setting = Settings.RegisterAddOnSetting(optionsCategory, "Hearthstone_Dropdown", optionsKey, db, type(defaultsDB[optionsKey]), L["Hearthstone Toy"], defaultsDB[optionsKey])
+
         Settings.CreateDropdown(optionsCategory, setting, GetOptions, tooltip)
         Settings.SetOnValueChangedCallback("Hearthstone_Dropdown", OnSettingChanged)
     end
 
-    do
-        local optionsKey = "reverseMageFlyouts"
-        local tooltip = L["Reverse order of flyouts for mage abilities to make most recent expansion teleports appear first"]
-        local setting = Settings.RegisterAddOnSetting(optionsCategory, "reverseMageFlyouts_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Reverse Mage Flyouts"], defaultsDB[optionsKey])
-        Settings.SetOnValueChangedCallback("reverseMageFlyouts_Checkbox", OnSettingChanged)
-        Settings.CreateCheckbox(optionsCategory, setting, tooltip)
-    end
-
-    Settings.RegisterAddOnCategory(optionsCategory)
     do
         local optionsKey = "showOnlySeasonalHerosPath"
         local tooltip = L["Seasonal Teleports Toggle Tooltip"]
