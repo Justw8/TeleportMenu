@@ -37,5 +37,4 @@ L["Hearthstone Toy Tooltip"] = "设置首选的炉石\n\n如果设置为随机�
 L["None"] = "无"
 L["Random"] = "随机"
 L["ButtonText"] = "显示文本"
-L["ButtonText Tooltip"] = "启用后，地下城的缩写名称将被添加到地下城传送阵上。"
-
+L["ButtonText Tooltip"] = "启用后，地下城的缩写名称将被添加到地下城传送阵上（重载界面生效）。"
