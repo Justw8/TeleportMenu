@@ -418,9 +418,6 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 	local flyOutButtons = {}
 	local flyoutsCreated = 0
 
-	-- Check if reverseMageFlyouts is enabled
-	local reverseMageFlyouts = TeleportMenuDB.reverseMageFlyouts
-
 	-- Function to create a flyout button
 	local function createFlyOutButton(spellID, index)
 		local spellName = C_Spell.GetSpellName(spellID)
@@ -458,53 +455,37 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 		return flyOutButton
 	end
 
+	-- Check if reverseMageFlyouts is enabled
 	-- Loop through spells, either forwards or backwards based on the setting
-	if reverseMageFlyouts and (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12) then
-		for i = spells, 1, -1 do
-			local flyname = nil
-			local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
-			if IsSpellKnown(spellID) then
-				for _, v in pairs(dungeons) do
-					if v.id == spellID then
-						flyname = v.name
-					end
-				end
-				flyoutsCreated = flyoutsCreated + 1
-				local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
-				if db.buttonText == true and flyname then
-					flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-					flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-					flyOutButton.text:SetText(flyname)
-					flyOutButton.text:SetTextColor(1, 1, 1, 1)
-				end
-				table.insert(flyOutButtons, flyOutButton)
-			end
-		end
+	local start, stop, step
+	if TeleportMenuDB.reverseMageFlyouts and (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12) then
+		start, stop, step = spells, 1, -1
 	else
-		for i = 1, spells do
-			local flyname = nil
-			local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
-			if IsSpellKnown(spellID) then
-				for _, v in pairs(dungeons) do
-					if v.id == spellID then
-						flyname = v.name
-					end
+		start, stop, step = 1, spells, 1
+	end
+
+	for i = start, stop, step do
+		local flyname = nil
+		local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
+		if IsSpellKnown(spellID) then
+			for _, v in pairs(dungeons) do
+				if v.id == spellID then
+					flyname = v.name
 				end
-				if not flyname then
-					print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
-				end
-				flyoutsCreated = flyoutsCreated + 1
-				local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
-				if db.buttonText == true and flyname then
-					flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-					flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-					flyOutButton.text:SetText(flyname)
-					flyOutButton.text:SetTextColor(1, 1, 1, 1)
-				end
-				table.insert(flyOutButtons, flyOutButton)
 			end
+			if not flyname then
+				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
+			end
+			flyoutsCreated = flyoutsCreated + 1
+			local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
+			if db.buttonText == true and flyname then
+				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
+				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
+				flyOutButton.text:SetText(flyname)
+				flyOutButton.text:SetTextColor(1, 1, 1, 1)
+			end
+			table.insert(flyOutButtons, flyOutButton)
 		end
 	end
 
