@@ -351,7 +351,7 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
+function tpm:CreateFlyout(flyoutId, iconId, yOffset, name, subtype)
 	if db.showOnlySeasonalHerosPath and subtype == "path" then
 		return
 	end
@@ -1083,7 +1083,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateFlyout(teleport.id, teleport.iconId, nil, teleport.name or nil)
+			local created = tpm:CreateFlyout(teleport.id, teleport.iconId, nil, teleport.name or nil, teleport.subtype or nil)
 			if created then
 				-- Save Teleport button for replacement later
 				if teleport.id == 1 or teleport.id == 8 then
