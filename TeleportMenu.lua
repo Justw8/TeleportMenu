@@ -109,12 +109,24 @@ local dungeons = {
 	{id = 424142, name = "ToTT"},
 	{id = 445424, name = "GB"},
 	-- MoP
+	{id = 131205, name = "SB"},
+	{id = 131206, name = "SPM"},
+	{id = 131222, name = "MP"},
+	{id = 131225, name = "Gate"},
+	{id = 131231, name = "SH"},
+	{id = 131229, name = "SM"},
+	{id = 131232, name = "S"},
+	{id = 131228, name = "SoN"},
 	{id = 131204, name = "TJS"},
 	-- WoD
 	{id = 159901, name = "EB"},
 	{id = 159899, name = "SBG"},
 	{id = 159900, name = "GD"},
 	{id = 159896, name = "ID"},
+	{id = 159895, name = "BSM"},
+	{id = 159897, name = "Auch"},
+	{id = 159898, name = "Sky"},
+	{id = 159902, name = "UBRS"},
 	-- Legion
 	{id = 393764, name = "HoV"},
 	{id = 410078, name = "NL"},
@@ -150,6 +162,10 @@ local dungeons = {
 	{id = 393283, name = "HoI"},
 	{id = 393222, name = "ULD"},
 	{id = 424197, name = "DotI"},
+	-- DF R
+	{id = 432254, name = "VotI"},
+	{id = 432257, name = "Abb"},
+	{id = 432258, name = "Amir"},
 	-- TWW
 	{id = 445416, name = "CoT"},
 	{id = 445414, name = "DB"},
@@ -185,9 +201,9 @@ local tpTable = {
 	{id = 224, type = "flyout", iconId = 1260827, name = "LEGN", subtype = "path"}, -- Hero's Path: Legion
 	{id = 223, type = "flyout", iconId = 1869493, name = "BFA", subtype = "path"}, -- Hero's Path: Battle for Azeroth
 	{id = 220, type = "flyout", iconId = 236798, name = "SL", subtype = "path"}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4062765, subtype = "path"}, -- Hero's Path: Shadowlands Raids
+	{id = 222, type = "flyout", iconId = 4062765, name = "SL R", subtype = "path"}, -- Hero's Path: Shadowlands Raids
 	{id = 227, type = "flyout", iconId = 4640496, name = "DF", subtype = "path"}, -- Hero's Path: Dragonflight
-	{id = 231, type = "flyout", iconId = 5342925, subtype = "path"}, -- Hero's Path: Dragonflight Raids
+	{id = 231, type = "flyout", iconId = 5342925, name = "DF R", subtype = "path"}, -- Hero's Path: Dragonflight Raids
 	{id = 232, type = "flyout", iconId = 5872031, name = "TWW", subtype = "path"} -- Hero's Path: The War Within
 }
 
@@ -475,6 +491,9 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 						flyname = v.name
 					end
 				end
+				if not flyname then
+					print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
+				end
 				flyoutsCreated = flyoutsCreated + 1
 				local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
 				if db.buttonText == true and flyname then
@@ -580,6 +599,9 @@ function tpm:CreateSeasonalTeleportFlyout()
 				if v.id == spellID then
 					flyname = v.name
 				end
+			end
+			if not flyname then
+				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
 			end
 
 			flyoutsCreated = flyoutsCreated + 1
