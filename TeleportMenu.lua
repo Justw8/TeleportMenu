@@ -187,10 +187,10 @@ local tpTable = {
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
 	-- Class Teleports
-	{id = 1, type = "flyout", iconId = 237509}, -- Teleport (Mage)
-	{id = 8, type = "flyout", iconId = 237509}, -- Teleport (Mage)
-	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mage)
-	{id = 12, type = "flyout", iconId = 135748}, -- Portals (Mage)
+	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
+	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
+	{id = 11, type = "flyout", iconId = 135744, subtype = "mage"}, -- Portals (Mage) (Horde)
+	{id = 12, type = "flyout", iconId = 135748, subtype = "mage"}, -- Portals (Mage) (Alliance)
 	{id = 126892, type = "spell"}, -- Zen Pilgrimage (Monk)
 	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
@@ -351,11 +351,11 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
-	if db.showOnlySeasonalHerosPath and subtype == "path" then
+function tpm:CreateFlyout(flyoutData, yOffset)
+	if db.showOnlySeasonalHerosPath and flyoutData.subtype == "path" then
 		return
 	end
-	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
+	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutData.id)
 	if not flyoutKnown then
 		return
 	end
@@ -364,7 +364,7 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 	yOffset = yOffset or -40 * TeleportMeButtonsFrame:GetButtonAmount()
 
 	button:SetSize(40, 40)
-	button:SetNormalTexture(iconId)
+	button:SetNormalTexture(flyoutData.iconId)
 	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 	button:EnableMouse(true)
 	button:RegisterForClicks("AnyDown", "AnyUp")
@@ -377,7 +377,7 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 				tpm:setCombatTooltip(self)
 				return
 			end
-			tpm:setToolTip(self, "flyout", flyoutId)
+			tpm:setToolTip(self, "flyout", flyoutData.id)
 			self.flyOutFrame:Show()
 		end
 	)
@@ -388,11 +388,11 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 		end
 	)
 
-	if db.buttonText == true and name then
+	if db.buttonText == true and flyoutData.name then
 		button.text = button:CreateFontString(nil, "OVERLAY")
 		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		button.text:SetText(name)
+		button.text:SetText(flyoutData.name)
 		button.text:SetTextColor(1, 1, 1, 1)
 	end
 
@@ -458,7 +458,7 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 	-- Check if reverseMageFlyouts is enabled
 	-- Loop through spells, either forwards or backwards based on the setting
 	local start, stop, step
-	if TeleportMenuDB.reverseMageFlyouts and (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12) then
+	if TeleportMenuDB.reverseMageFlyouts and flyoutData.subtype == "mage" then
 		start, stop, step = spells, 1, -1
 	else
 		start, stop, step = 1, spells, 1
@@ -466,7 +466,7 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 
 	for i = start, stop, step do
 		local flyname = nil
-		local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
+		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
 		if IsSpellKnown(spellID) then
 			for _, v in pairs(dungeons) do
 				if v.id == spellID then
@@ -497,15 +497,19 @@ end
 function tpm:updateMageFlyouts()
 	local teleportButton = TeleportMeButtonsFrame.mageTeleportButton
 	local portalButton = TeleportMeButtonsFrame.magePortalButton
+	if not teleportButton or not portalButton then
+		return
+	end
 	local _, _, _, _, teleportYOffset = teleportButton:GetPoint()
 	local _, _, _, _, portalYOffset = portalButton:GetPoint()
 
-	if select(4, GetFlyoutInfo(12)) then -- Player is Alliance
-		local updatedTeleportButton = tpm:CreateFlyout(1, 237509, teleportYOffset)
-		local updatedPortalButton = tpm:CreateFlyout(11, 135748, portalYOffset)
-	else -- Player is Horde
-		local updatedTeleportButton = tpm:CreateFlyout(8, 237509, teleportYOffset)
-		local updatedPortalButton = tpm:CreateFlyout(12, 135748, portalYOffset)
+	local updatedTeleportButton, updatedPortalButton
+	if select(4, GetFlyoutInfo(1)) then -- Player is Horde
+		updatedTeleportButton = tpm:CreateFlyout(tpTable[7], teleportYOffset)
+		updatedPortalButton = tpm:CreateFlyout(tpTable[9], portalYOffset)
+	else -- Player is Alliance
+		updatedTeleportButton = tpm:CreateFlyout(tpTable[8], teleportYOffset)
+		updatedPortalButton = tpm:CreateFlyout(tpTable[10], portalYOffset)
 	end
 
 	TeleportMeButtonsFrame.mageTeleportButton = updatedTeleportButton
@@ -1064,7 +1068,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateFlyout(teleport.id, teleport.iconId, nil, teleport.name or nil)
+			local created = tpm:CreateFlyout(teleport, nil)
 			if created then
 				-- Save Teleport button for replacement later
 				if teleport.id == 1 or teleport.id == 8 then

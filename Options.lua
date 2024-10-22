@@ -118,7 +118,7 @@ function tpm:LoadOptions()
 
     do
         local optionsKey = "reverseMageFlyouts"
-        local tooltip = L["Reverse order of flyouts for mage abilities to make most recent expansion teleports appear first"]
+        local tooltip = L["Reverse Mage Flyouts Tooltip"]
         local setting = Settings.RegisterAddOnSetting(optionsCategory, "reverseMageFlyouts_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Reverse Mage Flyouts"], defaultsDB[optionsKey])
         Settings.SetOnValueChangedCallback("reverseMageFlyouts_Checkbox", OnSettingChanged)
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
