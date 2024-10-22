@@ -112,10 +112,10 @@ local dungeons = {
 	{id = 131205, name = "SB"},
 	{id = 131206, name = "SPM"},
 	{id = 131222, name = "MP"},
-	{id = 131225, name = "Gate"},
+	{id = 131225, name = "GATE"},
 	{id = 131231, name = "SH"},
 	{id = 131229, name = "SM"},
-	{id = 131232, name = "S"},
+	{id = 131232, name = "SCHL"},
 	{id = 131228, name = "SoN"},
 	{id = 131204, name = "TJS"},
 	-- WoD
@@ -124,8 +124,8 @@ local dungeons = {
 	{id = 159900, name = "GD"},
 	{id = 159896, name = "ID"},
 	{id = 159895, name = "BSM"},
-	{id = 159897, name = "Auch"},
-	{id = 159898, name = "Sky"},
+	{id = 159897, name = "AUCH"},
+	{id = 159898, name = "SKY"},
 	{id = 159902, name = "UBRS"},
 	-- Legion
 	{id = 393764, name = "HoV"},
