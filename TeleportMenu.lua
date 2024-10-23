@@ -504,37 +504,26 @@ function tpm:updateMageFlyouts()
 		return
 	end
 
-
-	local start, stop, step
-	if TeleportMenuDB.reverseMageFlyouts then
-		start, stop, step = #teleportButton.flyOutButtons, 1, -1
-	else
-		start, stop, step = 1, #teleportButton.flyOutButtons, 1
-	end
-	for i = start, stop, step do
-		local xOffset
+	local function updateFlyoutButtons(buttons, frame)
+		local start, stop, step
 		if TeleportMenuDB.reverseMageFlyouts then
-			xOffset = 40 + (40 * (start - i + 1))
+			start, stop, step = #buttons, 1, -1
 		else
-			xOffset = 40 + (40 * i)
+			start, stop, step = 1, #buttons, 1
 		end
-		teleportButton.flyOutButtons[i]:SetPoint("RIGHT", teleportButton.flyOutFrame, "LEFT", xOffset, 0)
+		for i = start, stop, step do
+			local xOffset
+			if TeleportMenuDB.reverseMageFlyouts then
+				xOffset = 40 + (40 * (start - i + 1))
+			else
+				xOffset = 40 + (40 * i)
+			end
+			buttons[i]:SetPoint("RIGHT", frame, "LEFT", xOffset, 0)
+		end
 	end
 
-	if TeleportMenuDB.reverseMageFlyouts then
-		start, stop, step = #portalButton.flyOutButtons, 1, -1
-	else
-		start, stop, step = 1, #portalButton.flyOutButtons, 1
-	end
-	for i = start, stop, step do
-		local xOffset
-		if TeleportMenuDB.reverseMageFlyouts then
-			xOffset = 40 + (40 * (start - i + 1))
-		else
-			xOffset = 40 + (40 * i)
-		end
-		portalButton.flyOutButtons[i]:SetPoint("RIGHT", portalButton.flyOutFrame, "LEFT", xOffset, 0)
-	end
+	updateFlyoutButtons(teleportButton.flyOutButtons, teleportButton.flyOutFrame)
+	updateFlyoutButtons(portalButton.flyOutButtons, portalButton.flyOutFrame)
 end
 
 function tpm:CreateSeasonalTeleportFlyout()
