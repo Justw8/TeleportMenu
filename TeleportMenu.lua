@@ -498,13 +498,13 @@ function tpm:CreateFlyout(flyoutData, yOffset)
 end
 
 function tpm:updateMageFlyouts()
-	local teleportButton = TeleportMeButtonsFrame.mageTeleportButton
-	local portalButton = TeleportMeButtonsFrame.magePortalButton
-	if not teleportButton or not portalButton then
-		return
-	end
+	local function updateFlyoutButtons(button)
+		if not button.flyOutButtons then return end
+		local frame = button.flyOutFrame
+		local buttons = button.flyOutButtons
+		if not buttons then return end
+		if not frame then return end
 
-	local function updateFlyoutButtons(buttons, frame)
 		local totalButtons = #buttons
 		for i = 1, totalButtons do
 			local xOffset = 40 + (40 * i)
@@ -515,8 +515,8 @@ function tpm:updateMageFlyouts()
 		end
 	end
 
-	updateFlyoutButtons(teleportButton.flyOutButtons, teleportButton.flyOutFrame)
-	updateFlyoutButtons(portalButton.flyOutButtons, portalButton.flyOutFrame)
+	updateFlyoutButtons(TeleportMeButtonsFrame.mageTeleportButton)
+	updateFlyoutButtons(TeleportMeButtonsFrame.magePortalButton)
 end
 
 function tpm:CreateSeasonalTeleportFlyout()
