@@ -419,15 +419,19 @@ function tpm:CreateFlyout(flyoutData, yOffset)
 	local flyoutsCreated = 0
 
 	-- Function to create a flyout button
-	local function createFlyOutButton(spellID, index)
+	local function createFlyOutButton(spellID, index, totalKnownSpells)
 		local spellName = C_Spell.GetSpellName(spellID)
 		local spellTexture = C_Spell.GetSpellTexture(spellID)
 		local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
+		local xOffset = 40 + (40 * index)
+		if TeleportMenuDB.reverseMageFlyouts and flyoutData.subtype == "mage" then
+			xOffset = 40 + (40 * (totalKnownSpells - index + 1))
+		end
 		flyOutButton:SetSize(40, 40)
 		flyOutButton:SetNormalTexture(spellTexture)
 		flyOutButton:SetAttribute("type", "spell")
 		flyOutButton:SetAttribute("spell", spellID)
-		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + (40 * index), 0)
+		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", xOffset, 0)
 		flyOutButton:EnableMouse(true)
 		flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
 		flyOutButton:SetFrameStrata("HIGH")
@@ -455,16 +459,15 @@ function tpm:CreateFlyout(flyoutData, yOffset)
 		return flyOutButton
 	end
 
-	-- Check if reverseMageFlyouts is enabled
-	-- Loop through spells, either forwards or backwards based on the setting
-	local start, stop, step
-	if TeleportMenuDB.reverseMageFlyouts and flyoutData.subtype == "mage" then
-		start, stop, step = spells, 1, -1
-	else
-		start, stop, step = 1, spells, 1
+	local totalKnownSpells = 0
+	for i = 1, spells do
+		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
+		if IsSpellKnown(spellID) then
+			totalKnownSpells = totalKnownSpells + 1
+		end
 	end
 
-	for i = start, stop, step do
+	for i = 1, spells do
 		local flyname = nil
 		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
 		if IsSpellKnown(spellID) then
@@ -477,7 +480,7 @@ function tpm:CreateFlyout(flyoutData, yOffset)
 				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
 			end
 			flyoutsCreated = flyoutsCreated + 1
-			local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
+			local flyOutButton = createFlyOutButton(spellID, flyoutsCreated, totalKnownSpells)
 			if db.buttonText == true and flyname then
 				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
 				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
@@ -500,20 +503,38 @@ function tpm:updateMageFlyouts()
 	if not teleportButton or not portalButton then
 		return
 	end
-	local _, _, _, _, teleportYOffset = teleportButton:GetPoint()
-	local _, _, _, _, portalYOffset = portalButton:GetPoint()
 
-	local updatedTeleportButton, updatedPortalButton
-	if select(4, GetFlyoutInfo(1)) then -- Player is Horde
-		updatedTeleportButton = tpm:CreateFlyout(tpTable[7], teleportYOffset)
-		updatedPortalButton = tpm:CreateFlyout(tpTable[9], portalYOffset)
-	else -- Player is Alliance
-		updatedTeleportButton = tpm:CreateFlyout(tpTable[8], teleportYOffset)
-		updatedPortalButton = tpm:CreateFlyout(tpTable[10], portalYOffset)
+
+	local start, stop, step
+	if TeleportMenuDB.reverseMageFlyouts then
+		start, stop, step = #teleportButton.flyOutButtons, 1, -1
+	else
+		start, stop, step = 1, #teleportButton.flyOutButtons, 1
+	end
+	for i = start, stop, step do
+		local xOffset
+		if TeleportMenuDB.reverseMageFlyouts then
+			xOffset = 40 + (40 * (start - i + 1))
+		else
+			xOffset = 40 + (40 * i)
+		end
+		teleportButton.flyOutButtons[i]:SetPoint("RIGHT", teleportButton.flyOutFrame, "LEFT", xOffset, 0)
 	end
 
-	TeleportMeButtonsFrame.mageTeleportButton = updatedTeleportButton
-	TeleportMeButtonsFrame.magePortalButton = updatedPortalButton
+	if TeleportMenuDB.reverseMageFlyouts then
+		start, stop, step = #portalButton.flyOutButtons, 1, -1
+	else
+		start, stop, step = 1, #portalButton.flyOutButtons, 1
+	end
+	for i = start, stop, step do
+		local xOffset
+		if TeleportMenuDB.reverseMageFlyouts then
+			xOffset = 40 + (40 * (start - i + 1))
+		else
+			xOffset = 40 + (40 * i)
+		end
+		portalButton.flyOutButtons[i]:SetPoint("RIGHT", portalButton.flyOutFrame, "LEFT", xOffset, 0)
+	end
 end
 
 function tpm:CreateSeasonalTeleportFlyout()
