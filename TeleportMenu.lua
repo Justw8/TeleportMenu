@@ -505,18 +505,11 @@ function tpm:updateMageFlyouts()
 	end
 
 	local function updateFlyoutButtons(buttons, frame)
-		local start, stop, step
-		if TeleportMenuDB.reverseMageFlyouts then
-			start, stop, step = #buttons, 1, -1
-		else
-			start, stop, step = 1, #buttons, 1
-		end
-		for i = start, stop, step do
-			local xOffset
+		local totalButtons = #buttons
+		for i = 1, totalButtons do
+			local xOffset = 40 + (40 * i)
 			if TeleportMenuDB.reverseMageFlyouts then
-				xOffset = 40 + (40 * (start - i + 1))
-			else
-				xOffset = 40 + (40 * i)
+				xOffset = 40 + (40 * (totalButtons - i + 1))
 			end
 			buttons[i]:SetPoint("RIGHT", frame, "LEFT", xOffset, 0)
 		end
