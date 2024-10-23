@@ -499,11 +499,10 @@ end
 
 function tpm:updateMageFlyouts()
 	local function updateFlyoutButtons(button)
-		if not button.flyOutButtons then return end
+		if not button then return end
 		local frame = button.flyOutFrame
 		local buttons = button.flyOutButtons
-		if not buttons then return end
-		if not frame then return end
+		if not buttons or not frame then return end
 
 		local totalButtons = #buttons
 		for i = 1, totalButtons do
