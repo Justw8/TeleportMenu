@@ -1070,7 +1070,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateFlyout(teleport, nil)
+			local created = tpm:CreateFlyout(teleport)
 			if created then
 				-- Save Teleport button for replacement later
 				if teleport.id == 1 or teleport.id == 8 then
