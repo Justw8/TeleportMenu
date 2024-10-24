@@ -18,6 +18,18 @@ local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 -- Teleport Tables
 --------------------------------------
 
+local covenantsMaxed = nil
+local function GetCovenantData(id) -- the id is the achievement criteria index from Re-Re-Re-Renowned
+	if covenantsMaxed then
+		return covenantsMaxed[id]
+	end
+	covenantsMaxed = {}
+	for i = 1, 4 do
+		local _, _, completed = GetAchievementCriteriaInfo(15646, i)
+		covenantsMaxed[i] = completed
+	end
+end
+
 local availableHearthstones = {}
 local hearthstoneToys = {
 	[54452] = true, -- Ethereal Portal
@@ -35,6 +47,7 @@ local hearthstoneToys = {
 	[172179] = true, -- Eternal Traveler's Hearthstone
 	[180290] = function()
 		-- Night Fae Hearthstone
+		if GetCovenantData(3) then return true end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 3 then
 			return true
@@ -42,6 +55,7 @@ local hearthstoneToys = {
 	end,
 	[182773] = function()
 		-- Necrolord Hearthstone
+		if GetCovenantData(2) then return true end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 4 then
 			return true
@@ -49,6 +63,7 @@ local hearthstoneToys = {
 	end,
 	[183716] = function()
 		-- Venthyr Sinstone
+		if GetCovenantData(4) then return true end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 2 then
 			return true
@@ -56,6 +71,7 @@ local hearthstoneToys = {
 	end,
 	[184353] = function()
 		-- Kyrian Hearthstone
+		if GetCovenantData(1) then return true end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 1 then
 			return true
@@ -217,7 +233,7 @@ local tpTable = {
 
 local function SetTextureByItemId(frame, itemId)
 	frame:SetNormalTexture(DEFAULT_ICON) -- Temp while loading
-	local item = Item:CreateFromItemID(itemId)
+	local item = Item:CreateFromItemID(tonumber(itemId))
 	item:ContinueOnItemLoad(
 		function()
 			local icon = item:GetItemIcon()
@@ -1175,7 +1191,7 @@ local function checkItemsLoaded(self)
 	self.continuableContainer = ContinuableContainer:Create()
 	local function LoadItems(itemTable)
 		for _, itemId in ipairs(itemTable) do
-			self.continuableContainer:AddContinuable(Item:CreateFromItemID(itemId))
+			self.continuableContainer:AddContinuable(Item:CreateFromItemID(tonumber(itemId)))
 		end
 	end
 
