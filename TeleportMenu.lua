@@ -191,10 +191,10 @@ local tpTable = {
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
 	-- Class Teleports
-	{id = 1, type = "flyout", iconId = 237509}, -- Teleport (Mage)
-	{id = 8, type = "flyout", iconId = 237509}, -- Teleport (Mage)
-	{id = 11, type = "flyout", iconId = 135744}, -- Portals (Mage)
-	{id = 12, type = "flyout", iconId = 135748}, -- Portals (Mage)
+	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
+	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
+	{id = 11, type = "flyout", iconId = 135744, subtype = "mage"}, -- Portals (Mage) (Horde)
+	{id = 12, type = "flyout", iconId = 135748, subtype = "mage"}, -- Portals (Mage) (Alliance)
 	{id = 126892, type = "spell"}, -- Zen Pilgrimage (Monk)
 	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
@@ -355,20 +355,20 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
-	if db.showOnlySeasonalHerosPath and subtype == "path" then
+function tpm:CreateFlyout(flyoutData)
+	if db.showOnlySeasonalHerosPath and flyoutData.subtype == "path" then
 		return
 	end
-	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutId)
+	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutData.id)
 	if not flyoutKnown then
 		return
 	end
 
 	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-	yOffset = yOffset or -40 * TeleportMeButtonsFrame:GetButtonAmount()
+	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
 
 	button:SetSize(40, 40)
-	button:SetNormalTexture(iconId)
+	button:SetNormalTexture(flyoutData.iconId)
 	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 	button:EnableMouse(true)
 	button:RegisterForClicks("AnyDown", "AnyUp")
@@ -381,7 +381,7 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 				tpm:setCombatTooltip(self)
 				return
 			end
-			tpm:setToolTip(self, "flyout", flyoutId)
+			tpm:setToolTip(self, "flyout", flyoutData.id)
 			self.flyOutFrame:Show()
 		end
 	)
@@ -392,11 +392,11 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 		end
 	)
 
-	if db.buttonText == true and name then
+	if db.buttonText == true and flyoutData.name then
 		button.text = button:CreateFontString(nil, "OVERLAY")
 		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		button.text:SetText(name)
+		button.text:SetText(flyoutData.name)
 		button.text:SetTextColor(1, 1, 1, 1)
 	end
 
@@ -422,19 +422,20 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 	local flyOutButtons = {}
 	local flyoutsCreated = 0
 
-	-- Check if reverseMageFlyouts is enabled
-	local reverseMageFlyouts = TeleportMenuDB.reverseMageFlyouts
-
 	-- Function to create a flyout button
-	local function createFlyOutButton(spellID, index)
+	local function createFlyOutButton(spellID, index, totalKnownSpells)
 		local spellName = C_Spell.GetSpellName(spellID)
 		local spellTexture = C_Spell.GetSpellTexture(spellID)
 		local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
+		local xOffset = 40 + (40 * index)
+		if TeleportMenuDB.reverseMageFlyouts and flyoutData.subtype == "mage" then
+			xOffset = 40 + (40 * (totalKnownSpells - index + 1))
+		end
 		flyOutButton:SetSize(40, 40)
 		flyOutButton:SetNormalTexture(spellTexture)
 		flyOutButton:SetAttribute("type", "spell")
 		flyOutButton:SetAttribute("spell", spellID)
-		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + (40 * index), 0)
+		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", xOffset, 0)
 		flyOutButton:EnableMouse(true)
 		flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
 		flyOutButton:SetFrameStrata("HIGH")
@@ -462,53 +463,36 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 		return flyOutButton
 	end
 
-	-- Loop through spells, either forwards or backwards based on the setting
-	if reverseMageFlyouts and (flyoutId == 1 or flyoutId == 8 or flyoutId == 11 or flyoutId == 12) then
-		for i = spells, 1, -1 do
-			local flyname = nil
-			local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
-			if IsSpellKnown(spellID) then
-				for _, v in pairs(dungeons) do
-					if v.id == spellID then
-						flyname = v.name
-					end
-				end
-				flyoutsCreated = flyoutsCreated + 1
-				local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
-				if db.buttonText == true and flyname then
-					flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-					flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-					flyOutButton.text:SetText(flyname)
-					flyOutButton.text:SetTextColor(1, 1, 1, 1)
-				end
-				table.insert(flyOutButtons, flyOutButton)
-			end
+	local totalKnownSpells = 0
+	for i = 1, spells do
+		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
+		if IsSpellKnown(spellID) then
+			totalKnownSpells = totalKnownSpells + 1
 		end
-	else
-		for i = 1, spells do
-			local flyname = nil
-			local spellID = select(1, GetFlyoutSlotInfo(flyoutId, i))
-			if IsSpellKnown(spellID) then
-				for _, v in pairs(dungeons) do
-					if v.id == spellID then
-						flyname = v.name
-					end
+	end
+
+	for i = 1, spells do
+		local flyname = nil
+		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
+		if IsSpellKnown(spellID) then
+			for _, v in pairs(dungeons) do
+				if v.id == spellID then
+					flyname = v.name
 				end
-				if not flyname then
-					print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
-				end
-				flyoutsCreated = flyoutsCreated + 1
-				local flyOutButton = createFlyOutButton(spellID, flyoutsCreated)
-				if db.buttonText == true and flyname then
-					flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-					flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-					flyOutButton.text:SetText(flyname)
-					flyOutButton.text:SetTextColor(1, 1, 1, 1)
-				end
-				table.insert(flyOutButtons, flyOutButton)
 			end
+			if not flyname then
+				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
+			end
+			flyoutsCreated = flyoutsCreated + 1
+			local flyOutButton = createFlyOutButton(spellID, flyoutsCreated, totalKnownSpells)
+			if db.buttonText == true and flyname then
+				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
+				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
+				flyOutButton.text:SetText(flyname)
+				flyOutButton.text:SetTextColor(1, 1, 1, 1)
+			end
+			table.insert(flyOutButtons, flyOutButton)
 		end
 	end
 
@@ -518,21 +502,24 @@ function tpm:CreateFlyout(flyoutId, iconId, yOffset, name)
 end
 
 function tpm:updateMageFlyouts()
-	local teleportButton = TeleportMeButtonsFrame.mageTeleportButton
-	local portalButton = TeleportMeButtonsFrame.magePortalButton
-	local _, _, _, _, teleportYOffset = teleportButton:GetPoint()
-	local _, _, _, _, portalYOffset = portalButton:GetPoint()
+	local function updateFlyoutButtons(button)
+		if not button then return end
+		local frame = button.flyOutFrame
+		local buttons = button.flyOutButtons
+		if not buttons or not frame then return end
 
-	if select(4, GetFlyoutInfo(12)) then -- Player is Alliance
-		local updatedTeleportButton = tpm:CreateFlyout(1, 237509, teleportYOffset)
-		local updatedPortalButton = tpm:CreateFlyout(11, 135748, portalYOffset)
-	else -- Player is Horde
-		local updatedTeleportButton = tpm:CreateFlyout(8, 237509, teleportYOffset)
-		local updatedPortalButton = tpm:CreateFlyout(12, 135748, portalYOffset)
+		local totalButtons = #buttons
+		for i = 1, totalButtons do
+			local xOffset = 40 + (40 * i)
+			if TeleportMenuDB.reverseMageFlyouts then
+				xOffset = 40 + (40 * (totalButtons - i + 1))
+			end
+			buttons[i]:SetPoint("RIGHT", frame, "LEFT", xOffset, 0)
+		end
 	end
 
-	TeleportMeButtonsFrame.mageTeleportButton = updatedTeleportButton
-	TeleportMeButtonsFrame.magePortalButton = updatedPortalButton
+	updateFlyoutButtons(TeleportMeButtonsFrame.mageTeleportButton)
+	updateFlyoutButtons(TeleportMeButtonsFrame.magePortalButton)
 end
 
 function tpm:CreateSeasonalTeleportFlyout()
@@ -1087,7 +1074,7 @@ local function createAnchors()
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateFlyout(teleport.id, teleport.iconId, nil, teleport.name or nil)
+			local created = tpm:CreateFlyout(teleport)
 			if created then
 				-- Save Teleport button for replacement later
 				if teleport.id == 1 or teleport.id == 8 then
