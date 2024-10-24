@@ -116,6 +116,6 @@ if not L then return end
 --L["None"] = "None"
 --L["Random"] = "Random"
 --L["ButtonText"] = "Show Teleport Icon Text"
---L["ButtonText Tooltip"] = "When enabled, an abbreviated name of the dungeon will be added to dungeon teleports."
+--L["ButtonText Tooltip"] = "When enabled, an abbreviated name of the dungeon will be added to dungeon teleports.\n\n\124cFF34B7EBRequires a reload to take effect.\124r"
 --L["Reverse Mage Flyouts"] = "Reverse Mage Flyouts"
 --L["Reverse Mage Flyouts Tooltip"] = "Reverse order of flyouts for mage abilities to make most recent expansion teleports appear first"
