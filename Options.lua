@@ -124,7 +124,6 @@ function tpm:LoadOptions()
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
     end
 
-    Settings.RegisterAddOnCategory(optionsCategory)
     do
         local optionsKey = "showOnlySeasonalHerosPath"
         local tooltip = L["Seasonal Teleports Toggle Tooltip"]
