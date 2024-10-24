@@ -351,7 +351,7 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateFlyout(flyoutData, yOffset)
+function tpm:CreateFlyout(flyoutData)
 	if db.showOnlySeasonalHerosPath and flyoutData.subtype == "path" then
 		return
 	end
@@ -361,7 +361,7 @@ function tpm:CreateFlyout(flyoutData, yOffset)
 	end
 
 	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-	yOffset = yOffset or -40 * TeleportMeButtonsFrame:GetButtonAmount()
+	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
 
 	button:SetSize(40, 40)
 	button:SetNormalTexture(flyoutData.iconId)
