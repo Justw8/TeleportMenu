@@ -105,76 +105,80 @@ local availableSeasonalTeleports = {}
 
 local dungeons = {
 	-- CATA
-	{id = 410080, name = "VP"},
-	{id = 424142, name = "ToTT"},
-	{id = 445424, name = "GB"},
+	{id = 410080, name = L["The Vortex Pinnacle"]},
+	{id = 424142, name = L["Throne of the Tides"]},
+	{id = 445424, name = L["Grim Batol"]},
 	-- MoP
-	{id = 131205, name = "SB"},
-	{id = 131206, name = "SPM"},
-	{id = 131222, name = "MP"},
-	{id = 131225, name = "GATE"},
-	{id = 131231, name = "SH"},
-	{id = 131229, name = "SM"},
-	{id = 131232, name = "SCHL"},
-	{id = 131228, name = "SoN"},
-	{id = 131204, name = "TJS"},
+	{id = 131204, name = L["Temple of the Jade Serpentl"]},
+	{id = 131205, name = L["Stormstout Brewery"]},
+	{id = 131206, name = L["Shado-Pan Monastery"]},
+	{id = 131222, name = L["Mogu'shan Palace"]},
+	{id = 131225, name = L["Gate of the Setting Sun"]},
+	{id = 131228, name = L["Siege of Niuzao Temple"]},
+	{id = 131229, name = L["Scarlet Monastery"]},
+	{id = 131231, name = L["Scarlet Halls"]},
+	{id = 131232, name = L["Scholomance"]},
 	-- WoD
-	{id = 159901, name = "EB"},
-	{id = 159899, name = "SBG"},
-	{id = 159900, name = "GD"},
-	{id = 159896, name = "ID"},
-	{id = 159895, name = "BSM"},
-	{id = 159897, name = "AUCH"},
-	{id = 159898, name = "SKY"},
-	{id = 159902, name = "UBRS"},
+	{id = 159901, name = L["The Everblooml"]},
+	{id = 159899, name = L["Shadowmoon Burial Grounds"]},
+	{id = 159900, name = L["Grimrail Depot"]},
+	{id = 159896, name = L["Iron Docks"]},
+	{id = 159895, name = L["Bloodmaul Slag Mines"]},
+	{id = 159897, name = L["Auchindoun"]},
+	{id = 159898, name = L["Skyreach"]},
+	{id = 159902, name = L["Upper Blackrock Spire"]},
 	-- Legion
-	{id = 393764, name = "HoV"},
-	{id = 410078, name = "NL"},
-	{id = 393766, name = "CoS"},
-	{id = 373262, name = "KARA"},
-	{id = 424153, name = "BRH"},
-	{id = 424163, name = "DHT"},
+	{id = 393764, name = L["Halls of Valor"]},
+	{id = 410078, name = L["Neltharion's Lair"]},
+	{id = 393766, name = L["Court of Stars"]},
+	{id = 373262, name = L["Karazhan"]},
+	{id = 424153, name = L["Black Rook Hold"]},
+	{id = 424163, name = L["Darkheart Thicket"]},
 	-- BFA
-	{id = 410071, name = "FH"},
-	{id = 410074, name = "UR"},
-	{id = 373274, name = "MECH"},
-	{id = 424167, name = "WM"},
-	{id = 424187, name = "AD"},
-	{id = 445418, name = "SoB"},
-	{id = 464256, name = "SoB"},
+	{id = 410071, name = L["Freehold"]},
+	{id = 410074, name = L["The Underrot"]},
+	{id = 373274, name = L["Mechagon"]},
+	{id = 424167, name = L["Waycrest Manor"]},
+	{id = 424187, name = L["Atal'Dazar"]},
+	{id = 445418, name = L["Siege of Boralus"]},
+	{id = 464256, name = L["Siege of Boralus"]},
 	-- SL
-	{id = 354462, name = "NW"},
-	{id = 354463, name = "PF"},
-	{id = 354464, name = "MoTS"},
-	{id = 354465, name = "HoA"},
-	{id = 354466, name = "SoA"},
-	{id = 354467, name = "ToP"},
-	{id = 354468, name = "DOS"},
-	{id = 354469, name = "SD"},
-	{id = 367416, name = "TAZ"},
+	{id = 354462, name = L["The Necrotic Wake"]},
+	{id = 354463, name = L["Plaguefall"]},
+	{id = 354464, name = L["Mists of Tirna Scithe"]},
+	{id = 354465, name = L["Halls of Atonement"]},
+	{id = 354466, name = L["Bastion"]},
+	{id = 354467, name = L["Theater of Pain"]},
+	{id = 354468, name = L["De Other Side"]},
+	{id = 354469, name = L["Sanguine Depths"]},
+	{id = 367416, name = L["Tazavesh, the Veiled Market"]},
+	-- SL R
+	{id = 373190, name = L["Castle Nathria"]},
+	{id = 373191, name = L["Sanctum of Domination"]},
+	{id = 373192, name = L["Sepulcher of the First Ones"]},
 	-- DF
-	{id = 393256, name = "RLP"},
-	{id = 393262, name = "NO"},
-	{id = 393267, name = "BH"},
-	{id = 393273, name = "AA"},
-	{id = 393276, name = "NELT"},
-	{id = 393279, name = "AV"},
-	{id = 393283, name = "HoI"},
-	{id = 393222, name = "ULD"},
-	{id = 424197, name = "DotI"},
+	{id = 393256, name = L["Ruby Life Pools"]},
+	{id = 393262, name = L["The Nokhud Offensive"]},
+	{id = 393267, name = L["Brackenhide Hollow"]},
+	{id = 393273, name = L["Algeth'ar Academy"]},
+	{id = 393276, name = L["Neltharus"]},
+	{id = 393279, name = L["The Azure Vault"]},
+	{id = 393283, name = L["Halls of Infusion"]},
+	{id = 393222, name = L["Uldaman"]},
+	{id = 424197, name = L["Dawn of the Infinite"]},
 	-- DF R
-	{id = 432254, name = "VotI"},
-	{id = 432257, name = "Abb"},
-	{id = 432258, name = "Amir"},
+	{id = 432254, name = L["Vault of the Incarnates"]},
+	{id = 432257, name = L["Aberrus, the Shadowed Crucible"]},
+	{id = 432258, name = L["Amirdrassil, the Dream's Hope"]},
 	-- TWW
-	{id = 445416, name = "CoT"},
-	{id = 445414, name = "DB"},
-	{id = 445269, name = "SV"},
-	{id = 445443, name = "ROOK"},
-	{id = 445440, name = "CBM"},
-	{id = 445444, name = "PoSF"},
-	{id = 445417, name = "AK"},
-	{id = 445441, name = "DFC"}
+	{id = 445416, name = L["City of Threads"]},
+	{id = 445414, name = L["The Dawnbreaker"]},
+	{id = 445269, name = L["The Stonevault"]},
+	{id = 445443, name = L["The Rookery"]},
+	{id = 445440, name = L["Cinderbrew Meadery"]},
+	{id = 445444, name = L["Priory of the Sacred Flame"]},
+	{id = 445417, name = L["Ara-Kara, City of Echoes"]},
+	{id = 445441, name = L["Darkflame Cleft"]}
 }
 
 local tpTable = {
@@ -195,16 +199,16 @@ local tpTable = {
 	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788, name = "CATA", subtype = "path"}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269, name = "MoP", subtype = "path"}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856, name = "WoD", subtype = "path"}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827, name = "LEGN", subtype = "path"}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493, name = "BFA", subtype = "path"}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798, name = "SL", subtype = "path"}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4062765, name = "SL R", subtype = "path"}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496, name = "DF", subtype = "path"}, -- Hero's Path: Dragonflight
-	{id = 231, type = "flyout", iconId = 5342925, name = "DF R", subtype = "path"}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031, name = "TWW", subtype = "path"} -- Hero's Path: The War Within
+	{id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path"}, -- Hero's Path: Cataclysm
+	{id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path"}, -- Hero's Path: Mists of Pandaria
+	{id = 96, type = "flyout", iconId = 1413856, name = L["Warlords of Draenor"], subtype = "path"}, -- Hero's Path: Warlords of Draenor
+	{id = 224, type = "flyout", iconId = 1260827, name = L["Legion"], subtype = "path"}, -- Hero's Path: Legion
+	{id = 223, type = "flyout", iconId = 1869493, name = L["Battle for Azeroth"], subtype = "path"}, -- Hero's Path: Battle for Azeroth
+	{id = 220, type = "flyout", iconId = 236798, name = L["Shadowlands"], subtype = "path"}, -- Hero's Path: Shadowlands
+	{id = 222, type = "flyout", iconId = 4062765, name = L["Shadowlands Raids"], subtype = "path"}, -- Hero's Path: Shadowlands Raids
+	{id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path"}, -- Hero's Path: Dragonflight
+	{id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path"}, -- Hero's Path: Dragonflight Raids
+	{id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path"} -- Hero's Path: The War Within
 }
 
 --------------------------------------
@@ -554,7 +558,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 		button.text = button:CreateFontString(nil, "OVERLAY")
 		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		button.text:SetText("S1")
+		button.text:SetText(L["Season 1"])
 		button.text:SetTextColor(1, 1, 1, 1)
 	end
 
