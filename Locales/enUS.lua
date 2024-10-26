@@ -105,6 +105,37 @@ L["Dragonflight Raids"] = "DF R"
 L["The War Within"] = "TWW"
 L["Season 1"] = "S1"
 
+-- Mage teleport/portal abreviated text
+-- Alliance
+L["Stormwind"] = "SW"
+L["Ironforge"] = "IF"
+L["Darnassus"] = "DS"
+L["Exodar"] = "EX"
+L["Theramore"] = "TH"
+L["Stormshield"] = "SS"
+L["Boralus"] = "BO"
+
+-- Horde
+L["Orgrimmar"] = "ORG"
+L["Undercity"] = "UC"
+L["Thunder Bluff"] = "TB"
+L["Silvermoon"] = "SM"
+L["Stonard"] = "STO"
+L["Warspear"] = "WS"
+L["Dazar'alor"] = "DAZ"
+
+-- Shared
+L["Shattrath"] = "SH"
+L["Dalaran - Northrend"] = "D-N"
+L["Tol Barad"] = "TOL"
+L["Vale of Eternal Blossoms"] = "VALE"
+L["Dalaran - Broken Isles"] = "D-BI"
+L["Oribos"] = "ORI"
+L["Valdrakken"] = "VALD"
+L["Dalaran - Ancient"] = "D-AP"
+L["Hall of the Guardian"] = "HotG"
+L["Dornogal"] = "DG"
+
 -- Options
 L["Enabled"] = "Enabled"
 L["Enable Tooltip"] = "Enable/Disable the Teleport Menu."

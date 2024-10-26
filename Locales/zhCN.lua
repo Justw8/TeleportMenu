@@ -106,6 +106,37 @@ L["Dragonflight Raids"] = "巨龙 团"
 L["The War Within"] = "地心"
 L["Season 1"] = "赛季"
 
+-- Mage teleport/portal abreviated text
+-- Alliance
+--L["Stormwind"] = "SW"
+--L["Ironforge"] = "IF"
+--L["Darnassus"] = "DS"
+--L["Exodar"] = "EX"
+--L["Theramore"] = "TH"
+--L["Stormshield"] = "SS"
+--L["Boralus"] = "BO"
+
+-- Horde
+--L["Orgrimmar"] = "ORG"
+--L["Undercity"] = "UC"
+--L["Thunder Bluff"] = "TB"
+--L["Silvermoon"] = "SM"
+--L["Stonard"] = "STO"
+--L["Warspear"] = "WS"
+--L["Dazar'alor"] = "DAZ"
+
+-- Shared
+--L["Shattrath"] = "SH"
+--L["Dalaran - Northrend"] = "D-N"
+--L["Tol Barad"] = "TOL"
+--L["Vale of Eternal Blossoms"] = "VALE"
+--L["Dalaran - Broken Isles"] = "D-BI"
+--L["Oribos"] = "ORI"
+--L["Valdrakken"] = "VALD"
+--L["Dalaran - Ancient"] = "D-AP"
+--L["Hall of the Guardian"] = "HotG"
+--L["Dornogal"] = "DG"
+
 -- Options
 L["Enabled"] = "启用"
 L["Enable Tooltip"] = "启用/禁用传送菜单"

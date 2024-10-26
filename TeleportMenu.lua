@@ -115,82 +115,139 @@ local wormholes = {
 }
 local availableSeasonalTeleports = {}
 
-local dungeons = {
+local shortNames = {
 	-- CATA
-	{id = 410080, name = L["The Vortex Pinnacle"]},
-	{id = 424142, name = L["Throne of the Tides"]},
-	{id = 445424, name = L["Grim Batol"]},
+	[410080] = L["The Vortex Pinnacle"],
+	[424142] = L["Throne of the Tides"],
+	[445424] = L["Grim Batol"],
 	-- MoP
-	{id = 131204, name = L["Temple of the Jade Serpentl"]},
-	{id = 131205, name = L["Stormstout Brewery"]},
-	{id = 131206, name = L["Shado-Pan Monastery"]},
-	{id = 131222, name = L["Mogu'shan Palace"]},
-	{id = 131225, name = L["Gate of the Setting Sun"]},
-	{id = 131228, name = L["Siege of Niuzao Temple"]},
-	{id = 131229, name = L["Scarlet Monastery"]},
-	{id = 131231, name = L["Scarlet Halls"]},
-	{id = 131232, name = L["Scholomance"]},
+	[131204] = L["Temple of the Jade Serpentl"],
+	[131205] = L["Stormstout Brewery"],
+	[131206] = L["Shado-Pan Monastery"],
+	[131222] = L["Mogu'shan Palace"],
+	[131225] = L["Gate of the Setting Sun"],
+	[131228] = L["Siege of Niuzao Temple"],
+	[131229] = L["Scarlet Monastery"],
+	[131231] = L["Scarlet Halls"],
+	[131232] = L["Scholomance"],
 	-- WoD
-	{id = 159901, name = L["The Everblooml"]},
-	{id = 159899, name = L["Shadowmoon Burial Grounds"]},
-	{id = 159900, name = L["Grimrail Depot"]},
-	{id = 159896, name = L["Iron Docks"]},
-	{id = 159895, name = L["Bloodmaul Slag Mines"]},
-	{id = 159897, name = L["Auchindoun"]},
-	{id = 159898, name = L["Skyreach"]},
-	{id = 159902, name = L["Upper Blackrock Spire"]},
+	[159901] = L["The Everblooml"],
+	[159899] = L["Shadowmoon Burial Grounds"],
+	[159900] = L["Grimrail Depot"],
+	[159896] = L["Iron Docks"],
+	[159895] = L["Bloodmaul Slag Mines"],
+	[159897] = L["Auchindoun"],
+	[159898] = L["Skyreach"],
+	[159902] = L["Upper Blackrock Spire"],
 	-- Legion
-	{id = 393764, name = L["Halls of Valor"]},
-	{id = 410078, name = L["Neltharion's Lair"]},
-	{id = 393766, name = L["Court of Stars"]},
-	{id = 373262, name = L["Karazhan"]},
-	{id = 424153, name = L["Black Rook Hold"]},
-	{id = 424163, name = L["Darkheart Thicket"]},
+	[393764] = L["Halls of Valor"],
+	[410078] = L["Neltharion's Lair"],
+	[393766] = L["Court of Stars"],
+	[373262] = L["Karazhan"],
+	[424153] = L["Black Rook Hold"],
+	[424163] = L["Darkheart Thicket"],
 	-- BFA
-	{id = 410071, name = L["Freehold"]},
-	{id = 410074, name = L["The Underrot"]},
-	{id = 373274, name = L["Mechagon"]},
-	{id = 424167, name = L["Waycrest Manor"]},
-	{id = 424187, name = L["Atal'Dazar"]},
-	{id = 445418, name = L["Siege of Boralus"]},
-	{id = 464256, name = L["Siege of Boralus"]},
+	[410071] = L["Freehold"],
+	[410074] = L["The Underrot"],
+	[373274] = L["Mechagon"],
+	[424167] = L["Waycrest Manor"],
+	[424187] = L["Atal'Dazar"],
+	[445418] = L["Siege of Boralus"],
+	[464256] = L["Siege of Boralus"],
 	-- SL
-	{id = 354462, name = L["The Necrotic Wake"]},
-	{id = 354463, name = L["Plaguefall"]},
-	{id = 354464, name = L["Mists of Tirna Scithe"]},
-	{id = 354465, name = L["Halls of Atonement"]},
-	{id = 354466, name = L["Bastion"]},
-	{id = 354467, name = L["Theater of Pain"]},
-	{id = 354468, name = L["De Other Side"]},
-	{id = 354469, name = L["Sanguine Depths"]},
-	{id = 367416, name = L["Tazavesh, the Veiled Market"]},
+	[354462] = L["The Necrotic Wake"],
+	[354463] = L["Plaguefall"],
+	[354464] = L["Mists of Tirna Scithe"],
+	[354465] = L["Halls of Atonement"],
+	[354466] = L["Bastion"],
+	[354467] = L["Theater of Pain"],
+	[354468] = L["De Other Side"],
+	[354469] = L["Sanguine Depths"],
+	[367416] = L["Tazavesh, the Veiled Market"],
 	-- SL R
-	{id = 373190, name = L["Castle Nathria"]},
-	{id = 373191, name = L["Sanctum of Domination"]},
-	{id = 373192, name = L["Sepulcher of the First Ones"]},
+	[373190] = L["Castle Nathria"],
+	[373191] = L["Sanctum of Domination"],
+	[373192] = L["Sepulcher of the First Ones"],
 	-- DF
-	{id = 393256, name = L["Ruby Life Pools"]},
-	{id = 393262, name = L["The Nokhud Offensive"]},
-	{id = 393267, name = L["Brackenhide Hollow"]},
-	{id = 393273, name = L["Algeth'ar Academy"]},
-	{id = 393276, name = L["Neltharus"]},
-	{id = 393279, name = L["The Azure Vault"]},
-	{id = 393283, name = L["Halls of Infusion"]},
-	{id = 393222, name = L["Uldaman"]},
-	{id = 424197, name = L["Dawn of the Infinite"]},
+	[393256] = L["Ruby Life Pools"],
+	[393262] = L["The Nokhud Offensive"],
+	[393267] = L["Brackenhide Hollow"],
+	[393273] = L["Algeth'ar Academy"],
+	[393276] = L["Neltharus"],
+	[393279] = L["The Azure Vault"],
+	[393283] = L["Halls of Infusion"],
+	[393222] = L["Uldaman"],
+	[424197] = L["Dawn of the Infinite"],
 	-- DF R
-	{id = 432254, name = L["Vault of the Incarnates"]},
-	{id = 432257, name = L["Aberrus, the Shadowed Crucible"]},
-	{id = 432258, name = L["Amirdrassil, the Dream's Hope"]},
+	[432254] = L["Vault of the Incarnates"],
+	[432257] = L["Aberrus, the Shadowed Crucible"],
+	[432258] = L["Amirdrassil, the Dream's Hope"],
 	-- TWW
-	{id = 445416, name = L["City of Threads"]},
-	{id = 445414, name = L["The Dawnbreaker"]},
-	{id = 445269, name = L["The Stonevault"]},
-	{id = 445443, name = L["The Rookery"]},
-	{id = 445440, name = L["Cinderbrew Meadery"]},
-	{id = 445444, name = L["Priory of the Sacred Flame"]},
-	{id = 445417, name = L["Ara-Kara, City of Echoes"]},
-	{id = 445441, name = L["Darkflame Cleft"]}
+	[445416] = L["City of Threads"],
+	[445414] = L["The Dawnbreaker"],
+	[445269] = L["The Stonevault"],
+	[445443] = L["The Rookery"],
+	[445440] = L["Cinderbrew Meadery"],
+	[445444] = L["Priory of the Sacred Flame"],
+	[445417] = L["Ara-Kara, City of Echoes"],
+	[445441] = L["Darkflame Cleft"],
+
+	-- Mage teleports
+	[3561] = L["Stormwind"],
+	[3562] = L["Ironforge"],
+	[3563] = L["Undercity"],
+	[3565] = L["Darnassus"],
+	[3566] = L["Thunder Bluff"],
+	[3567] = L["Orgrimmar"],
+	[32271] = L["Exodar"],
+	[32272] = L["Silvermoon"],
+	[33690] = L["Shattrath"],
+	[35715] = L["Shattrath"],
+	[49358] = L["Stonard"],
+	[49359] = L["Theramore"],
+	[53140] = L["Dalaran - Northrend"],
+	[88342] = L["Tol Barad"], -- Alliance
+	[88344] = L["Tol Barad"], -- Horde
+	[120145] = L["Dalaran - Ancient"],
+	[132621] = L["Vale of Eternal Blossoms"], -- Alliance
+	[132627] = L["Vale of Eternal Blossoms"], -- Horde
+	[176242] = L["Warspear"],
+	[176248] = L["Stormshield"],
+	[193759] = L["Hall of the Guardian"],
+	[224869] = L["Dalaran - Broken Isles"],
+	[281403] = L["Boralus"],
+	[281404] = L["Dazar'alor"],
+	[344587] = L["Oribos"],
+	[395277] = L["Valdrakken"],
+	[446540] = L["Dornogal"],
+
+	-- Mage portals
+	[10059] = L["Stormwind"],
+	[11416] = L["Ironforge"],
+	[11417] = L["Orgrimmar"],
+	[11418] = L["Undercity"],
+	[11419] = L["Darnassus"],
+	[11420] = L["Thunder Bluff"],
+	[32266] = L["Exodar"],
+	[32267] = L["Silvermoon"],
+	[33691] = L["Shattrath"],
+	[35717] = L["Shattrath"],
+	[49360] = L["Theramore"],
+	[49361] = L["Stonard"],
+	[53142] = L["Dalaran - Northrend"],
+	[88345] = L["Tol Barad"], -- Alliance
+	[88346] = L["Tol Barad"], -- Horde
+	[120146] = L["Dalaran - Ancient"],
+	[132620] = L["Vale of Eternal Blossoms"], -- Alliance
+	[132626] = L["Vale of Eternal Blossoms"], -- Horde
+	[176244] = L["Warspear"],
+	[176246] = L["Stormshield"],
+	[224871] = L["Dalaran - Broken Isles"],
+	[281400] = L["Boralus"],
+	[281402] = L["Dazar'alor"],
+	[344597] = L["Oribos"],
+	[395289] = L["Valdrakken"],
+	[446534] = L["Dornogal"],
 }
 
 local tpTable = {
@@ -473,9 +530,9 @@ function tpm:CreateFlyout(flyoutData)
 		local flyname = nil
 		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
 		if IsSpellKnown(spellID) then
-			for _, v in pairs(dungeons) do
-				if v.id == spellID then
-					flyname = v.name
+			for k, v in pairs(shortNames) do
+				if k == spellID then
+					flyname = v
 				end
 			end
 			if not flyname then
@@ -584,9 +641,9 @@ function tpm:CreateSeasonalTeleportFlyout()
 	for _, spellID in ipairs(availableSeasonalTeleports) do
 		local flyname = nil
 		if IsSpellKnown(spellID) then
-			for _, v in pairs(dungeons) do
-				if v.id == spellID then
-					flyname = v.name
+			for k, v in pairs(shortNames) do
+				if k == spellID then
+					flyname = v
 				end
 			end
 			if not flyname then
