@@ -530,11 +530,7 @@ function tpm:CreateFlyout(flyoutData)
 		local flyname = nil
 		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
 		if IsSpellKnown(spellID) then
-			for k, v in pairs(shortNames) do
-				if k == spellID then
-					flyname = v
-				end
-			end
+			flyname = shortNames[spellID]
 			if not flyname then
 				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
 			end
@@ -641,11 +637,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 	for _, spellID in ipairs(availableSeasonalTeleports) do
 		local flyname = nil
 		if IsSpellKnown(spellID) then
-			for k, v in pairs(shortNames) do
-				if k == spellID then
-					flyname = v
-				end
-			end
+			flyname = shortNames[spellID]
 			if not flyname then
 				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
 			end
