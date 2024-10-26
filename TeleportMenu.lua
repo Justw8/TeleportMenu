@@ -816,6 +816,12 @@ function tpm:updateHearthstone()
 		SetTextureByItemId(hearthstoneButton, db.hearthstone)
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", db.hearthstone)
+		hearthstoneButton:SetScript(
+			"OnEnter",
+			function(self)
+				tpm:setToolTip(self, "toy", db.hearthstone, true)
+			end
+		)
 	else
 		if GetItemCount(6948) == 0 then
 			print(APPEND .. L["No Hearthtone In Bags"])
