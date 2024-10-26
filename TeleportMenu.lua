@@ -35,6 +35,7 @@ local hearthstoneToys = {
 	[54452] = true, -- Ethereal Portal
 	[64488] = true, -- The Innkeeper's Daughter
 	[93672] = true, -- Dark Portal
+	[142542] = true, -- Tome of Town Portal
 	[162973] = true, -- Greatfather Winter's Hearthstone
 	[163045] = true, -- Headless Horseman's Hearthstone
 	[163206] = true, -- Weary Spirit Binding
@@ -85,12 +86,6 @@ local hearthstoneToys = {
 	[206195] = true, -- Path of the Naaru
 	[208704] = true, -- Deepdweller's Earthen Hearthstone
 	[209035] = true, -- Hearthstone of the Flame
-	[228940] = true -- Notorious Thread's Hearthstone
-}
-
-local availableBonusHearthstones = {}
-local bonusHearthstones = {
-	[142542] = true, -- Tome of Town Portal
 	[210455] = function()
 		-- Draenic Hologem (Draenei and Lightforged Draenei only)
 		local _, _, raceId = UnitRace("player")
@@ -98,7 +93,8 @@ local bonusHearthstones = {
 			return true
 		end
 	end,
-	[212337] = true -- Stone of the Hearth
+	[212337] = true, -- Stone of the Hearth
+	[228940] = true -- Notorious Thread's Hearthstone
 }
 
 local availableWormholes = {}
@@ -200,7 +196,6 @@ local dungeons = {
 local tpTable = {
 	-- Hearthstones
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
-	{type = "bonusheartsones", iconId = 5524917}, -- Bonus Heartstones
 	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
 	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
 	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
@@ -301,19 +296,6 @@ function tpm:updateAvailableHearthstones()
 				table.insert(availableHearthstones, id)
 			elseif usable == true then
 				table.insert(availableHearthstones, id)
-			end
-		end
-	end
-end
-
-function tpm:updateAvailableBonusHeartstones()
-	availableBonusHearthstones = {}
-	for id, usable in pairs(bonusHearthstones) do
-		if PlayerHasToy(id) then
-			if type(usable) == "function" and usable() then
-				table.insert(availableBonusHearthstones, id)
-			elseif usable == true then
-				table.insert(availableBonusHearthstones, id)
 			end
 		end
 	end
@@ -755,99 +737,6 @@ function tpm:CreateWormholeFlyout(iconId)
 	return button
 end
 
-function tpm:CreateBonusHearthstoneFlyout(iconId)
-	if #availableBonusHearthstones == 0 then
-		return
-	end
-	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
-	button:SetSize(40, 40)
-	button:SetNormalTexture(iconId)
-	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	button:EnableMouse(true)
-	button:RegisterForClicks("AnyDown", "AnyUp")
-	button:SetFrameStrata("HIGH")
-	button:SetFrameLevel(101)
-	button:SetScript(
-		"OnEnter",
-		function(self)
-			if InCombatLockdown() then
-				tpm:setCombatTooltip(self)
-				return
-			end
-			tpm:setToolTip(self, "bonusheartsones")
-			self.flyOutFrame:Show()
-		end
-	)
-	button:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-		end
-	)
-
-	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
-	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	flyOutFrame:SetFrameStrata("HIGH")
-	flyOutFrame:SetFrameLevel(103)
-	flyOutFrame:SetPropagateMouseClicks(true)
-	flyOutFrame:SetPropagateMouseMotion(true)
-	flyOutFrame.mainButton = button
-	flyOutFrame:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-			if not InCombatLockdown() then
-				self:Hide()
-			end
-		end
-	)
-	flyOutFrame:Hide()
-	button.flyOutFrame = flyOutFrame
-
-	local flyOutButtons = {}
-	local flyoutsCreated = 0
-	for _, toyId in ipairs(availableBonusHearthstones) do
-		local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
-		local xOffset = 40 + (40 * flyoutsCreated)
-		flyOutButton:SetSize(40, 40)
-		SetTextureByItemId(flyOutButton, toyId) -- async load texture
-		flyOutButton:SetAttribute("type", "toy")
-		flyOutButton:SetAttribute("toy", toyId)
-		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
-		flyOutButton:EnableMouse(true)
-		flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
-		flyOutButton:SetFrameStrata("HIGH")
-		flyOutButton:SetFrameLevel(102)
-		flyOutButton:SetScript(
-			"OnEnter",
-			function(self)
-				tpm:setToolTip(self, "toy", toyId)
-			end
-		)
-		flyOutButton:SetScript(
-			"OnLeave",
-			function(self)
-				GameTooltip:Hide()
-			end
-		)
-		flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
-		flyOutButton.cooldownFrame:CheckCooldown(toyId, "toy")
-		flyOutButton:SetScript(
-			"OnShow",
-			function(self)
-				self.cooldownFrame:CheckCooldown(toyId, "toy")
-			end
-		)
-		table.insert(flyOutButtons, flyOutButton)
-		flyoutsCreated = flyoutsCreated + 1
-	end
-	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
-
-	button.flyOutButtons = flyOutButtons
-	return button
-end
-
 function tpm:setCombatTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, 0)
@@ -877,9 +766,6 @@ function tpm:setToolTip(self, type, id, hs)
 		if professionInfo then
 			GameTooltip:SetText(professionInfo.professionName, 1, 1, 1)
 		end
-	elseif type == "bonusheartsones" then
-		GameTooltip:SetText(L["Bonus Hearthstones"], 1, 1, 1)
-		GameTooltip:AddLine(L["Bonus Hearthstones Tooltip"], 1, 1, 1)
 	elseif type == "seasonalteleport" then
 		GameTooltip:SetText(L["Seasonal Teleports"], 1, 1, 1)
 		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
@@ -1085,11 +971,6 @@ local function createAnchors()
 			if created then
 				TeleportMeButtonsFrame:IncrementButtons()
 			end
-		elseif teleport.type == "bonusheartsones" then
-			local created = tpm:CreateBonusHearthstoneFlyout(teleport.iconId)
-			if created then
-				TeleportMeButtonsFrame:IncrementButtons()
-			end
 		elseif teleport.type == "flyout" then
 			local created = tpm:CreateFlyout(teleport)
 			if created then
@@ -1197,7 +1078,6 @@ local function checkItemsLoaded(self)
 
 	LoadItems(hearthstoneToys)
 	LoadItems(wormholes)
-	LoadItems(bonusHearthstones)
 
 	local allLoaded = true
 	local function OnItemsLoaded()
@@ -1214,7 +1094,6 @@ end
 
 function tpm:Setup()
 	tpm:updateAvailableHearthstones()
-	tpm:updateAvailableBonusHeartstones()
 	tpm:updateAvailableWormholes()
 	tpm:updateAvailableSeasonalTeleport()
 
