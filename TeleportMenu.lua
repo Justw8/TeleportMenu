@@ -257,7 +257,7 @@ local tpTable = {
 	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
 	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
 	-- Engineering
-	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
+	{type = "flyout", iconId = 4620673, subtype = "wormholes"}, -- Engineering Wormholes
 	-- Class Teleports
 	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
 	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
@@ -267,16 +267,17 @@ local tpTable = {
 	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
 	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path"}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path"}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856, name = L["Warlords of Draenor"], subtype = "path"}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827, name = L["Legion"], subtype = "path"}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493, name = L["Battle for Azeroth"], subtype = "path"}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798, name = L["Shadowlands"], subtype = "path"}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4062765, name = L["Shadowlands Raids"], subtype = "path"}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path"}, -- Hero's Path: Dragonflight
-	{id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path"}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path"} -- Hero's Path: The War Within
+	{id = 230, type = "flyout", iconId = 574788, shortName = L["Cataclysm"], subtype = "path"}, -- Hero's Path: Cataclysm
+	{id = 84, type = "flyout", iconId = 328269, shortName = L["Mists of Pandaria"], subtype = "path"}, -- Hero's Path: Mists of Pandaria
+	{id = 96, type = "flyout", iconId = 1413856, shortName = L["Warlords of Draenor"], subtype = "path"}, -- Hero's Path: Warlords of Draenor
+	{id = 224, type = "flyout", iconId = 1260827, shortName = L["Legion"], subtype = "path"}, -- Hero's Path: Legion
+	{id = 223, type = "flyout", iconId = 1869493, shortName = L["Battle for Azeroth"], subtype = "path"}, -- Hero's Path: Battle for Azeroth
+	{id = 220, type = "flyout", iconId = 236798, shortName = L["Shadowlands"], subtype = "path"}, -- Hero's Path: Shadowlands
+	{id = 222, type = "flyout", iconId = 4062765, shortName = L["Shadowlands Raids"], subtype = "path"}, -- Hero's Path: Shadowlands Raids
+	{id = 227, type = "flyout", iconId = 4640496, shortName = L["Dragonflight"], subtype = "path"}, -- Hero's Path: Dragonflight
+	{id = 231, type = "flyout", iconId = 5342925, shortName = L["Dragonflight Raids"], subtype = "path"}, -- Hero's Path: Dragonflight Raids
+	{id = 232, type = "flyout", iconId = 5872031, shortName = L["The War Within"], subtype = "path"}, -- Hero's Path: The War Within
+	{type = "flyout", iconId = 5927657, shortName = L["Season 1"], subtype = "seasonalteleport"}, -- Season 1 Hero's Path
 }
 
 --------------------------------------
@@ -410,52 +411,158 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateFlyout(flyoutData)
-	if db.showOnlySeasonalHerosPath and flyoutData.subtype == "path" then
-		return
+function tpm:ExtractSpellInfo(spellID)
+	if IsSpellKnown(spellID) then
+		local spellTexture = C_Spell.GetSpellTexture(spellID)
+		local shortName = shortNames[spellID]
+		if not shortName then
+			print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
+		end
+		return {
+			id = spellID,
+			shortName = shortName,
+			iconId = spellTexture,
+			type = "spell",
+		}
 	end
-	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutData.id)
-	if not flyoutKnown then
-		return
-	end
+	return nil
+end
 
-	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
-
+function tpm:CreateButton(buttonsFrame, teleport, xOffset, yOffset)
+	if not buttonsFrame then return	end
+	local button = CreateFrame("Button", nil, buttonsFrame, "SecureActionButtonTemplate")
+	yOffset = yOffset or 0
+	xOffset = xOffset or 0
 	button:SetSize(40, 40)
-	button:SetNormalTexture(flyoutData.iconId)
-	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	if teleport.type == "item" and not teleport.iconId then
+		C_Timer.After(
+			0.7,
+			function()
+				retrySetNormalTexture(button, teleport.id)
+			end
+		)
+		teleport.iconId = DEFAULT_ICON
+	end
+	if teleport.type == "toy" then
+		SetTextureByItemId(button, teleport.id) -- async load texture
+	else
+		button:SetNormalTexture(teleport.iconId)
+	end
+
+	-- do not set attributes when type is flyout
+	if teleport.type == "item" then
+		button:SetAttribute("type", teleport.type)
+		button:SetAttribute(teleport.type, "item:" .. teleport.id)
+	elseif teleport.type == "toy" or teleport.type == "spell" then
+		button:SetAttribute("type", teleport.type)
+		button:SetAttribute(teleport.type, teleport.id)
+	end
+	if buttonsFrame == TeleportMeButtonsFrame then
+		button:SetPoint("TOPLEFT", buttonsFrame, "TOPRIGHT", xOffset, yOffset)
+	else
+		-- flyout buttonsFrame
+		button:SetPoint("RIGHT", buttonsFrame, "LEFT", xOffset, yOffset)
+	end
+
 	button:EnableMouse(true)
 	button:RegisterForClicks("AnyDown", "AnyUp")
 	button:SetFrameStrata("HIGH")
 	button:SetFrameLevel(101)
+	if teleport.type ~= "flyout" then
+		button.cooldownFrame = tpm:createCooldownFrame(button)
+		button.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
+			button:SetScript(
+		"OnShow",
+		function(self)
+			self.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
+		end
+	)
+	end
 	button:SetScript(
 		"OnEnter",
 		function(self)
-			if InCombatLockdown() then
-				tpm:setCombatTooltip(self)
-				return
+			if teleport.type == "flyout" then
+				if InCombatLockdown() then
+					tpm:setCombatTooltip(self)
+					return
+				elseif teleport.id then
+					tpm:setToolTip(self, "flyout", teleport.id)
+				elseif teleport.subtype == "wormholes" then
+					tpm:setToolTip(self, "profession", 202) -- Engineering
+				else
+					tpm:setToolTip(self, teleport.subtype)
+				end
+				self.flyOutFrame:Show()
+			else
+				tpm:setToolTip(self, teleport.type, teleport.id, teleport.hearthstone)
 			end
-			tpm:setToolTip(self, "flyout", flyoutData.id)
-			self.flyOutFrame:Show()
 		end
 	)
 	button:SetScript(
 		"OnLeave",
-		function(self)
+		function()
 			GameTooltip:Hide()
 		end
 	)
-
-	if db.buttonText == true and flyoutData.name then
+	if db.buttonText == true and teleport.shortName then
 		button.text = button:CreateFontString(nil, "OVERLAY")
 		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		button.text:SetText(flyoutData.name)
+		button.text:SetText(teleport.shortName)
 		button.text:SetTextColor(1, 1, 1, 1)
 	end
 
+	return button
+end
+
+function tpm:CreateFlyout(flyoutData)
+	if db.showOnlySeasonalHerosPath and flyoutData.subtype == "path" then
+		return
+	end
+	local knownTeleports = {}
+	if flyoutData.id then
+		local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutData.id)
+		if not flyoutKnown then
+			return
+		end
+		for i = 1, spells do
+			local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
+			local spellInfo = tpm:ExtractSpellInfo(spellID)
+			if spellInfo then
+				table.insert(knownTeleports, spellInfo)
+			end
+		end
+	elseif flyoutData.subtype == "wormholes" then
+		if #availableWormholes == 0 then
+			return
+		end
+		for _, wormhole in ipairs(availableWormholes) do
+			table.insert(knownTeleports, {
+				id = wormhole,
+				type = "toy",
+			})
+		end
+	elseif flyoutData.subtype == "seasonalteleport" then
+		if #availableSeasonalTeleports == 0 then
+			return
+		end
+		for _, spellID in ipairs(availableSeasonalTeleports) do
+			local spellInfo = tpm:ExtractSpellInfo(spellID)
+			if spellInfo then
+				table.insert(knownTeleports, spellInfo)
+			end
+		end
+	else
+		return
+	end
+
+	local teleportTotal = #knownTeleports
+
+	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
+	local button = tpm:CreateButton(TeleportMeButtonsFrame, flyoutData, 0, yOffset)
+
 	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
+	flyOutFrame:SetSize(40 + (40 * teleportTotal), 40)
 	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 	flyOutFrame:SetFrameStrata("HIGH")
 	flyOutFrame:SetFrameLevel(103)
@@ -475,79 +582,22 @@ function tpm:CreateFlyout(flyoutData)
 	button.flyOutFrame = flyOutFrame
 
 	local flyOutButtons = {}
-	local flyoutsCreated = 0
 
 	-- Function to create a flyout button
-	local function createFlyOutButton(spellID, index, totalKnownSpells)
-		local spellName = C_Spell.GetSpellName(spellID)
-		local spellTexture = C_Spell.GetSpellTexture(spellID)
-		local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
+	local function createFlyOutButton(teleport, index)
 		local xOffset = 40 + (40 * index)
 		if TeleportMenuDB.reverseMageFlyouts and flyoutData.subtype == "mage" then
-			xOffset = 40 + (40 * (totalKnownSpells - index + 1))
+			xOffset = 40 + (40 * (teleportTotal - index + 1))
 		end
-		flyOutButton:SetSize(40, 40)
-		flyOutButton:SetNormalTexture(spellTexture)
-		flyOutButton:SetAttribute("type", "spell")
-		flyOutButton:SetAttribute("spell", spellID)
-		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", xOffset, 0)
-		flyOutButton:EnableMouse(true)
-		flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
-		flyOutButton:SetFrameStrata("HIGH")
-		flyOutButton:SetFrameLevel(102)
-		flyOutButton:SetScript(
-			"OnEnter",
-			function(self)
-				tpm:setToolTip(self, "spell", spellID)
-			end
-		)
-		flyOutButton:SetScript(
-			"OnLeave",
-			function(self)
-				GameTooltip:Hide()
-			end
-		)
-		flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
-		flyOutButton.cooldownFrame:CheckCooldown(spellID)
-		flyOutButton:SetScript(
-			"OnShow",
-			function(self)
-				self.cooldownFrame:CheckCooldown(spellID)
-			end
-		)
+		local flyOutButton = tpm:CreateButton(flyOutFrame, teleport, xOffset, 0)
 		return flyOutButton
 	end
 
-	local totalKnownSpells = 0
-	for i = 1, spells do
-		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
-		if IsSpellKnown(spellID) then
-			totalKnownSpells = totalKnownSpells + 1
-		end
-	end
-
-	for i = 1, spells do
-		local flyname = nil
-		local spellID = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
-		if IsSpellKnown(spellID) then
-			flyname = shortNames[spellID]
-			if not flyname then
-				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
-			end
-			flyoutsCreated = flyoutsCreated + 1
-			local flyOutButton = createFlyOutButton(spellID, flyoutsCreated, totalKnownSpells)
-			if db.buttonText == true and flyname then
-				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-				flyOutButton.text:SetText(flyname)
-				flyOutButton.text:SetTextColor(1, 1, 1, 1)
-			end
+	for i, spell in ipairs(knownTeleports) do
+			local flyOutButton = createFlyOutButton(spell, i)
 			table.insert(flyOutButtons, flyOutButton)
-		end
 	end
 
-	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
 	button.flyOutButtons = flyOutButtons
 	return button
 end
@@ -571,219 +621,6 @@ function tpm:updateMageFlyouts()
 
 	updateFlyoutButtons(TeleportMeButtonsFrame.mageTeleportButton)
 	updateFlyoutButtons(TeleportMeButtonsFrame.magePortalButton)
-end
-
-function tpm:CreateSeasonalTeleportFlyout()
-	if #availableSeasonalTeleports == 0 then
-		return
-	end
-
-	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
-	button:SetSize(40, 40)
-	button:SetNormalTexture(5927657) -- Xal'atath Devour Affix Icon
-	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	button:EnableMouse(true)
-	button:RegisterForClicks("AnyDown", "AnyUp")
-	button:SetFrameStrata("HIGH")
-	button:SetFrameLevel(101)
-	button:SetScript(
-		"OnEnter",
-		function(self)
-			if InCombatLockdown() then
-				tpm:setCombatTooltip(self)
-				return
-			end
-			tpm:setToolTip(self, "seasonalteleport")
-			self.flyOutFrame:Show()
-		end
-	)
-	button:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-		end
-	)
-
-	if db.buttonText == true then
-		button.text = button:CreateFontString(nil, "OVERLAY")
-		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		button.text:SetText(L["Season 1"])
-		button.text:SetTextColor(1, 1, 1, 1)
-	end
-
-	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
-	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	flyOutFrame:SetFrameStrata("HIGH")
-	flyOutFrame:SetFrameLevel(103)
-	flyOutFrame:SetPropagateMouseClicks(true)
-	flyOutFrame:SetPropagateMouseMotion(true)
-	flyOutFrame.mainButton = button
-	flyOutFrame:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-			if not InCombatLockdown() then
-				self:Hide()
-			end
-		end
-	)
-	flyOutFrame:Hide()
-	button.flyOutFrame = flyOutFrame
-
-	local flyOutButtons = {}
-	local flyoutsCreated = 0
-	for _, spellID in ipairs(availableSeasonalTeleports) do
-		local flyname = nil
-		if IsSpellKnown(spellID) then
-			flyname = shortNames[spellID]
-			if not flyname then
-				print(APPEND .. "No short name found for spellID " .. spellID ..", please report this on GitHub")
-			end
-
-			flyoutsCreated = flyoutsCreated + 1
-			local xOffset = 40 * flyoutsCreated
-			local spellName = C_Spell.GetSpellName(spellID)
-			local spellTexture = C_Spell.GetSpellTexture(spellID)
-			local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
-			flyOutButton:SetSize(40, 40)
-			flyOutButton:SetNormalTexture(spellTexture)
-			flyOutButton:SetAttribute("type", "spell")
-			flyOutButton:SetAttribute("spell", spellID)
-			flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
-			flyOutButton:EnableMouse(true)
-			flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
-			flyOutButton:SetFrameStrata("HIGH")
-			flyOutButton:SetFrameLevel(102)
-			flyOutButton:SetScript(
-				"OnEnter",
-				function(self)
-					tpm:setToolTip(self, "spell", spellID)
-				end
-			)
-			flyOutButton:SetScript(
-				"OnLeave",
-				function(self)
-					GameTooltip:Hide()
-				end
-			)
-			flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
-			flyOutButton.cooldownFrame:CheckCooldown(spellID)
-			flyOutButton:SetScript(
-				"OnShow",
-				function(self)
-					self.cooldownFrame:CheckCooldown(spellID)
-				end
-			)
-
-			if db.buttonText == true and flyname then
-				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
-				flyOutButton.text:SetText(flyname)
-				flyOutButton.text:SetTextColor(1, 1, 1, 1)
-			end
-			table.insert(flyOutButtons, flyOutButton)
-		end
-	end
-	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
-
-	button.flyOutButtons = flyOutButtons
-	return button
-end
-
-function tpm:CreateWormholeFlyout(iconId)
-	if #availableWormholes == 0 then
-		return
-	end
-	local button = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
-	local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
-	button:SetSize(40, 40)
-	button:SetNormalTexture(iconId)
-	button:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	button:EnableMouse(true)
-	button:RegisterForClicks("AnyDown", "AnyUp")
-	button:SetFrameStrata("HIGH")
-	button:SetFrameLevel(101)
-	button:SetScript(
-		"OnEnter",
-		function(self)
-			if InCombatLockdown() then
-				tpm:setCombatTooltip(self)
-				return
-			end
-			tpm:setToolTip(self, "profession", 202) -- Engineering
-			self.flyOutFrame:Show()
-		end
-	)
-	button:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-		end
-	)
-
-	local flyOutFrame = CreateFrame("Frame", nil, TeleportMeButtonsFrame)
-	flyOutFrame:SetPoint("TOPLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	flyOutFrame:SetFrameStrata("HIGH")
-	flyOutFrame:SetFrameLevel(103)
-	flyOutFrame:SetPropagateMouseClicks(true)
-	flyOutFrame:SetPropagateMouseMotion(true)
-	flyOutFrame.mainButton = button
-	flyOutFrame:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-			if not InCombatLockdown() then
-				self:Hide()
-			end
-		end
-	)
-	flyOutFrame:Hide()
-	button.flyOutFrame = flyOutFrame
-
-	local flyOutButtons = {}
-	local flyoutsCreated = 0
-	for _, wormholeId in ipairs(availableWormholes) do
-		local flyOutButton = CreateFrame("Button", nil, flyOutFrame, "SecureActionButtonTemplate")
-		local xOffset = 40 + (40 * flyoutsCreated)
-		flyOutButton:SetSize(40, 40)
-		SetTextureByItemId(flyOutButton, wormholeId) -- async load texture
-		flyOutButton:SetAttribute("type", "toy")
-		flyOutButton:SetAttribute("toy", wormholeId)
-		flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", 40 + xOffset, 0)
-		flyOutButton:EnableMouse(true)
-		flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
-		flyOutButton:SetFrameStrata("HIGH")
-		flyOutButton:SetFrameLevel(102)
-		flyOutButton:SetScript(
-			"OnEnter",
-			function(self)
-				tpm:setToolTip(self, "toy", wormholeId)
-			end
-		)
-		flyOutButton:SetScript(
-			"OnLeave",
-			function(self)
-				GameTooltip:Hide()
-			end
-		)
-		flyOutButton.cooldownFrame = tpm:createCooldownFrame(flyOutButton)
-		flyOutButton.cooldownFrame:CheckCooldown(wormholeId, "toy")
-		flyOutButton:SetScript(
-			"OnShow",
-			function(self)
-				self.cooldownFrame:CheckCooldown(wormholeId, "toy")
-			end
-		)
-		table.insert(flyOutButtons, flyOutButton)
-		flyoutsCreated = flyoutsCreated + 1
-	end
-	flyOutFrame:SetSize(40 + (40 * flyoutsCreated), 40)
-
-	button.flyOutButtons = flyOutButtons
-	return button
 end
 
 function tpm:setCombatTooltip(self)
@@ -872,7 +709,7 @@ function tpm:updateHearthstone()
 			end
 		)
 	else
-		if GetItemCount(6948) == 0 then
+		if C_Item.GetItemCount(6948) == 0 then
 			print(APPEND .. L["No Hearthtone In Bags"])
 			hearthstoneButton:Hide()
 			return
@@ -932,7 +769,6 @@ local function createAnchors()
 	end
 
 	for i, teleport in ipairs(tpTable) do
-		local texture
 		local known
 
 		-- Checks and overwrites
@@ -947,20 +783,20 @@ local function createAnchors()
 				teleport.id = db.hearthstone
 			end
 			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
-		elseif teleport.type == "item" and GetItemCount(teleport.id) > 0 then
-			local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(teleport.id)
-			texture = itemTexture
+		elseif teleport.type == "item" and C_Item.GetItemCount(teleport.id) > 0 then
+			local itemTexture = select(10, C_Item.GetItemInfo(teleport.id))
+			teleport.iconId = itemTexture
 			known = true
 		elseif teleport.type == "toy" and PlayerHasToy(teleport.id) then
-			local _, name, iconId = C_ToyBox.GetToyInfo(teleport.id)
-			texture = iconId
+			local iconId = select(3, C_ToyBox.GetToyInfo(teleport.id))
+			teleport.iconId = iconId
 			if teleport.quest then
 				known = tpm:checkQuestCompletion(teleport.quest)
 			else
 				known = true
 			end
 		elseif teleport.type == "spell" and IsSpellKnown(teleport.id) then
-			texture = C_Spell.GetSpellTexture(teleport.id)
+			teleport.iconId = C_Spell.GetSpellTexture(teleport.id)
 			known = true
 		end
 
@@ -971,61 +807,13 @@ local function createAnchors()
 		-- Create Stuff
 		if known and (teleport.type == "toy" or teleport.type == "item" or teleport.type == "spell") then
 			tpm:DebugPrint(teleport.hearthstone)
-			local button = CreateFrame("Button", nil, buttonsFrame, "SecureActionButtonTemplate")
 			local yOffset = -40 * TeleportMeButtonsFrame:GetButtonAmount()
-			button:SetSize(40, 40)
-			if not texture then
-				C_Timer.After(
-					0.7,
-					function()
-						retrySetNormalTexture(button, teleport.id)
-					end
-				)
-				texture = DEFAULT_ICON
-			end
-			button:SetNormalTexture(texture)
-			if teleport.type == "item" then
-				button:SetAttribute("type", teleport.type)
-				button:SetAttribute(teleport.type, "item:" .. teleport.id)
-			else
-				button:SetAttribute("type", teleport.type)
-				button:SetAttribute(teleport.type, teleport.id)
-			end
-			button:SetPoint("TOPLEFT", buttonsFrame, "TOPRIGHT", 0, yOffset)
-			button:EnableMouse(true)
-			button:RegisterForClicks("AnyDown", "AnyUp")
-			button:SetFrameStrata("HIGH")
-			button:SetFrameLevel(101)
-			button.cooldownFrame = tpm:createCooldownFrame(button)
-			button.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
-			button:SetScript(
-				"OnEnter",
-				function(self)
-					tpm:setToolTip(self, teleport.type, teleport.id, teleport.hearthstone)
-				end
-			)
-			button:SetScript(
-				"OnLeave",
-				function()
-					GameTooltip:Hide()
-				end
-			)
-			button:SetScript(
-				"OnShow",
-				function(self)
-					self.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
-				end
-			)
+			local button = tpm:CreateButton(buttonsFrame, teleport, 0, yOffset)
 
 			if teleport.hearthstone then -- store to replace item later
 				buttonsFrame.hearthstoneButton = button
 			end
 			TeleportMeButtonsFrame:IncrementButtons()
-		elseif teleport.type == "wormholes" then
-			local created = tpm:CreateWormholeFlyout(teleport.iconId)
-			if created then
-				TeleportMeButtonsFrame:IncrementButtons()
-			end
 		elseif teleport.type == "flyout" then
 			local created = tpm:CreateFlyout(teleport)
 			if created then
@@ -1041,15 +829,6 @@ local function createAnchors()
 			end
 		end
 	end
-
-	function CreateCurrentSeasonTeleports()
-		local created = tpm:CreateSeasonalTeleportFlyout()
-		if created then
-			TeleportMeButtonsFrame:IncrementButtons()
-		end
-	end
-
-	CreateCurrentSeasonTeleports()
 end
 
 -- Slash Commands
