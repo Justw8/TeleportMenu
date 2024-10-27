@@ -106,6 +106,37 @@ L["Dragonflight Raids"] = "巨龍 團"
 L["The War Within"] = "地心"
 L["Season 1"] = "賽季1"
 
+-- Mage teleport/portal abreviated text
+-- Alliance
+L["Stormwind"] = "暴風"
+L["Ironforge"] = "鐵爐堡"
+L["Darnassus"] = "達納"
+L["Exodar"] = "艾克"
+L["Theramore"] = "賽拉摩"
+L["Stormshield"] = "風暴盾"
+L["Boralus"] = "波拉勒斯"
+
+-- Horde
+L["Orgrimmar"] = "奧格瑪"
+L["Undercity"] = "幽暗"
+L["Thunder Bluff"] = "雷霆"
+L["Silvermoon"] = "銀月"
+L["Stonard"] = "斯通"
+L["Warspear"] = "戰矛"
+L["Dazar'alor"] = "達薩"
+
+-- Shared
+L["Shattrath"] = "撒塔斯"
+L["Dalaran - Northrend"] = "達拉-北"
+L["Tol Barad"] = "托巴"
+L["Vale of Eternal Blossoms"] = "恆春谷"
+L["Dalaran - Broken Isles"] = "達拉-破"
+L["Oribos"] = "奧睿博司"
+L["Valdrakken"] = "沃卓肯"
+L["Dalaran - Ancient"] = "達拉-古"
+L["Hall of the Guardian"] = "守衛廳"
+L["Dornogal"] = "多恩"
+
 -- Options
 L["Enabled"] = "啟用"
 L["Enable Tooltip"] = "啟用/停用 此傳送選單。"
