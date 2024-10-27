@@ -6,6 +6,8 @@ L["Not In Combat Tooltip"] = "\124cFFFF0000<戰鬥中不可用>\124r"
 L["Random Hearthstone"] = "隨機爐石"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EB點擊後，會隨機使用一個爐石。\n當你重新打開主選單時，它會選擇一個新爐石。\124r"
 L["Random Hearthstone Location"] = "\n\124cFF34B7EB爐石所在地：\124r \124cFF1EFF0C%s\124r"
+L["Bonus Hearthstones"] = "額外爐石"
+L["Bonus Hearthstones Tooltip"] = "\124cFF34B7EB這些爐石不與其他玩具共享冷卻時間。\124r"
 L["Seasonal Teleports"] = "賽季傳送"
 L["Seasonal Teleports Tooltip"] = "\124cFF34B7EB這些傳送適用於當前鑰石+賽季地下城。\124r"
 L["Seasonal Teleports Toggle Tooltip"] = "啟用/禁用 僅顯示當前賽季傳送。\n\n\124cFF34B7EB需重載界面生效。\124r"
@@ -105,6 +107,37 @@ L["Dragonflight"] = "巨龍"
 L["Dragonflight Raids"] = "巨龍 團"
 L["The War Within"] = "地心"
 L["Season 1"] = "賽季1"
+
+-- Mage teleport/portal abreviated text
+-- Alliance
+L["Stormwind"] = "暴風"
+L["Ironforge"] = "鐵爐堡"
+L["Darnassus"] = "達納"
+L["Exodar"] = "艾克"
+L["Theramore"] = "賽拉摩"
+L["Stormshield"] = "風暴盾"
+L["Boralus"] = "波拉勒斯"
+
+-- Horde
+L["Orgrimmar"] = "奧格瑪"
+L["Undercity"] = "幽暗"
+L["Thunder Bluff"] = "雷霆"
+L["Silvermoon"] = "銀月"
+L["Stonard"] = "斯通"
+L["Warspear"] = "戰矛"
+L["Dazar'alor"] = "達薩"
+
+-- Shared
+L["Shattrath"] = "撒塔斯"
+L["Dalaran - Northrend"] = "達拉-北"
+L["Tol Barad"] = "托巴"
+--L["Vale of Eternal Blossoms"] = "VALE"
+L["Dalaran - Broken Isles"] = "達拉-破"
+L["Oribos"] = "奧睿博斯"
+L["Valdrakken"] = "沃卓肯"
+L["Dalaran - Ancient"] = "達拉-古"
+L["Hall of the Guardian"] = "守衛廳"
+L["Dornogal"] = "多恩"
 
 -- Options
 L["Enabled"] = "啟用"
