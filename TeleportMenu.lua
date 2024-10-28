@@ -449,7 +449,7 @@ function tpm:CreateFlyout(flyoutData)
 
 	if db.buttonText == true and flyoutData.name then
 		button.text = button:CreateFontString(nil, "OVERLAY")
-		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+		button.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
 		button.text:SetText(flyoutData.name)
 		button.text:SetTextColor(1, 1, 1, 1)
@@ -538,7 +538,7 @@ function tpm:CreateFlyout(flyoutData)
 			local flyOutButton = createFlyOutButton(spellID, flyoutsCreated, totalKnownSpells)
 			if db.buttonText == true and flyname then
 				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
 				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
 				flyOutButton.text:SetText(flyname)
 				flyOutButton.text:SetTextColor(1, 1, 1, 1)
@@ -607,7 +607,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 
 	if db.buttonText == true then
 		button.text = button:CreateFontString(nil, "OVERLAY")
-		button.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+		button.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
 		button.text:SetText(L["Season 1"])
 		button.text:SetTextColor(1, 1, 1, 1)
@@ -679,7 +679,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 
 			if db.buttonText == true and flyname then
 				flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
-				flyOutButton.text:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				flyOutButton.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
 				flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
 				flyOutButton.text:SetText(flyname)
 				flyOutButton.text:SetTextColor(1, 1, 1, 1)
