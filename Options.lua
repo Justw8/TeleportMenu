@@ -37,12 +37,7 @@ end
 local function OnSettingChanged(_, setting, value)
 	local variable = setting:GetVariable()
 	TeleportMenuDB[variable] = value
-    if variable == "Hearthstone_Dropdown" then
-        tpm:updateHearthstone()
-    end
-    if variable == "reverseMageFlyouts_Checkbox" then
-        tpm:updateMageFlyouts()
-    end
+    tpm:ReloadFrames()
 end
 
 
@@ -71,29 +66,30 @@ function tpm:LoadOptions()
         Settings.CreateCheckbox(optionsCategory, setting, buttonText)
     end
 
-    -- do -- Icon Size Slider
-    --     local optionsKey = "iconSize"
-    --     local tooltip = "Increase or decrease the size of the icons."
-    --     local options = Settings.CreateSliderOptions(10, 75, 1)
-    --     local label = "%s px"
+    do -- Icon Size Slider
+        local optionsKey = "iconSize"
+        local tooltip = "Increase or decrease the size of the icons."
+        local options = Settings.CreateSliderOptions(10, 75, 1)
+        local label = "%s px"
 
-    --     local function GetValue()
-    --         return TeleportMenuDB[optionsKey] or defaultsDB[optionsKey]
-    --     end
+        local function GetValue()
+            return TeleportMenuDB[optionsKey] or defaultsDB[optionsKey]
+        end
 
-    --     local function SetValue(value)
-    --         TeleportMenuDB[optionsKey] = value
-    --     end
+        local function SetValue(value)
+            TeleportMenuDB[optionsKey] = value
+            tpm:ReloadFrames()
+        end
 
-    --     local setting = Settings.RegisterProxySetting(optionsCategory, "IconSize_Slider", type(defaultsDB[optionsKey]), "Icon Size", defaultsDB[optionsKey], GetValue, SetValue)
+        local setting = Settings.RegisterProxySetting(optionsCategory, "IconSize_Slider", type(defaultsDB[optionsKey]), "Icon Size", defaultsDB[optionsKey], GetValue, SetValue)
 
-    --     local function Formatter(value)
-	-- 		return label:format(value)
-	-- 	end
-    --     options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
+        local function Formatter(value)
+			return label:format(value)
+		end
+        options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
 
-    --     Settings.CreateSlider(optionsCategory, setting, options, tooltip)
-    -- end
+        Settings.CreateSlider(optionsCategory, setting, options, tooltip)
+    end
 
     do
         local optionsKey = "hearthstone"
