@@ -13,7 +13,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 local db = {}
 local APPEND = L["AddonNamePrint"]
 local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
-local globalWidth, globalHeight = 35, 35 -- defaults
+local globalWidth, globalHeight = 40, 40 -- defaults
 
 --------------------------------------
 -- Teleport Tables
