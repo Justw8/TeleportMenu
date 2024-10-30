@@ -16,7 +16,7 @@ local defaultsDB = {
     hearthstone = "none",
     reverseMageFlyouts = false,
     buttonText = true,
-    showOnlySeasonalHerosPath = false,
+    showOnlySeasonalHerosPath = false
 }
 
 -- Get all options and verify them
@@ -35,11 +35,10 @@ local function resetOptions()
 end
 
 local function OnSettingChanged(_, setting, value)
-	local variable = setting:GetVariable()
-	TeleportMenuDB[variable] = value
+    local variable = setting:GetVariable()
+    TeleportMenuDB[variable] = value
     tpm:ReloadFrames()
 end
-
 
 local optionsCategory = Settings.RegisterVerticalLayoutCategory(ADDON_NAME)
 
@@ -84,8 +83,8 @@ function tpm:LoadOptions()
         local setting = Settings.RegisterProxySetting(optionsCategory, "IconSize_Slider", type(defaultsDB[optionsKey]), "Icon Size", defaultsDB[optionsKey], GetValue, SetValue)
 
         local function Formatter(value)
-			return label:format(value)
-		end
+            return label:format(value)
+        end
         options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
 
         Settings.CreateSlider(optionsCategory, setting, options, tooltip)
@@ -98,11 +97,11 @@ function tpm:LoadOptions()
         local function GetOptions()
             local container = Settings.CreateControlTextContainer()
             container:Add("none", L["None"])
-            container:Add("rng", "|T1669494:16:16:0:0:64:64:4:60:4:60|t "..L["Random"])
+            container:Add("rng", "|T1669494:16:16:0:0:64:64:4:60:4:60|t " .. L["Random"])
             local startOption = 2
             local hearthstones = tpm:GetAvailableHearthstoneToys()
             for id, hearthstoneInfo in pairs(hearthstones) do
-                container:Add(tostring(id), "|T"..hearthstoneInfo.texture..":16:16:0:0:64:64:4:60:4:60|t "..hearthstoneInfo.name)
+                container:Add(tostring(id), "|T" .. hearthstoneInfo.texture .. ":16:16:0:0:64:64:4:60:4:60|t " .. hearthstoneInfo.name)
             end
             return container:GetData()
         end
@@ -123,10 +122,11 @@ function tpm:LoadOptions()
     do
         local optionsKey = "showOnlySeasonalHerosPath"
         local tooltip = L["Seasonal Teleports Toggle Tooltip"]
-        local setting = Settings.RegisterAddOnSetting(optionsCategory, "ShowOnlySeasonalHerosPath_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Seasonal Teleports"], defaultsDB[optionsKey])
+        local setting =
+            Settings.RegisterAddOnSetting(optionsCategory, "ShowOnlySeasonalHerosPath_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Seasonal Teleports"], defaultsDB[optionsKey])
         Settings.SetOnValueChangedCallback("ShowOnlySeasonalHerosPath_Checkbox", OnSettingChanged)
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
     end
 
-	Settings.RegisterAddOnCategory(optionsCategory)
+    Settings.RegisterAddOnCategory(optionsCategory)
 end

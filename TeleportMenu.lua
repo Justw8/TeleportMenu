@@ -49,7 +49,9 @@ local hearthstoneToys = {
 	[172179] = true, -- Eternal Traveler's Hearthstone
 	[180290] = function()
 		-- Night Fae Hearthstone
-		if GetCovenantData(3) then return true end
+		if GetCovenantData(3) then
+			return true
+		end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 3 then
 			return true
@@ -57,7 +59,9 @@ local hearthstoneToys = {
 	end,
 	[182773] = function()
 		-- Necrolord Hearthstone
-		if GetCovenantData(2) then return true end
+		if GetCovenantData(2) then
+			return true
+		end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 4 then
 			return true
@@ -65,7 +69,9 @@ local hearthstoneToys = {
 	end,
 	[183716] = function()
 		-- Venthyr Sinstone
-		if GetCovenantData(4) then return true end
+		if GetCovenantData(4) then
+			return true
+		end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 2 then
 			return true
@@ -73,7 +79,9 @@ local hearthstoneToys = {
 	end,
 	[184353] = function()
 		-- Kyrian Hearthstone
-		if GetCovenantData(1) then return true end
+		if GetCovenantData(1) then
+			return true
+		end
 		local covenantID = C_Covenants.GetActiveCovenantID()
 		if covenantID == 1 then
 			return true
@@ -192,7 +200,6 @@ local shortNames = {
 	[445444] = L["Priory of the Sacred Flame"],
 	[445417] = L["Ara-Kara, City of Echoes"],
 	[445441] = L["Darkflame Cleft"],
-
 	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
@@ -221,7 +228,6 @@ local shortNames = {
 	[344587] = L["Oribos"],
 	[395277] = L["Valdrakken"],
 	[446540] = L["Dornogal"],
-
 	-- Mage portals
 	[10059] = L["Stormwind"],
 	[11416] = L["Ironforge"],
@@ -248,7 +254,7 @@ local shortNames = {
 	[281402] = L["Dazar'alor"],
 	[344597] = L["Oribos"],
 	[395289] = L["Valdrakken"],
-	[446534] = L["Dornogal"],
+	[446534] = L["Dornogal"]
 }
 
 local tpTable = {
@@ -379,7 +385,9 @@ local function createCooldownFrame(frame)
 	cooldownFrame:SetAllPoints()
 
 	function cooldownFrame:CheckCooldown(id, type)
-		if not id then return end
+		if not id then
+			return
+		end
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
 			start, duration, enabled = C_Item.GetItemCooldown(id)
@@ -483,7 +491,7 @@ local function createFlyOutFrame()
 	if next(flyOutFramesPool) then
 		flyOutFrame = table.remove(flyOutFramesPool)
 	else
-		flyOutFrame = CreateFrame("Frame", "FlyOutFrame"..#flyOutFrames+1, TeleportMeButtonsFrame)
+		flyOutFrame = CreateFrame("Frame", "FlyOutFrame" .. #flyOutFrames + 1, TeleportMeButtonsFrame)
 		table.insert(flyOutFrames, flyOutFrame)
 	end
 
@@ -603,8 +611,10 @@ end
 
 function tpm:GetIconText(spellId)
 	local text = shortNames[spellId]
-	if text then return text end
-	print(APPEND .. "No short name found for spellID " .. id ..", please report this on GitHub")
+	if text then
+		return text
+	end
+	print(APPEND .. "No short name found for spellID " .. id .. ", please report this on GitHub")
 end
 
 function tpm:GetAvailableHearthstoneToys()
@@ -760,7 +770,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 			local xOffset = globalWidth * flyoutsCreated
 			flyOutButton:SetPoint("RIGHT", flyOutFrame, "LEFT", globalWidth + xOffset, 0)
 		end
-
 	end
 	flyOutFrame:SetSize(globalWidth + (globalWidth * flyoutsCreated), globalHeight)
 
