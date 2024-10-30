@@ -133,3 +133,6 @@ if not L then return end
 --L["Seasonal Teleports"] = "Seasonal Teleports"
 --L["Seasonal Teleports Tooltip"] = "\124cFF34B7EBThese Teleports are for the current Mythic Keystone Season.\124r"
 --L["Seasonal Teleports Toggle Tooltip"] = "Enable/Disable to only show the Seasonal Teleports."
+--L["Icon Size"] = "Icon Size"
+--L["Increase or decrease the size of the icons."] = "Increase or decrease the size of the icons."
+--L["%s px"] = "%s px"
