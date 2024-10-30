@@ -991,67 +991,8 @@ end
 SLASH_TPMENU1 = "/tpm"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
-	if msg == "reload" then
-		tpm:ReloadFrames()
-		return
-	end
-	if msg == "current" then
-		if db.hearthstone == "none" then
-			print(APPEND .. L["No alternative Hearthstone"])
-		else
-			print(APPEND .. L["Current Hearthstone"]:format(db.hearthstone))
-		end
-		return
-	end
-
-	if msg == "clear" then
-		if not InCombatLockdown() then
-			db.hearthstone = "none"
-			tpm:updateHearthstone()
-			print(APPEND .. L["Hearthstone Reset"])
-		else
-			print(APPEND .. L["Not In Combat Print"])
-		end
-		return
-	end
-
-	if msg == "list" then
-		print(APPEND .. L["Available Hearthstones Print"])
-		for id, _ in pairs(hearthstoneToys) do
-			if PlayerHasToy(id) then
-				local _, name = C_ToyBox.GetToyInfo(id)
-				print(id .. " - " .. name)
-			end
-		end
-		return
-	end
-
-	if msg == "rng" then
-		if not availableHearthstones or #availableHearthstones == 0 then
-			print(APPEND .. L["No Hearthone Toys"])
-			return
-		end
-		db.hearthstone = msg
-		print(APPEND .. L["Hearthstone Random Set"])
-		tpm:updateHearthstone()
-		return
-	end
-
-	local id = tonumber(msg)
-	if id and hearthstoneToys[id] and PlayerHasToy(id) then
-		local _, name = C_ToyBox.GetToyInfo(id)
-		db.hearthstone = id
-		tpm:updateHearthstone()
-		print(APPEND .. L["New Hearthstone Set"]:format(name))
-	else
-		print(APPEND .. L["Available Commands"])
-		print(L["List Command"])
-		print(L["Current Command"])
-		print(L["Clear Command"])
-		print(L["ItemId Command"])
-		print(L["Rng Command"])
-		Settings.OpenToCategory(tpm:GetOptionsCategory())
-	end
+	print(APPEND .. L["Opening Options"])
+	Settings.OpenToCategory(tpm:GetOptionsCategory())
 end
 
 --------------------------------------
