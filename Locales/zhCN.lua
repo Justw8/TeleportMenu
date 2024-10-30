@@ -133,3 +133,6 @@ L["Reverse Mage Flyouts Tooltip"] = "反转法师的传送技能弹出顺序，�
 L["Seasonal Teleports"] = "赛季传送"
 L["Seasonal Teleports Tooltip"] = "\124cFF34B7EB这些传送适用于当前钥石+赛季地下城。\124r"
 L["Seasonal Teleports Toggle Tooltip"] = "启用/禁用 仅显示当前赛季传送。"
+L["Icon Size"] = "图标大小"
+L["Increase or decrease the size of the icons."] = "选择显示图标大小。"
+L["%s px"] = "%s 像素"
