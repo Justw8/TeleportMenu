@@ -823,7 +823,7 @@ function tpm:updateHearthstone()
 			end
 		)
 	else
-		if GetItemCount(6948) == 0 then
+		if C_Item.GetItemCount(6948) == 0 then
 			print(APPEND .. L["No Hearthtone In Bags"])
 			hearthstoneButton:Hide()
 			return
@@ -905,7 +905,7 @@ local function createAnchors()
 				teleport.id = db.hearthstone
 			end
 			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
-		elseif teleport.type == "item" and GetItemCount(teleport.id) > 0 then
+		elseif teleport.type == "item" and C_Item.GetItemCount(teleport.id) > 0 then
 			known = true
 		elseif teleport.type == "toy" and PlayerHasToy(teleport.id) then
 			if teleport.quest then
