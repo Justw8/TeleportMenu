@@ -133,3 +133,6 @@ L["Reverse Mage Flyouts Tooltip"] = "反轉法師的傳送技能彈出順序，�
 L["Seasonal Teleports"] = "賽季傳送"
 L["Seasonal Teleports Tooltip"] = "\124cFF34B7EB這些傳送適用於當前鑰石+賽季地下城。\124r"
 L["Seasonal Teleports Toggle Tooltip"] = "啟用/禁用 僅顯示當前賽季傳送。"
+--L["Icon Size"] = "Icon Size"
+--L["Increase or decrease the size of the icons."] = "Increase or decrease the size of the icons."
+--L["%s px"] = "%s px"
