@@ -135,3 +135,6 @@ L["Seasonal Teleports Toggle Tooltip"] = "Enable/Disable to only show the Season
 L["Icon Size"] = "Icon Size"
 L["Increase or decrease the size of the icons."] = "Increase or decrease the size of the icons."
 L["%s px"] = "%s px"
+L["Icons Per Flyout Row"] = "Icons Per Flyout Row"
+L["Icons Per Flyout Row Tooltip"] = "Set the maximum amount of flyout icons before a new row will be created."
+L["%s icons"] = "%s icons"

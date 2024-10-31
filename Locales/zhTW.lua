@@ -136,3 +136,6 @@ L["Seasonal Teleports Toggle Tooltip"] = "啟用/禁用 僅顯示當前賽季傳
 L["Icon Size"] = "圖示大小"
 L["Increase or decrease the size of the icons."] = "增加或減少圖示的大小。"
 L["%s px"] = "%s 像素"
+--L["Icons Per Flyout Row"] = "Icons Per Flyout Row"
+--L["Icons Per Flyout Row Tooltip"] = "Set the maximum amount of flyout icons before a new row will be created."
+--L["%s icons"] = "%s icons"

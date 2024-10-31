@@ -14,6 +14,7 @@ local defaultsDB = {
     enabled = true,
     iconSize = 40,
     hearthstone = "none",
+    maxFlyoutIcons = 5,
     reverseMageFlyouts = false,
     buttonText = true,
     showOnlySeasonalHerosPath = false
@@ -57,39 +58,6 @@ function tpm:LoadOptions()
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
     end
 
-    do -- ButtonText  Checkbox
-        local optionsKey = "buttonText"
-        local buttonText = L["ButtonText Tooltip"]
-        local setting = Settings.RegisterAddOnSetting(optionsCategory, "ButtonText_Toggle", optionsKey, db, type(defaultsDB[optionsKey]), L["ButtonText"], defaultsDB[optionsKey])
-        Settings.SetOnValueChangedCallback("ButtonText_Toggle", OnSettingChanged)
-        Settings.CreateCheckbox(optionsCategory, setting, buttonText)
-    end
-
-    do -- Icon Size Slider
-        local optionsKey = "iconSize"
-        local tooltip = L["Increase or decrease the size of the icons."]
-        local options = Settings.CreateSliderOptions(10, 75, 1)
-        local label = L["%s px"]
-
-        local function GetValue()
-            return TeleportMenuDB[optionsKey] or defaultsDB[optionsKey]
-        end
-
-        local function SetValue(value)
-            TeleportMenuDB[optionsKey] = value
-            tpm:ReloadFrames()
-        end
-
-        local setting = Settings.RegisterProxySetting(optionsCategory, "IconSize_Slider", type(defaultsDB[optionsKey]), L["Icon Size"], defaultsDB[optionsKey], GetValue, SetValue)
-
-        local function Formatter(value)
-            return label:format(value)
-        end
-        options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
-
-        Settings.CreateSlider(optionsCategory, setting, options, tooltip)
-    end
-
     do
         local optionsKey = "hearthstone"
         local tooltip = L["Hearthstone Toy Tooltip"]
@@ -111,7 +79,67 @@ function tpm:LoadOptions()
         Settings.SetOnValueChangedCallback("Hearthstone_Dropdown", OnSettingChanged)
     end
 
-    do
+    do -- ButtonText  Checkbox
+        local optionsKey = "buttonText"
+        local buttonText = L["ButtonText Tooltip"]
+        local setting = Settings.RegisterAddOnSetting(optionsCategory, "ButtonText_Toggle", optionsKey, db, type(defaultsDB[optionsKey]), L["ButtonText"], defaultsDB[optionsKey])
+        Settings.SetOnValueChangedCallback("ButtonText_Toggle", OnSettingChanged)
+        Settings.CreateCheckbox(optionsCategory, setting, buttonText)
+    end
+
+    do -- Icon Size Slider
+        local optionsKey = "iconSize"
+        local text = L["Icon Size"]
+        local tooltip = L["Increase or decrease the size of the icons."]
+        local options = Settings.CreateSliderOptions(10, 75, 1)
+        local label = L["%s px"]
+
+        local function GetValue()
+            return TeleportMenuDB[optionsKey] or defaultsDB[optionsKey]
+        end
+
+        local function SetValue(value)
+            TeleportMenuDB[optionsKey] = value
+            tpm:ReloadFrames()
+        end
+
+        local setting = Settings.RegisterProxySetting(optionsCategory, "IconSize_Slider", type(defaultsDB[optionsKey]), text, defaultsDB[optionsKey], GetValue, SetValue)
+
+        local function Formatter(value)
+            return label:format(value)
+        end
+        options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
+
+        Settings.CreateSlider(optionsCategory, setting, options, tooltip)
+    end
+
+    do -- Max Flyout Icons
+        local optionsKey = "maxFlyoutIcons"
+        local text = L["Icons Per Flyout Row"]
+        local tooltip = L["Icons Per Flyout Row Tooltip"]
+        local options = Settings.CreateSliderOptions(1, 20, 1)
+        local label = L["%s icons"]
+
+        local function GetValue()
+            return TeleportMenuDB[optionsKey] or defaultsDB[optionsKey]
+        end
+
+        local function SetValue(value)
+            TeleportMenuDB[optionsKey] = value
+            tpm:ReloadFrames()
+        end
+
+        local setting = Settings.RegisterProxySetting(optionsCategory, "MaxFlyoutIcons_Slider", type(defaultsDB[optionsKey]), text, defaultsDB[optionsKey], GetValue, SetValue)
+
+        local function Formatter(value)
+            return label:format(value)
+        end
+        options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
+
+        Settings.CreateSlider(optionsCategory, setting, options, tooltip)
+    end
+
+    do -- Reverse the mage teleport flyouts
         local optionsKey = "reverseMageFlyouts"
         local tooltip = L["Reverse Mage Flyouts Tooltip"]
         local setting = Settings.RegisterAddOnSetting(optionsCategory, "reverseMageFlyouts_Checkbox", optionsKey, db, type(defaultsDB[optionsKey]), L["Reverse Mage Flyouts"], defaultsDB[optionsKey])
@@ -119,7 +147,7 @@ function tpm:LoadOptions()
         Settings.CreateCheckbox(optionsCategory, setting, tooltip)
     end
 
-    do
+    do -- Seasonal Teleports Only
         local optionsKey = "showOnlySeasonalHerosPath"
         local tooltip = L["Seasonal Teleports Toggle Tooltip"]
         local setting =
