@@ -522,11 +522,12 @@ end
 -- Args
 -- frame: Parent Frame
 -- type: item, spell, toy type for the button click
--- text: Text to display on the button, only works for spells atm
+-- text: Text to display on the button
 -- id: id of the item, spell, or toy
+-- hearthstone: boolean if the button is for a hearthstone (only used for tooltip atm)
 local secureButtons = {}
 local secureButtonsPool = {}
-local function CreateSecureButton(frame, type, text, id)
+local function CreateSecureButton(frame, type, text, id, hearthstone)
 	local button
 	if next(secureButtonsPool) then
 		button = table.remove(secureButtonsPool)
@@ -568,7 +569,7 @@ local function CreateSecureButton(frame, type, text, id)
 	button:SetScript(
 		"OnEnter",
 		function(self)
-			setToolTip(self, type, id)
+			setToolTip(self, type, id, hearthstone)
 		end
 	)
 	button:SetScript(
@@ -924,21 +925,9 @@ local function createAnchors()
 		-- Create Stuff
 		if known and (teleport.type == "toy" or teleport.type == "item" or teleport.type == "spell") then
 			tpm:DebugPrint(teleport.hearthstone)
-			local button = CreateSecureButton(buttonsFrame, teleport.type, nil, teleport.id)
+			local button = CreateSecureButton(buttonsFrame, teleport.type, nil, teleport.id, teleport.hearthstone)
 			local yOffset = -globalHeight * buttonsFrame:GetButtonAmount()
 			button:SetPoint("TOPLEFT", buttonsFrame, "TOPRIGHT", 0, yOffset)
-			button:SetScript(
-				"OnEnter",
-				function(self)
-					setToolTip(self, teleport.type, teleport.id, teleport.hearthstone)
-				end
-			)
-			button:SetScript(
-				"OnShow",
-				function(self)
-					self.cooldownFrame:CheckCooldown(teleport.id, teleport.type)
-				end
-			)
 			if teleport.hearthstone then -- store to replace item later
 				buttonsFrame.hearthstoneButton = button
 			end
