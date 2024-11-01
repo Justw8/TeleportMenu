@@ -90,7 +90,7 @@ function tpm:LoadOptions()
     do -- Icon Size Slider
         local optionsKey = "iconSize"
         local text = L["Icon Size"]
-        local tooltip = L["Increase or decrease the size of the icons."]
+        local tooltip = L["Icon Size Tooltip"]
         local options = Settings.CreateSliderOptions(10, 75, 1)
         local label = L["%s px"]
 
