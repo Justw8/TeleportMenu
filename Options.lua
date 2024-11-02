@@ -21,8 +21,8 @@ local defaultsDB = {
 }
 
 -- Get all options and verify them
-local function getOptions()
-    local db = TeleportMenuDB
+function tpm:GetOptions()
+    local db = TeleportMenuDB or {}
     for k, v in pairs(db) do
         if defaultsDB[k] == nil then
             db[k] = nil
@@ -48,7 +48,7 @@ function tpm:GetOptionsCategory()
 end
 
 function tpm:LoadOptions()
-    local db = getOptions()
+    local db = tpm:GetOptions()
 
     do
         local optionsKey = "enabled"

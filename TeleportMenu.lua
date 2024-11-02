@@ -729,7 +729,7 @@ function tpm:CreateFlyout(flyoutData)
 	local flyoutsCreated = 0
 	local rowNr = 1
 
-	local inverse = TeleportMenuDB.reverseMageFlyouts and flyoutData.subtype == "mage"
+	local inverse = db.reverseMageFlyouts and flyoutData.subtype == "mage"
 	local start, endLoop, step = 1, spells, 1
 	if inverse then -- Inverse loop params
 		start, endLoop, step = spells, 1, -1
@@ -1048,8 +1048,7 @@ end
 
 local function OnEvent(self, event, addOnName)
 	if addOnName == "TeleportMenu" then
-		db = TeleportMenuDB or {}
-		TeleportMenuDB = db
+		db = tpm:GetOptions()
 		db.debug = false
 	elseif event == "PLAYER_LOGIN" then
 		checkItemsLoaded(self)
