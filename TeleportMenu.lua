@@ -990,7 +990,7 @@ end
 SLASH_TPMENU1 = "/tpm"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
-	print(APPEND .. L["Opening Options"])
+	print(APPEND .. L["Opening Options Menu"])
 	Settings.OpenToCategory(tpm:GetOptionsCategory())
 end
 

@@ -119,6 +119,7 @@ L["Hall of the Guardian"] = "HotG"
 L["Dornogal"] = "DG"
 
 -- Options
+L["Opening Options Menu"] = "Opening Options Menu"
 L["Enabled"] = "Enabled"
 L["Enable Tooltip"] = "Enable/Disable the Teleport Menu."
 L["Hearthstone Toy"] = "Hearthstone Toy"

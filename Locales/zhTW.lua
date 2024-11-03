@@ -120,6 +120,7 @@ L["Hall of the Guardian"] = "守衛廳"
 L["Dornogal"] = "多恩"
 
 -- Options
+--L["Opening Options Menu"] = "Opening Options Menu"
 L["Enabled"] = "啟用"
 L["Enable Tooltip"] = "啟用/停用 此傳送選單。"
 L["Hearthstone Toy"] = "爐石玩具"
