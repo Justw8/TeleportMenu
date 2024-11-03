@@ -23,16 +23,18 @@ local defaultsDB = {
 -- Get all options and verify them
 function tpm:GetOptions()
     local db = TeleportMenuDB or {}
-    for k, v in pairs(db) do
+    for k, v in pairs(db) do -- Remove any invalid options
         if defaultsDB[k] == nil then
             db[k] = nil
         end
     end
+    for k, v in pairs(defaultsDB) do -- Set Defaults
+        if db[k] == nil then
+            db[k] = v
+        end
+    end
+    TeleportMenuDB = db
     return db
-end
-
-local function resetOptions()
-    TeleportMenuDB = defaultsDB
 end
 
 local function OnSettingChanged(_, setting, value)
