@@ -786,9 +786,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 			local flyOutButton = CreateSecureButton(flyOutFrame, "spell", text, spellId)
 			local xOffset = globalWidth * flyoutsCreated
 			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
-			flyOutButton:SetScript("OnMouseDown", function()
-				ToggleGameMenu()
-			end)
 		end
 	end
 	flyOutFrame:SetSize(globalWidth + (globalWidth * flyoutsCreated), globalHeight)
@@ -815,9 +812,6 @@ function tpm:CreateWormholeFlyout(flyoutData)
 		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
 		local xOffset = globalWidth * flyoutsCreated
 		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
-	    flyOutButton:SetScript("OnMouseDown", function()
-			ToggleGameMenu()
-		end)
 	end
 	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
 
@@ -861,12 +855,6 @@ function tpm:updateHearthstone()
 			end
 		)
 	end
-	hearthstoneButton:SetScript(
-	    "OnMouseDown", 
-		function()
-			ToggleGameMenu()
-	end
-	)
 	hearthstoneButton:Show()
 end
 
