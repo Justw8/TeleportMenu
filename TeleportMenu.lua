@@ -569,25 +569,70 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		button.text:Show()
 	end
 
+
+    button.mouseDown = false
+	function button:SetMouseDown(mouseDown)
+		self.mouseDown = mouseDown
+	end
+
+	function button:GetMouseDown()
+		return self.mouseDown
+	end
+
 	-- Scripts
+	button:SetScript(
+	    "OnMouseDown",
+		 function(self)
+			self:SetMouseDown(true)
+		end
+	)
+	
+	button:SetScript(
+	    "OnMouseUp",
+		 function(self)
+			self:SetMouseDown(false)
+		end
+	)
+	
+	button:SetScript(
+	    "PostClick",
+		 function(self)
+			if not self:GetMouseDown() then
+				ToggleGameMenu()
+			end
+		end
+	)
+	
 	button:SetScript(
 		"OnLeave",
 		function(self)
 			GameTooltip:Hide()
 		end
 	)
+	
 	button:SetScript(
 		"OnEnter",
 		function(self)
 			setToolTip(self, type, id, hearthstone)
 		end
 	)
+	
 	button:SetScript(
 		"OnShow",
 		function(self)
 			self.cooldownFrame:CheckCooldown(id, type)
 		end
 	)
+	
+	button:SetScript(
+	    "PostClick",
+		 function(self)
+			if not self:GetMouseDown() then
+				ToggleGameMenu()
+			end
+		end
+	)
+	
 	button.cooldownFrame:CheckCooldown(id, type)
 
 	-- Textures
@@ -847,6 +892,7 @@ function tpm:updateHearthstone()
 			end
 		)
 	end
+	
 	hearthstoneButton:Show()
 end
 
