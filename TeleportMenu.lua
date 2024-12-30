@@ -123,6 +123,10 @@ local wormholes = {
 	221966 -- Wormhole Generator: Khaz Algar
 }
 local availableSeasonalTeleports = {}
+local teleportItems = {
+	202046 -- Lucky Tortollan Charm
+}
+local availableTeleportItems = {}
 
 local shortNames = {
 	-- CATA
@@ -265,6 +269,8 @@ local tpTable = {
 	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
+	-- Items
+	{id = 202046, type = "item", iconId = 2203919}, -- Lucky Tortollan Charm
 	-- Class Teleports
 	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
 	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
@@ -696,6 +702,27 @@ function tpm:updateAvailableSeasonalTeleport()
 	end
 end
 
+-- Function to check if an item is in the player's bags
+local function IsItemInBags(itemID)
+    for bag = 0, NUM_BAG_SLOTS do
+        for slot = 1, GetContainerNumSlots(bag) do
+            local id = GetContainerItemID(bag, slot)
+            if id == itemID then
+                return true -- Item found
+            end
+        end
+    end
+    return false -- Item not found
+end
+
+function tpm:updateAvailableTeleportItems()
+	for _, id in ipairs(teleportItems) do
+		if IsItemInBags(id) then
+			table.insert(availableTeleportItems, id)
+		end
+	end
+end
+
 function tpm:checkQuestCompletion(quest)
 	if type(quest) == "table" then
 		for _, questID in ipairs(quest) do
@@ -787,6 +814,31 @@ end
 
 function tpm:CreateWormholeFlyout(flyoutData)
 	if #availableWormholes == 0 then
+		return
+	end
+
+	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
+
+	local flyOutFrame = createFlyOutFrame()
+	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+
+	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "profession", id = 202})
+	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+
+	local flyoutsCreated = 0
+	for _, wormholeId in ipairs(availableWormholes) do
+		flyoutsCreated = flyoutsCreated + 1
+		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
+		local xOffset = globalWidth * flyoutsCreated
+		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+	end
+	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
+
+	return button
+end
+
+function tpm:CreateTeleportItemFlyout(flyoutData)
+	if #availableTeleportItems == 0 then
 		return
 	end
 
