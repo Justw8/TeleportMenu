@@ -257,12 +257,24 @@ local shortNames = {
 	[446534] = L["Dornogal"]
 }
 
+local availableItemTeleports = {}
+local itemTeleports = {
+	65274, -- Cloak of Coordination
+	63207, -- Wrap of Unity
+	63353, -- Shroud of Cooperation
+	202046, -- Lucky Tortollan Charm
+}
+
 local tpTable = {
 	-- Hearthstones
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
 	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
+	{id = 312370, type = "spell"}, -- Make Camp (Vulpera)
+	{id = 312372, type = "spell"}, -- Return To Camp (Vulpera)
 	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
 	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
+	-- Item Teleports
+	{type = "item_teleports", iconId = 133655}, -- Item Teleports 
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
 	-- Class Teleports
@@ -371,6 +383,9 @@ local function setToolTip(self, type, id, hs)
 	elseif type == "seasonalteleport" then
 		GameTooltip:SetText(L["Seasonal Teleports"], 1, 1, 1)
 		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
+	elseif type == "item_teleports" then
+		GameTooltip:SetText(L["Item Teleports"], 1, 1, 1)
+		GameTooltip:AddLine(L["Item Teleports Tooltip"], 1, 1, 1)
 	end
 	GameTooltip:Show()
 end
@@ -664,6 +679,14 @@ function tpm:updateAvailableWormholes()
 	end
 end
 
+function tpm:updateAvailableItemTeleports()
+	for _, id in ipairs(itemTeleports) do
+		if C_Item.GetItemCount(id) > 0 then
+			table.insert(availableItemTeleports, id)
+		end
+	end
+end
+
 function tpm:updateAvailableSeasonalTeleport()
 	local playerFaction = UnitFactionGroup("player")
 	local siegeOfBoralus = -1
@@ -781,6 +804,30 @@ function tpm:CreateSeasonalTeleportFlyout()
 		end
 	end
 	flyOutFrame:SetSize(globalWidth + (globalWidth * flyoutsCreated), globalHeight)
+
+	return button
+end
+
+function tpm:CreateItemTeleportFlyout(flyoutData)
+	if #availableItemTeleports == 0 then
+		return
+	end
+
+	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
+
+	local flyOutFrame = createFlyOutFrame()
+	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "item_teleports"})
+	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+
+	local flyoutsCreated = 0
+	for _, itemTeleportId in ipairs(availableItemTeleports) do
+		flyoutsCreated = flyoutsCreated + 1
+		local flyOutButton = CreateSecureButton(flyOutFrame, "item", nil, itemTeleportId)
+		local xOffset = globalWidth * flyoutsCreated
+		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+	end
+	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
 
 	return button
 end
@@ -946,6 +993,11 @@ local function createAnchors()
 			if created then
 				buttonsFrame:IncrementButtons()
 			end
+		elseif teleport.type == "item_teleports" then
+			local created = tpm:CreateItemTeleportFlyout(teleport)
+			if created then
+				buttonsFrame:IncrementButtons()
+			end
 		elseif teleport.type == "flyout" then
 			local created = tpm:CreateFlyout(teleport)
 			if created then
@@ -1012,6 +1064,7 @@ local function checkItemsLoaded(self)
 
 	LoadItems(hearthstoneToys)
 	LoadItems(wormholes)
+	LoadItems(itemTeleports)
 
 	local allLoaded = true
 	local function OnItemsLoaded()
@@ -1035,6 +1088,7 @@ function tpm:Setup()
 	tpm:updateAvailableHearthstones()
 	tpm:updateAvailableWormholes()
 	tpm:updateAvailableSeasonalTeleport()
+	tpm:updateAvailableItemTeleports()
 
 	if db.hearthstone and db.hearthstone ~= "rng" and db.hearthstone ~= "none" and not PlayerHasToy(db.hearthstone) then
 		print(APPEND .. L["Hearthone Reset Error"]:format(db.hearthstone))
