@@ -19,109 +19,6 @@ local globalWidth, globalHeight = 40, 40 -- defaults
 -- Teleport Tables
 --------------------------------------
 
-local covenantsMaxed = nil
-local function GetCovenantData(id) -- the id is the achievement criteria index from Re-Re-Re-Renowned
-	if covenantsMaxed then
-		return covenantsMaxed[id]
-	end
-	covenantsMaxed = {}
-	for i = 1, 4 do
-		local _, _, completed = GetAchievementCriteriaInfo(15646, i)
-		covenantsMaxed[i] = completed
-	end
-end
-
-local availableHearthstones = {}
-local hearthstoneToys = {
-	[54452] = true, -- Ethereal Portal
-	[64488] = true, -- The Innkeeper's Daughter
-	[93672] = true, -- Dark Portal
-	[142542] = true, -- Tome of Town Portal
-	[162973] = true, -- Greatfather Winter's Hearthstone
-	[163045] = true, -- Headless Horseman's Hearthstone
-	[163206] = true, -- Weary Spirit Binding
-	[165669] = true, -- Lunar Elder's Hearthstone
-	[165670] = true, -- Peddlefeet's Lovely Hearthstone
-	[165802] = true, -- Noble Gardener's Hearthstone
-	[166746] = true, -- Fire Eater's Hearthstone
-	[166747] = true, -- Brewfest Reveler's Hearthstone
-	[168907] = true, -- Holographic Digitalization Hearthstone
-	[172179] = true, -- Eternal Traveler's Hearthstone
-	[180290] = function()
-		-- Night Fae Hearthstone
-		if GetCovenantData(3) then
-			return true
-		end
-		local covenantID = C_Covenants.GetActiveCovenantID()
-		if covenantID == 3 then
-			return true
-		end
-	end,
-	[182773] = function()
-		-- Necrolord Hearthstone
-		if GetCovenantData(2) then
-			return true
-		end
-		local covenantID = C_Covenants.GetActiveCovenantID()
-		if covenantID == 4 then
-			return true
-		end
-	end,
-	[183716] = function()
-		-- Venthyr Sinstone
-		if GetCovenantData(4) then
-			return true
-		end
-		local covenantID = C_Covenants.GetActiveCovenantID()
-		if covenantID == 2 then
-			return true
-		end
-	end,
-	[184353] = function()
-		-- Kyrian Hearthstone
-		if GetCovenantData(1) then
-			return true
-		end
-		local covenantID = C_Covenants.GetActiveCovenantID()
-		if covenantID == 1 then
-			return true
-		end
-	end,
-	[188952] = true, -- Dominated Hearthstone
-	[190196] = true, -- Enlightened Hearthstone
-	[190237] = true, -- Broker Translocation Matrix
-	[193588] = true, -- Timewalker's Hearthstone
-	[200630] = true, -- Ohnir Windsage's Hearthstone
-	[206195] = true, -- Path of the Naaru
-	[208704] = true, -- Deepdweller's Earthen Hearthstone
-	[209035] = true, -- Hearthstone of the Flame
-	[210455] = function()
-		-- Draenic Hologem (Draenei and Lightforged Draenei only)
-		local _, _, raceId = UnitRace("player")
-		if raceId == 11 or raceId == 30 then
-			return true
-		end
-	end,
-	[212337] = true, -- Stone of the Hearth
-	[228940] = true -- Notorious Thread's Hearthstone
-}
-
-local availableWormholes = {}
-local wormholes = {
-	30542, -- Dimensional Ripper - Area 52
-	18984, -- Dimensional Ripper - Everlook
-	18986, -- Ultrasafe Transporter: Gadgetzan
-	30544, -- Ultrasafe Transporter: Toshley's Station
-	48933, -- Wormhole Generator: Northrend
-	87215, -- Wormhole Generator: Pandaria
-	112059, -- Wormhole Centrifuge (Dreanor) 6
-	151652, -- Wormhole Generator: Argus
-	168807, -- Wormhole Generator: Kul Tiras 5
-	168808, -- Wormhole Generator: Zandalar
-	172924, -- Wormhole Generator: Shadowlands 3
-	198156, -- Wyrmhole Generator: Dragon Isles 4
-	221966 -- Wormhole Generator: Khaz Algar
-}
 local availableSeasonalTeleports = {}
 
 local shortNames = {
@@ -630,15 +527,7 @@ function tpm:GetIconText(spellId)
 	print(APPEND .. "No short name found for spellID " .. id .. ", please report this on GitHub")
 end
 
-function tpm:updateAvailableWormholes()
-	for _, id in ipairs(wormholes) do
-		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
-			table.insert(availableWormholes, id)
-		end
-	end
-end
-
-function tpm:updateAvailableSeasonalTeleport()
+function tpm:UpdateAvailableSeasonalTeleport()
 	local playerFaction = UnitFactionGroup("player")
 	local siegeOfBoralus = -1
 	if playerFaction == "Alliance" then
@@ -760,7 +649,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 end
 
 function tpm:CreateWormholeFlyout(flyoutData)
-	if #availableWormholes == 0 then
+	if #tpm.AvailableWormholes == 0 then
 		return
 	end
 
@@ -773,7 +662,7 @@ function tpm:CreateWormholeFlyout(flyoutData)
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
-	for _, wormholeId in ipairs(availableWormholes) do
+	for _, wormholeId in ipairs(tpm.AvailableWormholes) do
 		flyoutsCreated = flyoutsCreated + 1
 		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
 		local xOffset = globalWidth * flyoutsCreated
@@ -785,7 +674,7 @@ function tpm:CreateWormholeFlyout(flyoutData)
 end
 
 function tpm:CreateItemTeleportsFlyout(flyoutData)
-	if #tpm.AvailableItemTeleports == 0 then 
+	if #tpm.AvailableItemTeleports == 0 then
 		return
 	end
 
@@ -814,12 +703,12 @@ function tpm:updateHearthstone()
 	if not hearthstoneButton then
 		return
 	end
-	local texture
+
 	if db["Teleports:Hearthstone"] == "rng" then
-		local rng = math.random(#availableHearthstones)
+		local rng = math.random(#tpm.AvailableHearthstones)
 		hearthstoneButton:SetNormalTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
-		hearthstoneButton:SetAttribute("toy", availableHearthstones[rng])
+		hearthstoneButton:SetAttribute("toy", tpm.AvailableHearthstones[rng])
 	elseif db["Teleports:Hearthstone"] ~= "none" then
 		SetTextureByItemId(hearthstoneButton, db["Teleports:Hearthstone"])
 		hearthstoneButton:SetAttribute("type", "toy")
@@ -847,23 +736,6 @@ function tpm:updateHearthstone()
 		)
 	end
 	hearthstoneButton:Show()
-end
-
-function tpm:GetRandomHearthstone(retry)
-	if #availableHearthstones == 0 then
-		return
-	end
-	if #availableHearthstones == 1 then
-		return availableHearthstones[1]
-	end -- Don't even bother
-	local randomHs = availableHearthstones[math.random(#availableHearthstones)]
-	if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
-		randomHs = self:GetRandomHearthstone(true)
-	end
-	if not retry then
-		lastRandomHearthstone = randomHs
-	end
-	return randomHs
 end
 
 local function createAnchors()
@@ -994,8 +866,16 @@ end
 SLASH_TPMENU1 = "/tpm"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
-	print(APPEND .. L["Opening Options Menu"])
-	Settings.OpenToCategory(tpm:GetOptionsCategory())
+	local args = { (" "):split(msg:lower()) };
+	msg = args[1];
+
+	if msg == "" then
+		Settings.OpenToCategory(tpm:GetOptionsCategory())
+	elseif msg == "filters" then
+		Settings.OpenToCategory(tpm:GetOptionsCategory(msg))
+	else
+		print(APPEND.." unknown command: "..msg)
+	end
 end
 
 --------------------------------------
@@ -1009,13 +889,13 @@ local function checkItemsLoaded(self)
 
 	self.continuableContainer = ContinuableContainer:Create()
 	local function LoadItems(itemTable)
-		for _, itemId in ipairs(itemTable) do
-			self.continuableContainer:AddContinuable(Item:CreateFromItemID(tonumber(itemId)))
+		for id, _ in ipairs(itemTable) do
+			self.continuableContainer:AddContinuable(Item:CreateFromItemID(tonumber(id)))
 		end
 	end
 
-	LoadItems(hearthstoneToys)
-	LoadItems(wormholes)
+	LoadItems(tpm.Wormholes)
+	LoadItems(tpm.Hearthstones)
 	LoadItems(tpm.ItemTeleports)
 
 	local allLoaded = true
@@ -1037,9 +917,9 @@ function tpm:Setup()
 		globalHeight = db["Button:Size"]
 	end
 
-	tpm:updateAvailableHearthstones()
-	tpm:updateAvailableWormholes()
-	tpm:updateAvailableSeasonalTeleport()
+	tpm:UpdateAvailableHearthstones()
+	tpm:UpdateAvailableWormholes()
+	tpm:UpdateAvailableSeasonalTeleport()
 	tpm:UpdateAvailableItemTeleports()
 
 	if db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] ~= "rng" and db["Teleports:Hearthstone"] ~= "none" and not PlayerHasToy(db["Teleports:Hearthstone"]) then
