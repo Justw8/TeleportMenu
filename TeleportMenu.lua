@@ -257,26 +257,16 @@ local shortNames = {
 	[446534] = L["Dornogal"]
 }
 
-local availableItemTeleports = {}
-local itemTeleports = {
-	65274, -- Cloak of Coordination
-	63207, -- Wrap of Unity
-	63353, -- Shroud of Cooperation
-	202046, -- Lucky Tortollan Charm
-}
-
 local tpTable = {
 	-- Hearthstones
 	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
 	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
-	{id = 312370, type = "spell"}, -- Make Camp (Vulpera)
-	{id = 312372, type = "spell"}, -- Return To Camp (Vulpera)
 	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
 	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
-	-- Item Teleports
-	{type = "item_teleports", iconId = 133655}, -- Item Teleports 
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
+	-- Item Teleports
+	{id = -1, type = "item_teleports", iconId = 133655}, -- Item Teleports 
 	-- Class Teleports
 	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
 	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
@@ -361,7 +351,7 @@ local function setToolTip(self, type, id, hs)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	local yOffset = globalHeight / 2
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	if hs and db.hearthstone and db.hearthstone == "rng" then
+	if hs and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
 		local bindLocation = GetBindLocation()
 		GameTooltip:SetText(L["Random Hearthstone"], 1, 1, 1)
 		GameTooltip:AddLine(L["Random Hearthstone Tooltip"], 1, 1, 1)
@@ -383,9 +373,6 @@ local function setToolTip(self, type, id, hs)
 	elseif type == "seasonalteleport" then
 		GameTooltip:SetText(L["Seasonal Teleports"], 1, 1, 1)
 		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
-	elseif type == "item_teleports" then
-		GameTooltip:SetText(L["Item Teleports"], 1, 1, 1)
-		GameTooltip:AddLine(L["Item Teleports Tooltip"], 1, 1, 1)
 	end
 	GameTooltip:Show()
 end
@@ -493,10 +480,10 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 	)
 
 	-- Text
-	flyOutButton.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
+	flyOutButton.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
 	flyOutButton.text:SetTextColor(1, 1, 1, 1)
 	flyOutButton.text:Hide()
-	if db.buttonText == true and flyoutData.name then
+	if db["Button:Text:Show"] == true and flyoutData.name then
 		flyOutButton.text:SetText(flyoutData.name)
 		flyOutButton.text:Show()
 	end
@@ -576,10 +563,10 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	button:RegisterForClicks("AnyDown", "AnyUp")
 
 	-- Text
-	button.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
+	button.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
 	button.text:SetTextColor(1, 1, 1, 1)
 	button.text:Hide()
-	if db.buttonText == true and text then
+	if db["Button:Text:Show"] == true and text then
 		button.text:SetText(text)
 		button.text:Show()
 	end
@@ -643,46 +630,10 @@ function tpm:GetIconText(spellId)
 	print(APPEND .. "No short name found for spellID " .. id .. ", please report this on GitHub")
 end
 
-function tpm:GetAvailableHearthstoneToys()
-	local hearthstoneNames = {}
-	for _, toyId in pairs(availableHearthstones) do
-		local _, name, texture = C_ToyBox.GetToyInfo(toyId)
-		if not texture then
-			texture = DEFAULT_ICON
-		end
-		if not name then
-			name = tostring(toyId)
-		end
-		hearthstoneNames[toyId] = {name = name, texture = texture}
-	end
-	return hearthstoneNames
-end
-
-function tpm:updateAvailableHearthstones()
-	availableHearthstones = {}
-	for id, usable in pairs(hearthstoneToys) do
-		if PlayerHasToy(id) then
-			if type(usable) == "function" and usable() then
-				table.insert(availableHearthstones, id)
-			elseif usable == true then
-				table.insert(availableHearthstones, id)
-			end
-		end
-	end
-end
-
 function tpm:updateAvailableWormholes()
 	for _, id in ipairs(wormholes) do
 		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
 			table.insert(availableWormholes, id)
-		end
-	end
-end
-
-function tpm:updateAvailableItemTeleports()
-	for _, id in ipairs(itemTeleports) do
-		if C_Item.GetItemCount(id) > 0 then
-			table.insert(availableItemTeleports, id)
 		end
 	end
 end
@@ -732,7 +683,7 @@ function tpm:checkQuestCompletion(quest)
 end
 
 function tpm:CreateFlyout(flyoutData)
-	if db.showOnlySeasonalHerosPath and flyoutData.subtype == "path" then
+	if db["Teleports:Seasonal:Only"] and flyoutData.subtype == "path" then
 		return
 	end
 	local _, _, spells, flyoutKnown = GetFlyoutInfo(flyoutData.id)
@@ -752,7 +703,7 @@ function tpm:CreateFlyout(flyoutData)
 	local flyoutsCreated = 0
 	local rowNr = 1
 
-	local inverse = db.reverseMageFlyouts and flyoutData.subtype == "mage"
+	local inverse = db["Teleports:Mage:Reverse"] and flyoutData.subtype == "mage"
 	local start, endLoop, step = 1, spells, 1
 	if inverse then -- Inverse loop params
 		start, endLoop, step = spells, 1, -1
@@ -760,7 +711,7 @@ function tpm:CreateFlyout(flyoutData)
 	for i = start, endLoop, step do
 		local spellId = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
 		if IsSpellKnown(spellId) then
-			if flyoutsCreated == db.maxFlyoutIcons then
+			if flyoutsCreated == db["Flyout:Max_Per_Row"] then
 				flyoutsCreated = 0
 				rowNr = rowNr + 1
 			end
@@ -771,7 +722,7 @@ function tpm:CreateFlyout(flyoutData)
 		end
 	end
 
-	local frameWidth = rowNr > 1 and globalWidth * (db.maxFlyoutIcons + 1) or globalWidth * (flyoutsCreated + 1)
+	local frameWidth = rowNr > 1 and globalWidth * (db["Flyout:Max_Per_Row"] + 1) or globalWidth * (flyoutsCreated + 1)
 	flyOutFrame:SetSize(frameWidth, globalHeight * rowNr)
 	button.childButtons = childButtons
 	return button
@@ -808,30 +759,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 	return button
 end
 
-function tpm:CreateItemTeleportFlyout(flyoutData)
-	if #availableItemTeleports == 0 then
-		return
-	end
-
-	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
-
-	local flyOutFrame = createFlyOutFrame()
-	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "item_teleports"})
-	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
-
-	local flyoutsCreated = 0
-	for _, itemTeleportId in ipairs(availableItemTeleports) do
-		flyoutsCreated = flyoutsCreated + 1
-		local flyOutButton = CreateSecureButton(flyOutFrame, "item", nil, itemTeleportId)
-		local xOffset = globalWidth * flyoutsCreated
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
-	end
-	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
-
-	return button
-end
-
 function tpm:CreateWormholeFlyout(flyoutData)
 	if #availableWormholes == 0 then
 		return
@@ -857,25 +784,50 @@ function tpm:CreateWormholeFlyout(flyoutData)
 	return button
 end
 
+function tpm:CreateItemTeleportsFlyout(flyoutData)
+	if #tpm.AvailableItemTeleports == 0 then 
+		return
+	end
+
+	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
+
+	local flyOutFrame = createFlyOutFrame()
+	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+
+	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "profession", id = 202})
+	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+
+	local flyoutsCreated = 0
+	for _, itemTeleportId in ipairs(tpm.AvailableItemTeleports) do
+		flyoutsCreated = flyoutsCreated + 1
+		local flyOutButton = CreateSecureButton(flyOutFrame, "item", nil, itemTeleportId)
+		local xOffset = globalWidth * flyoutsCreated
+		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+	end
+	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
+
+	return button
+end
+
 function tpm:updateHearthstone()
 	local hearthstoneButton = TeleportMeButtonsFrame.hearthstoneButton
 	if not hearthstoneButton then
 		return
 	end
 	local texture
-	if db.hearthstone == "rng" then
+	if db["Teleports:Hearthstone"] == "rng" then
 		local rng = math.random(#availableHearthstones)
 		hearthstoneButton:SetNormalTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", availableHearthstones[rng])
-	elseif db.hearthstone ~= "none" then
-		SetTextureByItemId(hearthstoneButton, db.hearthstone)
+	elseif db["Teleports:Hearthstone"] ~= "none" then
+		SetTextureByItemId(hearthstoneButton, db["Teleports:Hearthstone"])
 		hearthstoneButton:SetAttribute("type", "toy")
-		hearthstoneButton:SetAttribute("toy", db.hearthstone)
+		hearthstoneButton:SetAttribute("toy", db["Teleports:Hearthstone"])
 		hearthstoneButton:SetScript(
 			"OnEnter",
 			function(self)
-				setToolTip(self, "toy", db.hearthstone, true)
+				setToolTip(self, "toy", db["Teleports:Hearthstone"], true)
 			end
 		)
 	else
@@ -918,17 +870,17 @@ local function createAnchors()
 	if InCombatLockdown() then
 		return
 	elseif TeleportMeButtonsFrame and not TeleportMeButtonsFrame.reload then
-		if not db.enabled then
+		if not db["Enabled"] then
 			TeleportMeButtonsFrame:Hide()
 			return
 		end
-		if TeleportMeButtonsFrame:IsVisible() and db.hearthstone and db.hearthstone == "rng" then
+		if TeleportMeButtonsFrame:IsVisible() and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
 			local rng = tpm:GetRandomHearthstone()
 			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", rng)
 		end
 		return
 	end
-	if not db.enabled then
+	if not db["Enabled"] then
 		return
 	end
 	local buttonsFrame = TeleportMeButtonsFrame or CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
@@ -951,15 +903,15 @@ local function createAnchors()
 		local known
 
 		-- Checks and overwrites
-		if teleport.hearthstone and db.hearthstone ~= "none" then -- Overwrite main HS with user set HS
+		if teleport.hearthstone and db["Teleports:Hearthstone"] ~= "none" then -- Overwrite main HS with user set HS
 			tpm:DebugPrint("Overwriting main HS with user set HS")
 			teleport.type = "toy"
 			known = true
-			if db.hearthstone == "rng" then
+			if db["Teleports:Hearthstone"] == "rng" then
 				texture = 1669494 -- misc_rune_pvp_random
 				teleport.id = tpm:GetRandomHearthstone()
 			else
-				teleport.id = db.hearthstone
+				teleport.id = db["Teleports:Hearthstone"]
 			end
 			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
 		elseif teleport.type == "item" and C_Item.GetItemCount(teleport.id) > 0 then
@@ -994,7 +946,7 @@ local function createAnchors()
 				buttonsFrame:IncrementButtons()
 			end
 		elseif teleport.type == "item_teleports" then
-			local created = tpm:CreateItemTeleportFlyout(teleport)
+			local created = tpm:CreateItemTeleportsFlyout(teleport)
 			if created then
 				buttonsFrame:IncrementButtons()
 			end
@@ -1018,9 +970,9 @@ local function createAnchors()
 end
 
 function tpm:ReloadFrames()
-	if db.iconSize then
-		globalWidth = db.iconSize
-		globalHeight = db.iconSize
+	if db["Button:Size"] then
+		globalWidth = db["Button:Size"]
+		globalHeight = db["Button:Size"]
 	end
 
 	for _, button in ipairs(flyOutButtons) do
@@ -1064,7 +1016,7 @@ local function checkItemsLoaded(self)
 
 	LoadItems(hearthstoneToys)
 	LoadItems(wormholes)
-	LoadItems(itemTeleports)
+	LoadItems(tpm.ItemTeleports)
 
 	local allLoaded = true
 	local function OnItemsLoaded()
@@ -1080,19 +1032,19 @@ local function checkItemsLoaded(self)
 end
 
 function tpm:Setup()
-	if db.iconSize then
-		globalWidth = db.iconSize
-		globalHeight = db.iconSize
+	if db["Button:Size"] then
+		globalWidth = db["Button:Size"]
+		globalHeight = db["Button:Size"]
 	end
 
 	tpm:updateAvailableHearthstones()
 	tpm:updateAvailableWormholes()
 	tpm:updateAvailableSeasonalTeleport()
-	tpm:updateAvailableItemTeleports()
+	tpm:UpdateAvailableItemTeleports()
 
-	if db.hearthstone and db.hearthstone ~= "rng" and db.hearthstone ~= "none" and not PlayerHasToy(db.hearthstone) then
-		print(APPEND .. L["Hearthone Reset Error"]:format(db.hearthstone))
-		db.hearthstone = "none"
+	if db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] ~= "rng" and db["Teleports:Hearthstone"] ~= "none" and not PlayerHasToy(db["Teleports:Hearthstone"]) then
+		print(APPEND .. L["Hearthone Reset Error"]:format(db["Teleports:Hearthstone"]))
+		db["Teleports:Hearthstone"] = "none"
 		tpm:updateHearthstone()
 	end
 
