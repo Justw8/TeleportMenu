@@ -1,4 +1,5 @@
 local _, tpm = ...
+local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 
 tpm.SettingsBase = {
 	["Enabled"] = false,
@@ -11,10 +12,28 @@ tpm.SettingsBase = {
 	["Flyout:Max_Per_Row"] = 5,
 }
 
+local function pack(...)
+	local num = select("#", ...)
+	return setmetatable({ ... }, { __len = function() return num end })
+end
+
+local function merge(...)
+	local all_teleports = {}
+	local arg = pack(...)
+	for i = 1, #arg do
+		for k, v in pairs(arg[i]) do
+			if all_teleports[k] then error("\n\n" .. L["AddonNamePrint"] .. "Duplicate key found\n\124cFF34B7EBKey:\124r " .. k .. "\n") end
+			all_teleports[k] = v
+		end
+	end
+	return all_teleports
+end
+
+
 tpm.SettingsBase = setmetatable(tpm.SettingsBase, {
-	__index = setmetatable(tpm.ItemTeleports, {
-		__index = setmetatable(tpm.Hearthstones, {
-			__index = setmetatable(tpm.Wormholes, {})
-		})
-	})
+	__index = merge(
+		tpm.ItemTeleports,
+		tpm.Wormholes,
+		tpm.Hearthstones
+	)
 })
