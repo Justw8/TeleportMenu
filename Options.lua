@@ -9,9 +9,10 @@ local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 -------------------------------------
 -- Locales
 --------------------------------------
-
 function tpm:ConvertOldSettings()
-	if not TeleportMenuDB then return end
+	if not TeleportMenuDB then
+		return
+	end
 
 	local mappedKeysToNewFormat = {
 		enabled = "Enabled",
@@ -38,7 +39,9 @@ end
 -- Get all options and verify them
 local RawSettings
 function tpm:GetOptions()
-	if not TeleportMenuDB then TeleportMenuDB = {} end
+	if not TeleportMenuDB then
+		TeleportMenuDB = {}
+	end
 	tpm:ConvertOldSettings()
 	RawSettings = TeleportMenuDB
 	return RawSettings
@@ -51,12 +54,12 @@ local function OnSettingChanged(_, setting, value)
 end
 
 local root = CreateFrame("Frame", ADDON_NAME, InterfaceOptionsFramePanelContainer)
-root.title = root:CreateFontString(nil,"ARTWORK","GameFontHighlightHuge")
-root.title:SetPoint("TOPLEFT",7, -22)
+root.title = root:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
+root.title:SetPoint("TOPLEFT", 7, -22)
 root.title:SetText(L["ADDON_NAME"])
-root.divider = root:CreateTexture(nil,"ARTWORK")
-root.divider:SetAtlas("Options_HorizontalDivider",true)
-root.divider:SetPoint("TOP",0,-50)
+root.divider = root:CreateTexture(nil, "ARTWORK")
+root.divider:SetAtlas("Options_HorizontalDivider", true)
+root.divider:SetPoint("TOP", 0, -50)
 root.logo = root:CreateTexture(nil, "ARTWORK")
 root.logo:SetPoint("TOPRIGHT", root, "TOPRIGHT", -8, -14)
 root.logo:SetTexture("Interface\\Icons\\inv_hearthstonepet")
@@ -68,12 +71,12 @@ local generalOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, 
 local buttonOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["BUTTON_SETTINGS"])
 local teleportsOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["TELEPORT_SETTINGS"])
 local teleportFiltersFrame = CreateFrame("Frame", "TeleportFiltersFramePanel", InterfaceOptionsFramePanelContainer)
-teleportFiltersFrame.title = teleportFiltersFrame:CreateFontString(nil,"ARTWORK","GameFontHighlightHuge")
-teleportFiltersFrame.title:SetPoint("TOPLEFT",7,-22)
+teleportFiltersFrame.title = teleportFiltersFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
+teleportFiltersFrame.title:SetPoint("TOPLEFT", 7, -22)
 teleportFiltersFrame.title:SetText(L["Teleports:Items:Filters"])
-teleportFiltersFrame.divider = teleportFiltersFrame:CreateTexture(nil,"ARTWORK")
-teleportFiltersFrame.divider:SetAtlas("Options_HorizontalDivider",true)
-teleportFiltersFrame.divider:SetPoint("TOP",0,-50)
+teleportFiltersFrame.divider = teleportFiltersFrame:CreateTexture(nil, "ARTWORK")
+teleportFiltersFrame.divider:SetAtlas("Options_HorizontalDivider", true)
+teleportFiltersFrame.divider:SetPoint("TOP", 0, -50)
 
 local teleportFilters = Settings.RegisterCanvasLayoutSubcategory(teleportsOptions, teleportFiltersFrame, L["Teleports:Items:Filters"])
 function tpm:GetOptionsCategory(category)
@@ -87,9 +90,7 @@ end
 function tpm:LoadOptions()
 	local db = tpm:GetOptions()
 	local defaults = tpm.SettingsBase
-	local ACTIVE_CONTRIBUTORS = {
-		"Creator: Justw8"
-	}
+	local ACTIVE_CONTRIBUTORS = { "Creator: Justw8", "Contributor(s): Mythi" }
 
 	do -- Settings Landing Page
 		local text = root:CreateFontString(nil, "ARTWORK", "GameFontNormal")
@@ -103,7 +104,7 @@ function tpm:LoadOptions()
 		contributors:SetJustifyH("LEFT")
 		contributors:SetText(L["ABOUT_CONTRIBUTORS"]:format(table.concat(ACTIVE_CONTRIBUTORS, "\n")))
 		contributors:SetWidth(640)
-		contributors:SetPoint("BOTTOMLEFT", root, 0, 20)
+		contributors:SetPoint("BOTTOMLEFT", root, 12, 20)
 	end
 
 	do
@@ -232,8 +233,7 @@ function tpm:LoadOptions()
 	do -- Seasonal Teleports Only
 		local optionsKey = "Teleports:Seasonal:Only"
 		local tooltip = L["Seasonal Teleports Toggle Tooltip"]
-		local setting =
-		Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Seasonal Teleports"], defaults[optionsKey])
+		local setting = Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Seasonal Teleports"], defaults[optionsKey])
 		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
 		Settings.CreateCheckbox(generalOptions, setting, tooltip)
 	end
@@ -266,7 +266,6 @@ function tpm:LoadOptions()
 		scrollBox:SetPoint("TOPLEFT", 2, -2)
 		scrollBox:SetPoint("BOTTOMRIGHT", scrollBar, "BOTTOMLEFT", -3, 0)
 
-
 		local function SetItemIcon(frame)
 			frame.ItemIcon = frame:CreateFontString(nil, "BACKGROUND", "GameFontHighlight")
 			frame.ItemIcon:SetSize(15, 15)
@@ -293,7 +292,7 @@ function tpm:LoadOptions()
 			end
 
 			if elementData.icon and elementData.icon ~= nil then
-				frame.ItemIcon:SetText("|T"..elementData.icon..":13:13|t ")
+				frame.ItemIcon:SetText("|T" .. elementData.icon .. ":13:13|t ")
 			else
 				frame.ItemIcon:SetText("")
 			end
@@ -332,12 +331,9 @@ function tpm:LoadOptions()
 		ScrollUtil.InitScrollBoxListWithScrollBar(scrollBox, scrollBar, view)
 
 		container:SetScript("OnShow", function()
-			scrollBox:SetDataProvider(
-				CreateDataProvider(items),
-			true)
+			scrollBox:SetDataProvider(CreateDataProvider(items), true)
 		end)
 	end
-
 
 	Settings.RegisterAddOnCategory(rootCategory)
 	Settings.RegisterAddOnCategory(generalOptions)
