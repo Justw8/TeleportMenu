@@ -2,40 +2,38 @@ local _, tpm = ...
 
 tpm.ItemTeleports = {
 	[202046] = true,      -- Lucky Tortollan Charm
-	[63206] = true,       -- Wrap of Unity: Stormwind
-	[63207] = true,       -- Wrap of Unity: Orgrimmar
-	[63352] = true,       -- Shroud of Cooperation: Stormwind
-	[63353] = true,       -- Shroud of Cooperation: Orgrimmar
-	[65274] = true,       -- Cloak of Coordination: Orgrimmar
-	[65360] = true,       -- Cloak of Coordination: Stormwind
+	[63206] = UnitFactionGroup("player") == "Alliance",       -- Wrap of Unity: Stormwind
+	[63207] = UnitFactionGroup("player") == "Horde",       -- Wrap of Unity: Orgrimmar
+	[63352] = UnitFactionGroup("player") == "Alliance",       -- Shroud of Cooperation: Stormwind
+	[63353] = UnitFactionGroup("player") == "Horde",       -- Shroud of Cooperation: Orgrimmar
+	[65274] = UnitFactionGroup("player") == "Horde",       -- Cloak of Coordination: Orgrimmar
+	[65360] = UnitFactionGroup("player") == "Alliance",       -- Cloak of Coordination: Stormwind
 	[58487] = true,       -- Potion of Deepholm
 	[61379] = true,       -- Gidwin's Hearthstone
 	[63378] = true,       -- Hellscream's Reach Tabard
 	[63379] = true,       -- Baradin's Wardens Tabard
 	[64457] = true,       -- The Last Relic of Argus
-	[64488] = true,       -- The Innkeeper's Daughter
 	[68808] = true,       -- Hero's Hearthstone
 	[68809] = true,       -- Veteran's Hearthstone
 	[87548] = true,       -- Lorewalker's Lodestone
 	[92510] = true,       -- Vol'jin's Hearthstone
-	[93672] = true,       -- Dark Portal (MoP)
-	[95050] = true,       -- The Brassiest Knuckle (Brawl'gar Arena)
-	[95051] = true,       -- The Brassiest Knuckle (Bizmo's Brawlpub)
+	[95050] = UnitFactionGroup("player") == "Horde",       -- The Brassiest Knuckle (Brawl'gar Arena)
+	[95051] = UnitFactionGroup("player") == "Alliance",       -- The Brassiest Knuckle (Bizmo's Brawlpub)
 	[95567] = true,       -- Kirin Tor Beacon
 	[95568] = true,       -- Sunreaver Beacon
 	[103678] = true,      -- Time-Lost Artifact
 	[117389] = true,      -- Draenor Archaeologist's Lodestone
 	[118662] = true,      -- Bladespire Relic
 	[118663] = true,      -- Relic of Karabor
-	[118907] = true,      -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
-	[118908] = true,      -- Pit Fighter's Punching Ring (Brawl'gar Arena)
+	[118908] = UnitFactionGroup("player") == "Horde",         -- Pit Fighter's Punching Ring (Brawl'gar Arena)
+	[118907] = UnitFactionGroup("player") == "Alliance",      -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
 	[119183] = true,      -- Scroll of Risky Recall
 	[128502] = true,      -- Hunter's Seeking Crystal
 	[128503] = true,      -- Master Hunter's Seeking Crystal
 	[128353] = true,      -- Admiral's Compass
 	[129276] = true,      -- Beginner's Guide to Dimensional Rifting
-	[132119] = true,      -- Orgrimmar Portal Stone
-	[132120] = true,      -- Stormwind Portal Stone
+	[132119] = UnitFactionGroup("player") == "Horde",      -- Orgrimmar Portal Stone
+	[132120] = UnitFactionGroup("player") == "Alliance",      -- Stormwind Portal Stone
 	[132517] = true,      -- Intra-Dalaran Wormhole Generator
 	[132523] = true,      -- Reaves Battery
 	[138448] = true,      -- Emblem of Margoss
@@ -51,11 +49,10 @@ tpm.ItemTeleports = {
 	[141605] = true,      -- Flight Master's Whistle
 	[142298] = true,      -- Astonishingly Scarlet Slippers
 	[142469] = true,      -- Violet Seal of the Grand Magus
-	[142542] = true,      -- Tome of Town Portal (Diablo 3 event)
 	[142543] = true,      -- Scroll of Town Portal (Diablo 3 event)
 	[144341] = true,      -- Rechargeable Reaves Battery
-	[144391] = true,      -- Pugilist's Powerful Punching Ring (Alliance)
-	[144392] = true,      -- Pugilist's Powerful Punching Ring (Horde)
+	[144391] = UnitFactionGroup("player") == "Alliance",      -- Pugilist's Powerful Punching Ring (Alliance)
+	[144392] = UnitFactionGroup("player") == "Horde",     -- Pugilist's Powerful Punching Ring (Horde)
 	[150733] = true,      -- Scroll of Town Portal (Ar'gorok in Arathi)
 	[159224] = true,      -- Zuldazar Hearthstone
 	[160219] = true,      -- Scroll of Town Portal (Stromgarde in Arathi)
@@ -75,7 +72,6 @@ tpm.ItemTeleports = {
 	[173716] = true,      -- Mossy Hearthstone
 	[180817] = true,      -- Cypher of Relocation (Ve'nari's Refuge)
 	[181163] = true,      -- Scroll of Teleport: Theater of Pain
-	[183716] = true,      -- Venthyr Sinstone
 	[184500] = true,      -- Attendant's Pocket Portal: Bastion
 	[184501] = true,      -- Attendant's Pocket Portal: Revendreth
 	[184502] = true,      -- Attendant's Pocket Portal: Maldraxxus
@@ -83,7 +79,6 @@ tpm.ItemTeleports = {
 	[184504] = true,      -- Attendant's Pocket Portal: Oribos
 	[189827] = true,      -- Cartel Xy's Proof of Initiation
 	[191029] = true,      -- Lilian's Hearthstone
-	[198156] = true,      -- Wyrmhole Generator: Dragon Isles
 	[201957] = true,      -- Thrall's Hearthstone
 	[204481] = true,      -- Morqut Hearth Totem
 	[205255] = true,      -- Niffen Diggin' Mitts

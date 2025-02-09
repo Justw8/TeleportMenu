@@ -97,7 +97,7 @@ function tpm:GetAvailableHearthstoneToys()
 		if not name then
 			name = tostring(toyId)
 		end
-		hearthstoneNames[toyId] = {name = name, texture = texture}
+		hearthstoneNames[toyId] = { name = name, texture = texture }
 	end
 	return hearthstoneNames
 end
@@ -117,8 +117,8 @@ function tpm:UpdateAvailableHearthstones()
 end
 
 function tpm:GetRandomHearthstone(retry)
-    local lastRandomHearthstone
-    if #tpm.AvailableHearthstones == 0 then
+	local lastRandomHearthstone
+	if #tpm.AvailableHearthstones == 0 then
 		return
 	end
 	if #tpm.AvailableHearthstones == 1 then

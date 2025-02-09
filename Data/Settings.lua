@@ -2,7 +2,7 @@ local _, tpm = ...
 local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 
 tpm.SettingsBase = {
-	["Enabled"] = false,
+	["Enabled"] = true,
 	["Teleports:Seasonal:Only"] = false,
 	["Teleports:Mage:Reverse"] = false,
 	["Teleports:Hearthstone"] = "none",

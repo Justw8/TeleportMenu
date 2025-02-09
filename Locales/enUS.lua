@@ -141,6 +141,8 @@ L["Icons Per Flyout Row Tooltip"] = "Set the maximum amount of flyout icons befo
 L["%s icons"] = "%s icons"
 L["Item Teleports"] = "Item Teleports"
 L["Item Teleports Tooltip"] = "\124cFF34B7EBAll items that have a teleport that are in your posession\124r\n\n\124cFFFF0000Items such as faction cloaks require clicking twice!\124r"
+L["Teleports:Items:Filters:Held_Items"] = "Items you have"
+L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Items you do NOT have"
 
 -- Settings
 L["ADDON_NAME"] = "Teleport Menu"

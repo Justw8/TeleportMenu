@@ -163,7 +163,7 @@ local tpTable = {
 	-- Engineering
 	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
 	-- Item Teleports
-	{id = -1, type = "item_teleports", iconId = 133655}, -- Item Teleports 
+	{type = "item_teleports", iconId = 133655}, -- Item Teleports 
 	-- Class Teleports
 	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
 	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
@@ -255,6 +255,8 @@ local function setToolTip(self, type, id, hs)
 		GameTooltip:AddLine(L["Random Hearthstone Location"]:format(bindLocation), 1, 1, 1)
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
+	elseif type == "item_teleports" then
+		GameTooltip:SetText(L["Item Teleports"], 1, 1, 1)
 	elseif type == "toy" then
 		GameTooltip:SetToyByItemID(id)
 	elseif type == "spell" then
@@ -683,7 +685,7 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 	local flyOutFrame = createFlyOutFrame()
 	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "profession", id = 202})
+	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "item_teleports"})
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
