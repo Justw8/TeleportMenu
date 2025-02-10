@@ -241,24 +241,46 @@ function tpm:LoadOptions()
 	end
 
 	do
+		local ContinuableContainer = ContinuableContainer:Create();
 		local items_in_posession = {}
 		local items_to_be_obtained = {}
+		local loader = CreateFrame("Frame", nil, teleportFiltersFrame, "SpinnerTemplate")
+		loader:SetWidth(100)
+		loader:SetHeight(100)
+		loader:SetPoint("CENTER")
+		loader.text = loader:CreateFontString(nil, "OVERLAY", "GameFontNormalHuge4")
+		loader.text:SetText(string.upper(L["Common:Loading"]))
+		loader.text:SetPoint("BOTTOM", loader, "TOP", 0, 10)
+
+		local container = CreateFrame("Frame", nil, teleportFiltersFrame)
+		container:SetPoint("TOPLEFT", teleportFiltersFrame.divider, "BOTTOMLEFT", 0, -4)
+		container:SetPoint("BOTTOMRIGHT", teleportFiltersFrame, nil, -4, 0)
+		container:Hide()
+
 		for id, _ in pairs(tpm.ItemTeleports) do
 			local item = Item:CreateFromItemID(id)
-			item:ContinueOnItemLoad(function()
+			ContinuableContainer:AddContinuable(item)
+		end
+
+		ContinuableContainer:ContinueOnLoad(function()
+			for id, _ in pairs(tpm.ItemTeleports) do
 				local items = (GetItemCount(id) > 0 and items_in_posession) or items_to_be_obtained
 				table.insert(items, {
 					id = id,
-					name = item:GetItemName(),
-					icon = item:GetItemIcon(),
+					name = C_Item.GetItemNameByID(id),
+					icon = C_Item.GetItemIconByID(id),
 					in_posession = GetItemCount(id) > 0,
 				})
 
-				sort(items, function(a, b)
-					return a.name < b.name
-				end)
-			end)
-		end
+				if #items > 1 then
+					sort(items, function(a, b)
+						return a.name < b.name
+					end)
+				end
+			end
+			loader:Hide()
+			container:Show()
+		end)
 
 		local function SetItemIcon(frame)
 			frame.ItemIcon = frame:CreateFontString(nil, "BACKGROUND", "GameFontHighlight")
@@ -326,10 +348,6 @@ function tpm:LoadOptions()
 			frame:UpdateVisual()
 		end
 
-		local container = CreateFrame("Frame", nil, teleportFiltersFrame)
-		container:SetPoint("TOPLEFT", teleportFiltersFrame.divider, "BOTTOMLEFT", 0, -4)
-		container:SetPoint("BOTTOMRIGHT", teleportFiltersFrame, nil, -4, 0)
-
 		---@class CreateScrollBox
 		---@param parent Frame
 		---@param items table
@@ -345,7 +363,7 @@ function tpm:LoadOptions()
 			ScrollBar:SetPoint("TOPRIGHT", ScrollBoxContainer, -10, -12)
 			ScrollBar:SetPoint("BOTTOMRIGHT", ScrollBoxContainer, -10, 5)
 
-			if #items < 15 then ScrollBar:Hide() end
+			if items and #items < 15 then ScrollBar:Hide() end
 
 			local ScrollBox = CreateFrame("Frame", nil, ScrollBoxContainer, "WowScrollBoxList")
 			ScrollBox:SetPoint("TOPLEFT", ScrollBoxTitle, "BOTTOMLEFT", -8, -4)

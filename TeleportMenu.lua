@@ -256,7 +256,7 @@ local function setToolTip(self, type, id, hs)
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
 	elseif type == "item_teleports" then
-		GameTooltip:SetText(L["Item Teleports"], 1, 1, 1)
+		GameTooltip:SetText(L["Item Teleports Tooltip"], 1, 1, 1)
 	elseif type == "toy" then
 		GameTooltip:SetToyByItemID(id)
 	elseif type == "spell" then

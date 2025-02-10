@@ -2,6 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhCN")
 if not L then return end
 
 L["AddonNamePrint"] = "\124cFFFF0000传送菜单：\124r " -- 1 space after the :
+L["Common:Loading"] = "LOADING"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<战斗中不可用>\124r"
 L["Random Hearthstone"] = "随机炉石"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EB点击后，会随机使用一个炉石。\n当你重新打开主菜单时，它会选择一个新炉石。\124r"

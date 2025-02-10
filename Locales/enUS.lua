@@ -1,6 +1,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "enUS", true)
 
 L["AddonNamePrint"] = "\124cFFFF0000TeleportMenu:\124r " -- 1 space after the :
+L["Common:Loading"] = "LOADING"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<Not available in combat>\124r"
 L["Random Hearthstone"] = "Random Hearthstone"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EBClick to cast a random hearthstone.\nIt will pick a new hearthstone when you re-open the menu.\124r"
