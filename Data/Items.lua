@@ -1,5 +1,6 @@
 local _, tpm = ...
 
+--- @type { [integer]: boolean }
 tpm.ItemTeleports = {
 	[202046] = true,      -- Lucky Tortollan Charm
 	[63206] = UnitFactionGroup("player") == "Alliance",       -- Wrap of Unity: Stormwind

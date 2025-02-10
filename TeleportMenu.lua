@@ -156,34 +156,36 @@ local shortNames = {
 
 local tpTable = {
 	-- Hearthstones
-	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
-	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
-	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
-	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
+	{ id = 6948,               type = "item",   hearthstone = true }, -- Hearthstone
+	{ id = 556,                type = "spell" }, -- Astral Recall (Shaman)
+	{ id = 110560,             type = "toy",    quest = { 34378, 34586 } }, -- Garrison Hearthstone
+	{ id = 140192,             type = "toy",    quest = { 44184, 44663 } }, -- Dalaran Hearthstone
 	-- Engineering
-	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
+	{ type = "wormholes",      iconId = 4620673 }, -- Engineering Wormholes
 	-- Item Teleports
-	{type = "item_teleports", iconId = 133655}, -- Item Teleports 
+	{ type = "item_teleports", iconId = 133655 }, -- Item Teleports
 	-- Class Teleports
-	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
-	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
-	{id = 11, type = "flyout", iconId = 135744, subtype = "mage"}, -- Portals (Mage) (Horde)
-	{id = 12, type = "flyout", iconId = 135748, subtype = "mage"}, -- Portals (Mage) (Alliance)
-	{id = 126892, type = "spell"}, -- Zen Pilgrimage (Monk)
-	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
-	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
+	{ id = 1,                  type = "flyout", iconId = 237509,         subtype = "mage" }, -- Teleport (Mage) (Horde)
+	{ id = 8,                  type = "flyout", iconId = 237509,         subtype = "mage" }, -- Teleport (Mage) (Alliance)
+	{ id = 11,                 type = "flyout", iconId = 135744,         subtype = "mage" }, -- Portals (Mage) (Horde)
+	{ id = 12,                 type = "flyout", iconId = 135748,         subtype = "mage" }, -- Portals (Mage) (Alliance)
+	{ id = 126892,             type = "spell" }, -- Zen Pilgrimage (Monk)
+	{ id = 50977,              type = "spell" }, -- Death Gate (Death Knight)
+	{ id = 193753,             type = "spell" }, -- Dreamwalk (Druid)
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path"}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path"}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856, name = L["Warlords of Draenor"], subtype = "path"}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827, name = L["Legion"], subtype = "path"}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493, name = L["Battle for Azeroth"], subtype = "path"}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798, name = L["Shadowlands"], subtype = "path"}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4062765, name = L["Shadowlands Raids"], subtype = "path"}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path"}, -- Hero's Path: Dragonflight
-	{id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path"}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path"} -- Hero's Path: The War Within
+	{ id = 230,                type = "flyout", iconId = 574788,         name = L["Cataclysm"],           subtype = "path" }, -- Hero's Path: Cataclysm
+	{ id = 84,                 type = "flyout", iconId = 328269,         name = L["Mists of Pandaria"],   subtype = "path" }, -- Hero's Path: Mists of Pandaria
+	{ id = 96,                 type = "flyout", iconId = 1413856,        name = L["Warlords of Draenor"], subtype = "path" }, -- Hero's Path: Warlords of Draenor
+	{ id = 224,                type = "flyout", iconId = 1260827,        name = L["Legion"],              subtype = "path" }, -- Hero's Path: Legion
+	{ id = 223,                type = "flyout", iconId = 1869493,        name = L["Battle for Azeroth"],  subtype = "path" }, -- Hero's Path: Battle for Azeroth
+	{ id = 220,                type = "flyout", iconId = 236798,         name = L["Shadowlands"],         subtype = "path" }, -- Hero's Path: Shadowlands
+	{ id = 222,                type = "flyout", iconId = 4062765,        name = L["Shadowlands Raids"],   subtype = "path" }, -- Hero's Path: Shadowlands Raids
+	{ id = 227,                type = "flyout", iconId = 4640496,        name = L["Dragonflight"],        subtype = "path" }, -- Hero's Path: Dragonflight
+	{ id = 231,                type = "flyout", iconId = 5342925,        name = L["Dragonflight Raids"],  subtype = "path" }, -- Hero's Path: Dragonflight Raids
+	{ id = 232,                type = "flyout", iconId = 5872031,        name = L["The War Within"],      subtype = "path" } -- Hero's Path: The War Within
 }
+
+local GetItemCount = C_Item.GetItemCount
 
 --------------------------------------
 -- Texture Stuff
@@ -191,7 +193,7 @@ local tpTable = {
 
 local function SetTextureByItemId(frame, itemId)
 	frame:SetNormalTexture(DEFAULT_ICON) -- Temp while loading
-	local item = Item:CreateFromItemID(tonumber(itemId))
+	local item = Item:CreateFromItemID(tonumber(itemId, 10))
 	item:ContinueOnItemLoad(
 		function()
 			local icon = item:GetItemIcon()
@@ -256,7 +258,7 @@ local function setToolTip(self, type, id, hs)
 	elseif type == "item" then
 		GameTooltip:SetItemByID(id)
 	elseif type == "item_teleports" then
-		GameTooltip:SetText(L["Item Teleports Tooltip"], 1, 1, 1)
+		GameTooltip:SetText(L["Item Teleports"] .. "\n" .. L["Item Teleports Tooltip"], 1, 1, 1)
 	elseif type == "toy" then
 		GameTooltip:SetToyByItemID(id)
 	elseif type == "spell" then
@@ -339,6 +341,7 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 	function flyOutButton:SetFlyOutFrame(frame)
 		flyOutButton.flyoutFrame = frame
 	end
+
 	flyOutButton:SetFlyOutFrame(flyOutFrame)
 
 	function flyOutButton:Recycle()
@@ -432,12 +435,12 @@ local function createFlyOutFrame()
 	return flyOutFrame
 end
 
--- Args
--- frame: Parent Frame
--- type: item, spell, toy type for the button click
--- text: Text to display on the button
--- id: id of the item, spell, or toy
--- hearthstone: boolean if the button is for a hearthstone (only used for tooltip atm)
+---@param frame Frame
+---@param type string
+---@param text string|nil
+---@param id integer
+---@param hearthstone? boolean
+---@return Frame
 local function CreateSecureButton(frame, type, text, id, hearthstone)
 	local button
 	if next(secureButtonsPool) then
@@ -526,10 +529,10 @@ function tpm:GetIconText(spellId)
 	if text then
 		return text
 	end
-	print(APPEND .. "No short name found for spellID " .. id .. ", please report this on GitHub")
+	print(APPEND .. "No short name found for spellID " .. spellId .. ", please report this on GitHub")
 end
 
-function tpm:UpdateAvailableSeasonalTeleport()
+function tpm:UpdateAvailableSeasonalTeleports()
 	local playerFaction = UnitFactionGroup("player")
 	local siegeOfBoralus = -1
 	if playerFaction == "Alliance" then
@@ -624,8 +627,8 @@ function tpm:CreateSeasonalTeleportFlyout()
 		return
 	end
 
-	local tooltipData = {type = "seasonalteleport"}
-	local seasonalFlyOutData = {id = -1, name = L["Season 1"], iconId = 5927657}
+	local tooltipData = { type = "seasonalteleport" }
+	local seasonalFlyOutData = { id = -1, name = L["Season 1"], iconId = 5927657 }
 	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame()
@@ -660,7 +663,7 @@ function tpm:CreateWormholeFlyout(flyoutData)
 	local flyOutFrame = createFlyOutFrame()
 	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "profession", id = 202})
+	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "profession", id = 202 })
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
@@ -685,7 +688,7 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 	local flyOutFrame = createFlyOutFrame()
 	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "item_teleports"})
+	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "item_teleports" })
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
@@ -790,13 +793,13 @@ local function createAnchors()
 			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
 		elseif teleport.type == "item" and C_Item.GetItemCount(teleport.id) > 0 then
 			known = true
-		elseif teleport.type == "toy" and PlayerHasToy(teleport.id) then
+		elseif teleport.type == "toy" and PlayerHasToy(teleport.id --[[@as integer]]) then
 			if teleport.quest then
 				known = tpm:checkQuestCompletion(teleport.quest)
 			else
 				known = true
 			end
-		elseif teleport.type == "spell" and IsSpellKnown(teleport.id) then
+		elseif teleport.type == "spell" and IsSpellKnown(teleport.id --[[@as integer]]) then
 			known = true
 		end
 
@@ -807,7 +810,7 @@ local function createAnchors()
 		-- Create Stuff
 		if known and (teleport.type == "toy" or teleport.type == "item" or teleport.type == "spell") then
 			tpm:DebugPrint(teleport.hearthstone)
-			local button = CreateSecureButton(buttonsFrame, teleport.type, nil, teleport.id, teleport.hearthstone)
+			local button = CreateSecureButton(buttonsFrame, teleport.type, nil, teleport.id --[[@as integer]], teleport.hearthstone)
 			local yOffset = -globalHeight * buttonsFrame:GetButtonAmount()
 			button:SetPoint("LEFT", buttonsFrame, "TOPRIGHT", 0, yOffset)
 			if teleport.hearthstone then -- store to replace item later
@@ -876,10 +879,9 @@ SlashCmdList["TPMENU"] = function(msg)
 	elseif msg == "filters" then
 		Settings.OpenToCategory(tpm:GetOptionsCategory(msg))
 	else
-		print(APPEND.." unknown command: "..msg)
+		print(APPEND .. " unknown command: " .. msg)
 	end
 end
-
 --------------------------------------
 -- Loading
 --------------------------------------
@@ -890,9 +892,10 @@ local function checkItemsLoaded(self)
 	end
 
 	self.continuableContainer = ContinuableContainer:Create()
+
 	local function LoadItems(itemTable)
 		for id, _ in ipairs(itemTable) do
-			self.continuableContainer:AddContinuable(Item:CreateFromItemID(tonumber(id)))
+			self.continuableContainer:AddContinuable(Item:CreateFromItemID(id))
 		end
 	end
 
@@ -905,6 +908,7 @@ local function checkItemsLoaded(self)
 		if allLoaded then
 			tpm:Setup()
 			tpm:LoadOptions()
+			self:UnregisterEvent("ADDON_LOADED")
 		else
 			checkItemsLoaded(self)
 		end
@@ -921,10 +925,10 @@ function tpm:Setup()
 
 	tpm:UpdateAvailableHearthstones()
 	tpm:UpdateAvailableWormholes()
-	tpm:UpdateAvailableSeasonalTeleport()
+	tpm:UpdateAvailableSeasonalTeleports()
 	tpm:UpdateAvailableItemTeleports()
 
-	if db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] ~= "rng" and db["Teleports:Hearthstone"] ~= "none" and not PlayerHasToy(db["Teleports:Hearthstone"]) then
+	if db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] ~= "rng" and db["Teleports:Hearthstone"] ~= "none" and not PlayerHasToy(db["Teleports:Hearthstone"] --[[@as integer]]) then
 		print(APPEND .. L["Hearthone Reset Error"]:format(db["Teleports:Hearthstone"]))
 		db["Teleports:Hearthstone"] = "none"
 		tpm:updateHearthstone()
@@ -934,19 +938,53 @@ function tpm:Setup()
 	hooksecurefunc("ToggleGameMenu", createAnchors)
 end
 
-local function OnEvent(self, event, addOnName)
-	if addOnName == "TeleportMenu" then
-		db = tpm:GetOptions()
-		db.debug = false
-	elseif event == "PLAYER_LOGIN" then
-		checkItemsLoaded(self)
-	end
-end
+-- Event Handlers
+local events = {};
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
-f:SetScript("OnEvent", OnEvent)
+f:RegisterEvent("BAG_UPDATE_DELAYED")
+f:SetScript("OnEvent", function(self, event, ...)
+	events[event](self, ...)
+end);
+
+function events:ADDON_LOADED(...)
+	local addOnName = ...
+
+	if addOnName == "TeleportMenu" then
+		db = tpm:GetOptions()
+		db.debug = false
+		f:UnregisterEvent("ADDON_LOADED")
+	end
+end
+
+function events:PLAYER_LOGIN(...)
+	checkItemsLoaded(f)
+	f:UnregisterEvent("PLAYER_LOGIN")
+end
+
+function events:BAG_UPDATE_DELAYED()
+	--- @type Item[]
+	local items_in_possession = CopyTable(tpm.player.items_in_possession)
+
+	--- @type Item[]
+	local items_to_be_obtained = CopyTable(tpm.player.items_to_be_obtained)
+
+	-- Scan bags for items supposedly in possession
+	for _, item in pairs(items_in_possession) do
+		if GetItemCount(item.id) == 0 then
+			tpm:RemoveItemFromPossession(item.id)
+		end
+	end
+
+	-- Scan bags for items supposedly NOT in possession
+	for _, item in pairs(items_to_be_obtained) do
+		if GetItemCount(item.id) > 0 then
+			tpm:AddItemToPossession(item.id)
+		end
+	end
+end
 
 -- Debug Functions
 function tpm:DebugPrint(...)

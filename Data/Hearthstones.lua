@@ -13,6 +13,7 @@ local function GetCovenantData(id) -- the id is the achievement criteria index f
 	end
 end
 
+--- @type { [integer]: boolean|fun(): boolean|nil }
 tpm.Hearthstones = {
 	[54452] = true, -- Ethereal Portal
 	[64488] = true, -- The Innkeeper's Daughter
@@ -90,6 +91,7 @@ tpm.Hearthstones = {
 function tpm:GetAvailableHearthstoneToys()
 	local hearthstoneNames = {}
 	for _, toyId in pairs(AvailableHearthstones) do
+		--- @type unknown, string, string | integer
 		local _, name, texture = C_ToyBox.GetToyInfo(toyId)
 		if not texture then
 			texture = "Interface\\Icons\\inv_hearthstonepet"
@@ -126,7 +128,7 @@ function tpm:GetRandomHearthstone(retry)
 	end -- Don't even bother
 	local randomHs = tpm.AvailableHearthstones[math.random(#tpm.AvailableHearthstones)]
 	if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
-		randomHs = self:GetRandomHearthstone(true)
+		randomHs = self:GetRandomHearthstone(true) --[[@as integer]]
 	end
 	if not retry then
 		lastRandomHearthstone = randomHs

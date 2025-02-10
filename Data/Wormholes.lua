@@ -1,5 +1,7 @@
 local _, tpm = ...
+local push = table.insert
 
+--- @type { [integer]: boolean }
 tpm.Wormholes = {
 	[30542] = true, -- Dimensional Ripper - Area 52
 	[18984] = true, -- Dimensional Ripper - Everlook
@@ -20,7 +22,7 @@ function tpm:UpdateAvailableWormholes()
 	local availableWormholes = {}
 	for id, _ in pairs(tpm.Wormholes) do
 		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
-			table.insert(availableWormholes, id)
+			push(availableWormholes, id)
 		end
 	end
 

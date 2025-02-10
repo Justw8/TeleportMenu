@@ -6,9 +6,6 @@ local ADDON_NAME, tpm = ...
 
 local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 
-
-local GetItemCount = C_Item.GetItemCount
-
 -------------------------------------
 -- Locales
 --------------------------------------
@@ -55,12 +52,12 @@ local function OnSettingChanged(_, setting, value)
 end
 
 local root = CreateFrame("Frame", ADDON_NAME, InterfaceOptionsFramePanelContainer)
-root.title = root:CreateFontString(nil,"ARTWORK","GameFontHighlightHuge")
-root.title:SetPoint("TOPLEFT",7, -22)
+root.title = root:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
+root.title:SetPoint("TOPLEFT", 7, -22)
 root.title:SetText(L["ADDON_NAME"])
-root.divider = root:CreateTexture(nil,"ARTWORK")
-root.divider:SetAtlas("Options_HorizontalDivider",true)
-root.divider:SetPoint("TOP",0,-50)
+root.divider = root:CreateTexture(nil, "ARTWORK")
+root.divider:SetAtlas("Options_HorizontalDivider", true)
+root.divider:SetPoint("TOP", 0, -50)
 root.logo = root:CreateTexture(nil, "ARTWORK")
 root.logo:SetPoint("TOPRIGHT", root, "TOPRIGHT", -8, -14)
 root.logo:SetTexture("Interface\\Icons\\inv_hearthstonepet")
@@ -72,12 +69,12 @@ local generalOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, 
 local buttonOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["BUTTON_SETTINGS"])
 local teleportsOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["TELEPORT_SETTINGS"])
 local teleportFiltersFrame = CreateFrame("Frame", "TeleportFiltersFramePanel", InterfaceOptionsFramePanelContainer)
-teleportFiltersFrame.title = teleportFiltersFrame:CreateFontString(nil,"ARTWORK","GameFontHighlightHuge")
-teleportFiltersFrame.title:SetPoint("TOPLEFT",7,-22)
+teleportFiltersFrame.title = teleportFiltersFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
+teleportFiltersFrame.title:SetPoint("TOPLEFT", 7, -22)
 teleportFiltersFrame.title:SetText(L["Teleports:Items:Filters"])
-teleportFiltersFrame.divider = teleportFiltersFrame:CreateTexture(nil,"ARTWORK")
-teleportFiltersFrame.divider:SetAtlas("Options_HorizontalDivider",true)
-teleportFiltersFrame.divider:SetPoint("TOP",0,-50)
+teleportFiltersFrame.divider = teleportFiltersFrame:CreateTexture(nil, "ARTWORK")
+teleportFiltersFrame.divider:SetAtlas("Options_HorizontalDivider", true)
+teleportFiltersFrame.divider:SetPoint("TOP", 0, -50)
 
 local teleportFilters = Settings.RegisterCanvasLayoutSubcategory(teleportsOptions, teleportFiltersFrame, L["Teleports:Items:Filters"])
 function tpm:GetOptionsCategory(category)
@@ -235,15 +232,12 @@ function tpm:LoadOptions()
 		local optionsKey = "Teleports:Seasonal:Only"
 		local tooltip = L["Seasonal Teleports Toggle Tooltip"]
 		local setting =
-		Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Seasonal Teleports"], defaults[optionsKey])
+			Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Seasonal Teleports"], defaults[optionsKey])
 		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
 		Settings.CreateCheckbox(generalOptions, setting, tooltip)
 	end
 
 	do
-		local ContinuableContainer = ContinuableContainer:Create();
-		local items_in_posession = {}
-		local items_to_be_obtained = {}
 		local loader = CreateFrame("Frame", nil, teleportFiltersFrame, "SpinnerTemplate")
 		loader:SetWidth(100)
 		loader:SetHeight(100)
@@ -257,27 +251,7 @@ function tpm:LoadOptions()
 		container:SetPoint("BOTTOMRIGHT", teleportFiltersFrame, nil, -4, 0)
 		container:Hide()
 
-		for id, _ in pairs(tpm.ItemTeleports) do
-			local item = Item:CreateFromItemID(id)
-			ContinuableContainer:AddContinuable(item)
-		end
-
-		ContinuableContainer:ContinueOnLoad(function()
-			for id, _ in pairs(tpm.ItemTeleports) do
-				local items = (GetItemCount(id) > 0 and items_in_posession) or items_to_be_obtained
-				table.insert(items, {
-					id = id,
-					name = C_Item.GetItemNameByID(id),
-					icon = C_Item.GetItemIconByID(id),
-					in_posession = GetItemCount(id) > 0,
-				})
-
-				if #items > 1 then
-					sort(items, function(a, b)
-						return a.name < b.name
-					end)
-				end
-			end
+		tpm:SourceItemTeleportScrollBoxes(function()
 			loader:Hide()
 			container:Show()
 		end)
@@ -306,7 +280,7 @@ function tpm:LoadOptions()
 			end
 
 			if elementData.icon and elementData.icon ~= nil then
-				frame.ItemIcon:SetText("|T"..elementData.icon..":13:13|t ")
+				frame.ItemIcon:SetText("|T" .. elementData.icon .. ":13:13|t ")
 			else
 				frame.ItemIcon:SetText("")
 			end
@@ -317,9 +291,7 @@ function tpm:LoadOptions()
 			frame.fullName = elementData.name
 			frame:SetText(frame.fullName)
 
-			frame:GetFontString():SetTextColor(1,1,1,1)
-			if not elementData.in_posession then frame:GetFontString():SetTextColor(1,1,1,0.25) end
-
+			frame:GetFontString():SetTextColor(1, 1, 1, 1)
 			frame:GetFontString():SetPoint("LEFT", 42, 0)
 			frame:GetFontString():SetPoint("RIGHT", -20, 0)
 			frame:GetFontString():SetJustifyH("LEFT")
@@ -348,14 +320,10 @@ function tpm:LoadOptions()
 			frame:UpdateVisual()
 		end
 
-		---@class CreateScrollBox
-		---@param parent Frame
-		---@param items table
-		---@param title string
-		local function CreateScrollBox(parent, items, title)
+		local function CreateScrollBox(parent, items_key, title)
 			local ScrollBoxContainer = CreateFrame("Frame", nil, parent)
 
-			local ScrollBoxTitle = ScrollBoxContainer:CreateFontString(nil,"ARTWORK","GameFontHighlightMedium")
+			local ScrollBoxTitle = ScrollBoxContainer:CreateFontString(nil, "ARTWORK", "GameFontHighlightMedium")
 			ScrollBoxTitle:SetPoint("TOPLEFT", ScrollBoxContainer, 2, -8)
 			ScrollBoxTitle:SetText(title)
 
@@ -373,17 +341,19 @@ function tpm:LoadOptions()
 			ScrollUtil.InitScrollBoxListWithScrollBar(ScrollBox, ScrollBar, view)
 
 			ScrollBoxContainer:SetScript("OnShow", function()
-				ScrollBox:SetDataProvider(CreateDataProvider(items))
+				ScrollBox:SetDataProvider(CreateDataProvider(tpm.player[items_key]))
 			end)
+
+			tpm.settings.scroll_box_views[items_key] = view
 
 			return ScrollBoxContainer
 		end
 
-		local HeldItemsScrollBoxContainer = CreateScrollBox(container, items_in_posession, L["Teleports:Items:Filters:Held_Items"])
+		local HeldItemsScrollBoxContainer = CreateScrollBox(container, "items_in_possession", L["Teleports:Items:Filters:Held_Items"])
 		HeldItemsScrollBoxContainer:SetPoint("TOPLEFT", container)
 		HeldItemsScrollBoxContainer:SetPoint("BOTTOMRIGHT", container, "BOTTOM")
 
-		local ItemsToBeObtainedScrollBoxContainer = CreateScrollBox(container, items_to_be_obtained, L["Teleports:Items:Filters:Items_To_Be_Obtained"])
+		local ItemsToBeObtainedScrollBoxContainer = CreateScrollBox(container, "items_to_be_obtained", L["Teleports:Items:Filters:Items_To_Be_Obtained"])
 		ItemsToBeObtainedScrollBoxContainer:SetPoint("TOPLEFT", HeldItemsScrollBoxContainer, "TOPRIGHT")
 		ItemsToBeObtainedScrollBoxContainer:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT")
 	end
