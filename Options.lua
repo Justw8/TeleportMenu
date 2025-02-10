@@ -363,8 +363,6 @@ function tpm:LoadOptions()
 			ScrollBar:SetPoint("TOPRIGHT", ScrollBoxContainer, -10, -12)
 			ScrollBar:SetPoint("BOTTOMRIGHT", ScrollBoxContainer, -10, 5)
 
-			if items and #items < 15 then ScrollBar:Hide() end
-
 			local ScrollBox = CreateFrame("Frame", nil, ScrollBoxContainer, "WowScrollBoxList")
 			ScrollBox:SetPoint("TOPLEFT", ScrollBoxTitle, "BOTTOMLEFT", -8, -4)
 			ScrollBox:SetPoint("BOTTOMRIGHT", ScrollBar, "BOTTOMRIGHT", -3, 0)
