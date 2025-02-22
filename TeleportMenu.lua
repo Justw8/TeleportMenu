@@ -656,7 +656,6 @@ function tpm:updateAvailableSeasonalTeleport()
 		motherlode = 467555
 	end
 
-	---@type table<number, table<number, table<number>>>
 	local seasonalTeleports = {
 		[10] = { -- The War Within
 			[1] = { -- Season 1
@@ -669,7 +668,7 @@ function tpm:updateAvailableSeasonalTeleport()
 				[505] = 445414, -- The Dawnbreaker
 				[507] = 445424, -- Grim Batol
 			},
-			[2] = {
+			[2] = { -- Season 2
 				[247] = motherlode, -- The MOTHERLODE!!
 				[370] = 373274, -- Operation: Mechagon - Workshop
 				[382] = 354467, -- Theater of Pain
