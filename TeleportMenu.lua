@@ -163,6 +163,8 @@ local shortNames = {
 	[424187] = L["Atal'Dazar"],
 	[445418] = L["Siege of Boralus"],
 	[464256] = L["Siege of Boralus"],
+	[467553] = L["The MOTHERLODE!!"],
+	[467555] = L["The MOTHERLODE!!"],
 	-- SL
 	[354462] = L["The Necrotic Wake"],
 	[354463] = L["Plaguefall"],
@@ -200,6 +202,7 @@ local shortNames = {
 	[445444] = L["Priory of the Sacred Flame"],
 	[445417] = L["Ara-Kara, City of Echoes"],
 	[445441] = L["Darkflame Cleft"],
+	[1216786] = L["Operation: Floodgate"],
 	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
@@ -653,27 +656,41 @@ function tpm:updateAvailableSeasonalTeleport()
 		motherlode = 467555
 	end
 
-	local challengeMapIdTospellID = {
-		[247] = motherlode, -- The MOTHERLODE!! Has two spells, one for each faction
-		[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
-		[370] = 373274, -- Operation: Mechagon - Workshop
-		[375] = 354464, -- Mists
-		[376] = 354462, -- Necrotic Wake
-		[382] = 354467, -- Theater of Pain
-		[499] = 445444, -- Priory of the Sacred Flame
-		[500] = 445443, -- The Rookery
-		[501] = 445269, -- Stonevault
-		[502] = 445416, -- City of Threads
-		[503] = 445417, -- Ara Ara
-		[504] = 445441, -- Darkflame Cleft
-		[505] = 445414, -- The Dawnbreaker
-		[506] = 445440, -- Cinderbrew Meadery
-		[507] = 445424, -- Grim Batol
-		[525] = 1216786, -- Operation: Floodgate -- Subject to change
+	---@type table<number, table<number, table<number>>>
+	local seasonalTeleports = {
+		[10] = { -- The War Within
+			[1] = { -- Season 1
+				[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
+				[375] = 354464, -- Mists
+				[376] = 354462, -- Necrotic Wake
+				[501] = 445269, -- Stonevault
+				[502] = 445416, -- City of Threads
+				[503] = 445417, -- Ara Ara
+				[505] = 445414, -- The Dawnbreaker
+				[507] = 445424, -- Grim Batol
+			},
+			[2] = {
+				[247] = motherlode, -- The MOTHERLODE!!
+				[370] = 373274, -- Operation: Mechagon - Workshop
+				[382] = 354467, -- Theater of Pain
+				[499] = 445444, -- Priory of the Sacred Flame
+				[500] = 445443, -- The Rookery
+				[504] = 445441, -- Darkflame Cleft
+				[506] = 445440, -- Cinderbrew Meadery
+				[525] = 1216786, -- Operation: Floodgate
+			},
+		},
 	}
 
+	local currentExpansion = GetExpansionLevel()
+	local currentSeason = C_MythicPlus.GetCurrentUIDisplaySeason()
+	if not currentSeason or currentSeason == 0 then
+		return
+	end
+
+	local currentSeasonTeleportPool = seasonalTeleports[currentExpansion][currentSeason]
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
-		local spellID = challengeMapIdTospellID[mapId]
+		local spellID = currentSeasonTeleportPool[mapId]
 		if spellID and IsSpellKnown(spellID) then
 			table.insert(availableSeasonalTeleports, spellID)
 		end
@@ -744,7 +761,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 	end
 
 	local tooltipData = { type = "seasonalteleport" }
-	local seasonalFlyOutData = { id = -1, name = L["Season "..C_MythicPlus.GetCurrentUIDisplaySeason()], iconId = 5927657 }
+	local seasonalFlyOutData = { id = -1, name = L["Season " .. C_MythicPlus.GetCurrentUIDisplaySeason()], iconId = 5927657 }
 	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame()
