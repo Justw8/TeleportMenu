@@ -688,9 +688,7 @@ function tpm:updateAvailableSeasonalTeleport()
 	end
 
 	local currentSeasonTeleportPool = (seasonalTeleports[currentExpansion] ~= nil and seasonalTeleports[currentExpansion] or {})[currentSeason]
-	if #currentSeasonTeleportPool == 0 then
-		return
-	end
+
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
 		local spellID = currentSeasonTeleportPool[mapId]
 		if spellID and IsSpellKnown(spellID) then
