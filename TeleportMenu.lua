@@ -683,11 +683,16 @@ function tpm:updateAvailableSeasonalTeleport()
 
 	local currentExpansion = GetExpansionLevel()
 	local currentSeason = C_MythicPlus.GetCurrentUIDisplaySeason()
+
 	if not currentSeason or currentSeason == 0 then
-		return
+		currentSeason = 1 -- Previous season as fallback incase we're inbetween seasons
 	end
 
 	local currentSeasonTeleportPool = (seasonalTeleports[currentExpansion] ~= nil and seasonalTeleports[currentExpansion] or {})[currentSeason]
+
+	if currentSeasonTeleportPool == nil then
+		return
+	end
 
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
 		local spellID = currentSeasonTeleportPool[mapId]
