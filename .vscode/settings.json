@@ -1,0 +1,26 @@
+{
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false,
+    "files.insertFinalNewline": true,
+    "Lua.workspace.library": [
+        "~\\.vscode\\extensions\\ketho.wow-api-0.18.2\\Annotations"
+    ],
+    "Lua.workspace.ignoreDir": [".vscode"],
+    "Lua.diagnostics.enable": true,
+    "Lua.diagnostics.ignoredFiles": "Disable",
+    "Lua.diagnostics.libraryFiles": "Disable",
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.runtime.builtin": {
+        "basic": "disable",
+        "debug": "disable",
+        "io": "disable",
+        "math": "disable",
+        "os": "disable",
+        "package": "disable",
+        "string": "disable",
+        "table": "disable",
+        "utf8": "disable"
+    },
+    "Lua.codeLens.enable": true
+}

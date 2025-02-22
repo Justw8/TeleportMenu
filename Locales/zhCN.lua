@@ -87,6 +87,9 @@ L["Dragonflight"] = "巨龙"
 L["Dragonflight Raids"] = "巨龙-团"
 L["The War Within"] = "地心"
 L["Season 1"] = "赛季"
+-- L["Season 2"] = "S2"
+-- L["Season 3"] = "S3"
+-- L["Season 4"] = "S4"
 
 -- Mage teleport/portal abreviated text
 -- Alliance

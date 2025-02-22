@@ -103,7 +103,7 @@ local hearthstoneToys = {
 		end
 	end,
 	[212337] = true, -- Stone of the Hearth
-	[228940] = true -- Notorious Thread's Hearthstone
+	[228940] = true, -- Notorious Thread's Hearthstone
 }
 
 local availableWormholes = {}
@@ -120,7 +120,7 @@ local wormholes = {
 	168808, -- Wormhole Generator: Zandalar
 	172924, -- Wormhole Generator: Shadowlands 3
 	198156, -- Wyrmhole Generator: Dragon Isles 4
-	221966 -- Wormhole Generator: Khaz Algar
+	221966, -- Wormhole Generator: Khaz Algar
 }
 local availableSeasonalTeleports = {}
 
@@ -254,36 +254,36 @@ local shortNames = {
 	[281402] = L["Dazar'alor"],
 	[344597] = L["Oribos"],
 	[395289] = L["Valdrakken"],
-	[446534] = L["Dornogal"]
+	[446534] = L["Dornogal"],
 }
 
 local tpTable = {
 	-- Hearthstones
-	{id = 6948, type = "item", hearthstone = true}, -- Hearthstone
-	{id = 556, type = "spell"}, -- Astral Recall (Shaman)
-	{id = 110560, type = "toy", quest = {34378, 34586}}, -- Garrison Hearthstone
-	{id = 140192, type = "toy", quest = {44184, 44663}}, -- Dalaran Hearthstone
+	{ id = 6948, type = "item", hearthstone = true }, -- Hearthstone
+	{ id = 556, type = "spell" }, -- Astral Recall (Shaman)
+	{ id = 110560, type = "toy", quest = { 34378, 34586 } }, -- Garrison Hearthstone
+	{ id = 140192, type = "toy", quest = { 44184, 44663 } }, -- Dalaran Hearthstone
 	-- Engineering
-	{type = "wormholes", iconId = 4620673}, -- Engineering Wormholes
+	{ type = "wormholes", iconId = 4620673 }, -- Engineering Wormholes
 	-- Class Teleports
-	{id = 1, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Horde)
-	{id = 8, type = "flyout", iconId = 237509, subtype = "mage"}, -- Teleport (Mage) (Alliance)
-	{id = 11, type = "flyout", iconId = 135744, subtype = "mage"}, -- Portals (Mage) (Horde)
-	{id = 12, type = "flyout", iconId = 135748, subtype = "mage"}, -- Portals (Mage) (Alliance)
-	{id = 126892, type = "spell"}, -- Zen Pilgrimage (Monk)
-	{id = 50977, type = "spell"}, -- Death Gate (Death Knight)
-	{id = 193753, type = "spell"}, -- Dreamwalk (Druid)
+	{ id = 1, type = "flyout", iconId = 237509, subtype = "mage" }, -- Teleport (Mage) (Horde)
+	{ id = 8, type = "flyout", iconId = 237509, subtype = "mage" }, -- Teleport (Mage) (Alliance)
+	{ id = 11, type = "flyout", iconId = 135744, subtype = "mage" }, -- Portals (Mage) (Horde)
+	{ id = 12, type = "flyout", iconId = 135748, subtype = "mage" }, -- Portals (Mage) (Alliance)
+	{ id = 126892, type = "spell" }, -- Zen Pilgrimage (Monk)
+	{ id = 50977, type = "spell" }, -- Death Gate (Death Knight)
+	{ id = 193753, type = "spell" }, -- Dreamwalk (Druid)
 	-- Dungeon/Raid Teleports
-	{id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path"}, -- Hero's Path: Cataclysm
-	{id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path"}, -- Hero's Path: Mists of Pandaria
-	{id = 96, type = "flyout", iconId = 1413856, name = L["Warlords of Draenor"], subtype = "path"}, -- Hero's Path: Warlords of Draenor
-	{id = 224, type = "flyout", iconId = 1260827, name = L["Legion"], subtype = "path"}, -- Hero's Path: Legion
-	{id = 223, type = "flyout", iconId = 1869493, name = L["Battle for Azeroth"], subtype = "path"}, -- Hero's Path: Battle for Azeroth
-	{id = 220, type = "flyout", iconId = 236798, name = L["Shadowlands"], subtype = "path"}, -- Hero's Path: Shadowlands
-	{id = 222, type = "flyout", iconId = 4062765, name = L["Shadowlands Raids"], subtype = "path"}, -- Hero's Path: Shadowlands Raids
-	{id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path"}, -- Hero's Path: Dragonflight
-	{id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path"}, -- Hero's Path: Dragonflight Raids
-	{id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path"} -- Hero's Path: The War Within
+	{ id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path" }, -- Hero's Path: Cataclysm
+	{ id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path" }, -- Hero's Path: Mists of Pandaria
+	{ id = 96, type = "flyout", iconId = 1413856, name = L["Warlords of Draenor"], subtype = "path" }, -- Hero's Path: Warlords of Draenor
+	{ id = 224, type = "flyout", iconId = 1260827, name = L["Legion"], subtype = "path" }, -- Hero's Path: Legion
+	{ id = 223, type = "flyout", iconId = 1869493, name = L["Battle for Azeroth"], subtype = "path" }, -- Hero's Path: Battle for Azeroth
+	{ id = 220, type = "flyout", iconId = 236798, name = L["Shadowlands"], subtype = "path" }, -- Hero's Path: Shadowlands
+	{ id = 222, type = "flyout", iconId = 4062765, name = L["Shadowlands Raids"], subtype = "path" }, -- Hero's Path: Shadowlands Raids
+	{ id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path" }, -- Hero's Path: Dragonflight
+	{ id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path" }, -- Hero's Path: Dragonflight Raids
+	{ id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path" }, -- Hero's Path: The War Within
 }
 
 --------------------------------------
@@ -293,12 +293,10 @@ local tpTable = {
 local function SetTextureByItemId(frame, itemId)
 	frame:SetNormalTexture(DEFAULT_ICON) -- Temp while loading
 	local item = Item:CreateFromItemID(tonumber(itemId))
-	item:ContinueOnItemLoad(
-		function()
-			local icon = item:GetItemIcon()
-			frame:SetNormalTexture(icon)
-		end
-	)
+	item:ContinueOnItemLoad(function()
+		local icon = item:GetItemIcon()
+		frame:SetNormalTexture(icon)
+	end)
 end
 
 local function retrySetNormalTexture(button, itemId, attempt)
@@ -309,12 +307,9 @@ local function retrySetNormalTexture(button, itemId, attempt)
 		return
 	end
 	if attempts < 5 then
-		C_Timer.After(
-			1,
-			function()
-				retrySetNormalTexture(button, itemId, attempts + 1)
-			end
-		)
+		C_Timer.After(1, function()
+			retrySetNormalTexture(button, itemId, attempts + 1)
+		end)
 	else
 		print(APPEND .. L["Missing Texture %s"]:format(itemId))
 	end
@@ -324,12 +319,9 @@ local function retryGetToyTexture(toyId, attempt)
 	local attempts = attempt or 1
 	local _, name, texture = C_ToyBox.GetToyInfo(toyId)
 	if attempts < 5 then
-		C_Timer.After(
-			0.1,
-			function()
-				retryGetToyTexture(toyId, attempts + 1)
-			end
-		)
+		C_Timer.After(0.1, function()
+			retryGetToyTexture(toyId, attempts + 1)
+		end)
 	end
 end
 
@@ -369,7 +361,10 @@ local function setToolTip(self, type, id, hs)
 			GameTooltip:SetText(professionInfo.professionName, 1, 1, 1)
 		end
 	elseif type == "seasonalteleport" then
-		GameTooltip:SetText(L["Seasonal Teleports"], 1, 1, 1)
+		local currExpID = GetExpansionLevel()
+		local expName = _G["EXPANSION_NAME" .. currExpID]
+		local title = MYTHIC_DUNGEON_SEASON:format(expName, C_MythicPlus.GetCurrentUIDisplaySeason())
+		GameTooltip:SetText(title, 1, 1, 1)
 		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
 	end
 	GameTooltip:Show()
@@ -458,24 +453,18 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 		tooltipType = tooltipData.type
 		tooltipId = tooltipData.id
 	end
-	flyOutButton:SetScript(
-		"OnEnter",
-		function(self)
-			if InCombatLockdown() then
-				setCombatTooltip(self)
-				return
-			end
-			CloseAllFlyouts()
-			setToolTip(self, tooltipType, tooltipId)
-			self.flyoutFrame:Show()
+	flyOutButton:SetScript("OnEnter", function(self)
+		if InCombatLockdown() then
+			setCombatTooltip(self)
+			return
 		end
-	)
-	flyOutButton:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-		end
-	)
+		CloseAllFlyouts()
+		setToolTip(self, tooltipType, tooltipId)
+		self.flyoutFrame:Show()
+	end)
+	flyOutButton:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
 
 	-- Text
 	flyOutButton.text:SetFont(STANDARD_TEXT_FONT, 13, "OUTLINE")
@@ -517,15 +506,12 @@ local function createFlyOutFrame()
 	flyOutFrame:SetFrameLevel(103)
 	flyOutFrame:SetPropagateMouseClicks(true)
 	flyOutFrame:SetPropagateMouseMotion(true)
-	flyOutFrame:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-			if not InCombatLockdown() then -- XXX Needed?
-				self:Hide()
-			end
+	flyOutFrame:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+		if not InCombatLockdown() then -- XXX Needed?
+			self:Hide()
 		end
-	)
+	end)
 
 	flyOutFrame:Hide()
 	return flyOutFrame
@@ -570,24 +556,15 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	end
 
 	-- Scripts
-	button:SetScript(
-		"OnLeave",
-		function(self)
-			GameTooltip:Hide()
-		end
-	)
-	button:SetScript(
-		"OnEnter",
-		function(self)
-			setToolTip(self, type, id, hearthstone)
-		end
-	)
-	button:SetScript(
-		"OnShow",
-		function(self)
-			self.cooldownFrame:CheckCooldown(id, type)
-		end
-	)
+	button:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+	button:SetScript("OnEnter", function(self)
+		setToolTip(self, type, id, hearthstone)
+	end)
+	button:SetScript("OnShow", function(self)
+		self.cooldownFrame:CheckCooldown(id, type)
+	end)
 	button.cooldownFrame:CheckCooldown(id, type)
 
 	-- Textures
@@ -638,7 +615,7 @@ function tpm:GetAvailableHearthstoneToys()
 		if not name then
 			name = tostring(toyId)
 		end
-		hearthstoneNames[toyId] = {name = name, texture = texture}
+		hearthstoneNames[toyId] = { name = name, texture = texture }
 	end
 	return hearthstoneNames
 end
@@ -667,17 +644,23 @@ end
 function tpm:updateAvailableSeasonalTeleport()
 	local playerFaction = UnitFactionGroup("player")
 	local siegeOfBoralus = -1
+	local motherlode = -1
 	if playerFaction == "Alliance" then
 		siegeOfBoralus = 445418
+		motherlode = 467553
 	else
 		siegeOfBoralus = 464256
+		motherlode = 467555
 	end
 
 	local challengeMapIdTospellID = {
+		[247] = motherlode, -- The MOTHERLODE!! Has two spells, one for each faction
 		[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
+		[370] = 373274, -- Operation: Mechagon - Workshop
 		[375] = 354464, -- Mists
 		[376] = 354462, -- Necrotic Wake
-		[499] = 445444, -- Priory
+		[382] = 354467, -- Theater of Pain
+		[499] = 445444, -- Priory of the Sacred Flame
 		[500] = 445443, -- The Rookery
 		[501] = 445269, -- Stonevault
 		[502] = 445416, -- City of Threads
@@ -685,7 +668,8 @@ function tpm:updateAvailableSeasonalTeleport()
 		[504] = 445441, -- Darkflame Cleft
 		[505] = 445414, -- The Dawnbreaker
 		[506] = 445440, -- Cinderbrew Meadery
-		[507] = 445424 -- Grim Batol
+		[507] = 445424, -- Grim Batol
+		[525] = 1216786, -- Operation: Floodgate -- Subject to change
 	}
 
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
@@ -759,8 +743,8 @@ function tpm:CreateSeasonalTeleportFlyout()
 		return
 	end
 
-	local tooltipData = {type = "seasonalteleport"}
-	local seasonalFlyOutData = {id = -1, name = L["Season 1"], iconId = 5927657}
+	local tooltipData = { type = "seasonalteleport" }
+	local seasonalFlyOutData = { id = -1, name = L["Season "..C_MythicPlus.GetCurrentUIDisplaySeason()], iconId = 5927657 }
 	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame()
@@ -795,7 +779,7 @@ function tpm:CreateWormholeFlyout(flyoutData)
 	local flyOutFrame = createFlyOutFrame()
 	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, flyoutData, {type = "profession", id = 202})
+	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "profession", id = 202 })
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
@@ -825,12 +809,9 @@ function tpm:updateHearthstone()
 		SetTextureByItemId(hearthstoneButton, db.hearthstone)
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", db.hearthstone)
-		hearthstoneButton:SetScript(
-			"OnEnter",
-			function(self)
-				setToolTip(self, "toy", db.hearthstone, true)
-			end
-		)
+		hearthstoneButton:SetScript("OnEnter", function(self)
+			setToolTip(self, "toy", db.hearthstone, true)
+		end)
 	else
 		if C_Item.GetItemCount(6948) == 0 then
 			print(APPEND .. L["No Hearthtone In Bags"])
@@ -840,12 +821,9 @@ function tpm:updateHearthstone()
 		SetTextureByItemId(hearthstoneButton, 6948)
 		hearthstoneButton:SetAttribute("type", "item")
 		hearthstoneButton:SetAttribute("item", "item:6948")
-		hearthstoneButton:SetScript(
-			"OnEnter",
-			function(self)
-				setToolTip(self, "item", 6948, true)
-			end
-		)
+		hearthstoneButton:SetScript("OnEnter", function(self)
+			setToolTip(self, "item", 6948, true)
+		end)
 	end
 	hearthstoneButton:Show()
 end

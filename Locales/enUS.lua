@@ -86,6 +86,9 @@ L["Dragonflight"] = "DF"
 L["Dragonflight Raids"] = "DF R"
 L["The War Within"] = "TWW"
 L["Season 1"] = "S1"
+L["Season 2"] = "S2"
+L["Season 3"] = "S3"
+L["Season 4"] = "S4"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
