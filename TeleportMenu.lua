@@ -657,7 +657,7 @@ function tpm:updateAvailableSeasonalTeleport()
 	end
 
 	local seasonalTeleports = {
-		[10] = { -- The War Within
+		[LE_EXPANSION_WAR_WITHIN] = { -- The War Within
 			[1] = { -- Season 1
 				[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
 				[375] = 354464, -- Mists
@@ -687,7 +687,10 @@ function tpm:updateAvailableSeasonalTeleport()
 		return
 	end
 
-	local currentSeasonTeleportPool = seasonalTeleports[currentExpansion][currentSeason]
+	local currentSeasonTeleportPool = (seasonalTeleports[currentExpansion] ~= nil and seasonalTeleports[currentExpansion] or {})[currentSeason]
+	if #currentSeasonTeleportPool == 0 then
+		return
+	end
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
 		local spellID = currentSeasonTeleportPool[mapId]
 		if spellID and IsSpellKnown(spellID) then
