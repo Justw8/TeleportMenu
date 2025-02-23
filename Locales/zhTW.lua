@@ -39,6 +39,7 @@ L["Darkheart Thicket"] = "暗心"
 L["Freehold"] = "自由"
 L["The Underrot"] = "幽腐"
 L["Mechagon"] = "機械"
+-- L["The MOTHERLODE!!"] = "ML"
 L["Waycrest Manor"] = "莊園"
 L["Atal'Dazar"] = "阿塔"
 L["Siege of Boralus"] = "圍城"
@@ -74,6 +75,7 @@ L["Cinderbrew Meadery"] = "酒莊"
 L["Priory of the Sacred Flame"] = "聖焰"
 L["Ara-Kara, City of Echoes"] = "回音"
 L["Darkflame Cleft"] = "暗焰"
+-- L["Operation: Floodgate"] = "FL"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "浩劫重生"
@@ -87,6 +89,9 @@ L["Dragonflight"] = "巨龍"
 L["Dragonflight Raids"] = "巨龍 團"
 L["The War Within"] = "地心"
 L["Season 1"] = "賽季1"
+-- L["Season 2"] = "S2"
+-- L["Season 3"] = "S3"
+-- L["Season 4"] = "S4"
 
 -- Mage teleport/portal abreviated text
 -- Alliance

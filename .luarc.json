@@ -1,0 +1,20 @@
+{
+    "diagnostics.globals": [
+        "Settings",
+        "ScrollUtil",
+        "CreateScrollBoxListLinearView",
+        "MinimalSliderWithSteppersMixin",
+        "CreateDataProvider",
+        "SlashCmdList",
+        "STANDARD_TEXT_FONT",
+        "GameMenuFrame",
+        "DevTool",
+        "InterfaceOptionsFramePanelContainer",
+        "TeleportMeButtonsFrame",
+        "ToggleGameMenu"
+    ],
+    "workspace.library": [
+        "~/Documents/GitHub/AddonDev/LuaLS/Libraries/vscode-wow-api/Annotations",
+        "~/Documents/GitHub/AddonDev/LuaLS/Libraries/wow-api-type-definitions"
+    ]
+}

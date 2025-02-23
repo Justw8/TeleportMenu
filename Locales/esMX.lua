@@ -39,6 +39,7 @@ if not L then return end
 --L["Freehold"] = "FH"
 --L["The Underrot"] = "UR"
 --L["Mechagon"] = "MECH"
+-- L["The MOTHERLODE!!"] = "ML"
 --L["Waycrest Manor"] = "WM"
 --L["Atal'Dazar"] = "AD"
 --L["Siege of Boralus"] = "SoB"
@@ -74,6 +75,7 @@ if not L then return end
 --L["Priory of the Sacred Flame"] = "PoSF"
 --L["Ara-Kara, City of Echoes"] = "AK"
 --L["Darkflame Cleft"] = "DFC"
+-- L["Operation: Floodgate"] = "FL"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"
@@ -87,6 +89,9 @@ if not L then return end
 --L["Dragonflight Raids"] = "DF R"
 --L["The War Within"] = "TWW"
 --L["Season 1"] = "S1"
+-- L["Season 2"] = "S2"
+-- L["Season 3"] = "S3"
+-- L["Season 4"] = "S4"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
