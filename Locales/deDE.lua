@@ -1,5 +1,7 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "enUS", true)
-if not L then return end
+local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "deDE")
+if not L then
+	return
+end
 
 -- L["AddonNamePrint"] = "\124cFFFF0000TeleportMenu:\124r " -- 1 space after the :
 -- L["Common:Loading"] = "LOADING"
