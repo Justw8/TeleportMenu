@@ -18,6 +18,9 @@ function tpm:AddItemToPossession(item_id)
 			push(tpm.player.items_in_possession, item)
 			if #tpm.player.items_in_possession > 1 then
 				sort(tpm.player.items_in_possession, function(a, b)
+					if not a or not b or not a.name or not b.name then
+						return false
+					end
 					return a.name < b.name
 				end)
 			end
@@ -36,8 +39,11 @@ function tpm:RemoveItemFromPossession(item_id)
 	for key, item in pairs(tpm.player.items_in_possession) do
 		if item.id == item_id then
 			push(tpm.player.items_to_be_obtained, item)
-			if #tpm.player.items_in_possession > 1 then
+			if #tpm.player.items_to_be_obtained > 1 then
 				sort(tpm.player.items_to_be_obtained, function(a, b)
+					if not a or not b or not a.name or not b.name then
+						return false
+					end
 					return a.name < b.name
 				end)
 			end
