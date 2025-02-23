@@ -2,6 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhTW")
 if not L then return end
 
 L["AddonNamePrint"] = "\124cFFFF0000傳送選單：\124r " -- 1 space after the :
+L["Common:Loading"] = "LOADING"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<戰鬥中不可用>\124r"
 L["Random Hearthstone"] = "隨機爐石"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EB點擊後，會隨機使用一個爐石。\n當你重新打開主選單時，它會選擇一個新爐石。\124r"
@@ -145,3 +146,18 @@ L["%s px"] = "%s 像素"
 L["Icons Per Flyout Row"] = "每行彈出選單的圖示數"
 L["Icons Per Flyout Row Tooltip"] = "在建立新行前，最大的彈出圖示數量。"
 L["%s icons"] = "%s 圖示"
+-- L["Item Teleports"] = "Item Teleports"
+-- L["Item Teleports Tooltip"] = "\124cFF34B7EBAll items that have a teleport\124r\n\n\124cFFFF0000Items such as faction cloaks require clicking twice!\124r"
+
+-- -- Settings
+-- L["ADDON_NAME"] = "Teleport Menu"
+-- L["TITLE"] = "Teleport Menu Settings"
+-- L["GENERAL"] = "General Settings"
+-- L["BUTTON_SETTINGS"] = "Button Settings"
+-- L["TELEPORT_SETTINGS"] = "Teleport Settings"
+-- L["HEARTHSTONE_SETTINGS"] = "Hearthstone Settings"
+-- L["BUTTON_FONT_SIZE"] = "Button Font Size"
+-- L["BUTTON_FONT_SIZE_TOOLTIP"] = "Changing this setting controls the size of the abbreviated teleport names"
+-- L["Teleports:Items:Filters"] = "Item Filters"
+-- L["ABOUT_ADDON"] = "|CFFFFFFFFThis addon adds your available hearthstones and teleports to the game menu (esc). \n\nYou can change the hearthstone it uses by typing /tpm ingame and following the commands. \n\nIf there are issues or questions, or missing teleports/stones, feel free to contact me on Github.  \n\nSupported Items:\n\n Hearthstones\n Mage Teleports/Portals\n Engineering Wormholes\n Hero's Path teleports\n All class teleports (Zen Pilgramige, Death Gate, Astral Recall etc.)  \n\n \n\nFuture plans to support:  \n\nTeleport Items in inventory (on use, equipment).|r"
+-- L["ABOUT_CONTRIBUTORS"] = "Active Contributors: |CFFFFFFFF\n\n%s\n\n|r"

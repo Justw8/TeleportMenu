@@ -12,5 +12,6 @@
 
 embeds.xml
 Locales\Locales.xml
+Data\Data.xml
 Options.lua
 TeleportMenu.lua
