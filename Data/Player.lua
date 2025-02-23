@@ -16,9 +16,11 @@ function tpm:AddItemToPossession(item_id)
 	for key, item in pairs(tpm.player.items_to_be_obtained) do
 		if item.id == item_id then
 			push(tpm.player.items_in_possession, item)
-			sort(tpm.player.items_in_possession, function(a, b)
-				return a.name < b.name
-			end)
+			if #tpm.player.items_in_possession > 1 then
+				sort(tpm.player.items_in_possession, function(a, b)
+					return a.name < b.name
+				end)
+			end
 
 			tpm.player.items_to_be_obtained[key] = nil
 			tpm.settings.scroll_box_views["items_to_be_obtained"]:SetDataProvider(CreateDataProvider(tpm.player.items_to_be_obtained))
@@ -34,9 +36,11 @@ function tpm:RemoveItemFromPossession(item_id)
 	for key, item in pairs(tpm.player.items_in_possession) do
 		if item.id == item_id then
 			push(tpm.player.items_to_be_obtained, item)
-			sort(tpm.player.items_to_be_obtained, function(a, b)
-				return a.name < b.name
-			end)
+			if #tpm.player.items_in_possession > 1 then
+				sort(tpm.player.items_to_be_obtained, function(a, b)
+					return a.name < b.name
+				end)
+			end
 
 			tpm.player.items_in_possession[key] = nil
 			tpm.settings.scroll_box_views["items_to_be_obtained"]:SetDataProvider(CreateDataProvider(tpm.player.items_to_be_obtained))
