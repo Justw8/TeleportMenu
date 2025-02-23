@@ -11,5 +11,9 @@
     ],
     "Lua.diagnostics.enable": false,
     "Lua.diagnostics.ignoredFiles": "Disable",
-    "Lua.diagnostics.libraryFiles": "Disable"
+	"Lua.diagnostics.libraryFiles": "Disable",
+	"Lua.diagnostics.globals": [
+		"LE_EXPANSION_WAR_WITHIN",
+		"MYTHIC_DUNGEON_SEASON"
+	]
 }
