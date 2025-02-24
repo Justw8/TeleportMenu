@@ -173,7 +173,12 @@ local tpTable = {
 	{ id = 12, type = "flyout", iconId = 135748, subtype = "mage" }, -- Portals (Mage) (Alliance)
 	{ id = 126892, type = "spell" }, -- Zen Pilgrimage (Monk)
 	{ id = 50977, type = "spell" }, -- Death Gate (Death Knight)
-	{ id = 193753, type = "spell" }, -- Dreamwalk (Druid)
+	{ id = 18960, type = "spell" }, -- Teleport: Moonglade (Druid)
+	{ id = 193753, type = "spell" }, -- Dreamwalk (Druid) (replaces Teleport: Moonglade)
+	-- Racials
+	{ id = 312370, type = "spell" }, -- Make Camp (Vulpera)
+	{ id = 312372, type = "spell" }, -- Return to Camp (Vulpera)
+
 	-- Dungeon/Raid Teleports
 	{ id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path" }, -- Hero's Path: Cataclysm
 	{ id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path" }, -- Hero's Path: Mists of Pandaria
