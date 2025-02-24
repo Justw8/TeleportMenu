@@ -268,7 +268,7 @@ local function setToolTip(self, type, id, hs)
 	elseif type == "seasonalteleport" then
 		local currExpID = GetExpansionLevel()
 		local expName = _G["EXPANSION_NAME" .. currExpID]
-		local title = MYTHIC_DUNGEON_SEASON:format(expName, C_MythicPlus.GetCurrentUIDisplaySeason())
+		local title = MYTHIC_DUNGEON_SEASON:format(expName, tpm.settings.current_season)
 		GameTooltip:SetText(title, 1, 1, 1)
 		GameTooltip:AddLine(L["Seasonal Teleports Tooltip"], 1, 1, 1)
 	end
@@ -512,6 +512,7 @@ function tpm:GetIconText(spellId)
 end
 
 function tpm:UpdateAvailableSeasonalTeleports()
+	availableSeasonalTeleports = {}
 	local playerFaction = UnitFactionGroup("player")
 	local siegeOfBoralus = -1
 	local motherlode = -1
@@ -524,45 +525,32 @@ function tpm:UpdateAvailableSeasonalTeleports()
 	end
 
 	local seasonalTeleports = {
-		[LE_EXPANSION_WAR_WITHIN] = { -- The War Within
-			[1] = { -- Season 1
-				[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
-				[375] = 354464, -- Mists
-				[376] = 354462, -- Necrotic Wake
-				[501] = 445269, -- Stonevault
-				[502] = 445416, -- City of Threads
-				[503] = 445417, -- Ara Ara
-				[505] = 445414, -- The Dawnbreaker
-				[507] = 445424, -- Grim Batol
-			},
-			[2] = { -- Season 2
-				[247] = motherlode, -- The MOTHERLODE!!
-				[370] = 373274, -- Operation: Mechagon - Workshop
-				[382] = 354467, -- Theater of Pain
-				[499] = 445444, -- Priory of the Sacred Flame
-				[500] = 445443, -- The Rookery
-				[504] = 445441, -- Darkflame Cleft
-				[506] = 445440, -- Cinderbrew Meadery
-				[525] = 1216786, -- Operation: Floodgate
-			},
+		-- TWW S1
+		[1] = {
+			[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
+			[375] = 354464, -- Mists
+			[376] = 354462, -- Necrotic Wake
+			[501] = 445269, -- Stonevault
+			[502] = 445416, -- City of Threads
+			[503] = 445417, -- Ara Ara
+			[505] = 445414, -- The Dawnbreaker
+			[507] = 445424, -- Grim Batol
+		},
+		-- TWW S2
+		[2] = {
+			[247] = motherlode, -- The MOTHERLODE!!
+			[370] = 373274, -- Operation: Mechagon - Workshop
+			[382] = 354467, -- Theater of Pain
+			[499] = 445444, -- Priory of the Sacred Flame
+			[500] = 445443, -- The Rookery
+			[504] = 445441, -- Darkflame Cleft
+			[506] = 445440, -- Cinderbrew Meadery
+			[525] = 1216786, -- Operation: Floodgate
 		},
 	}
 
-	local currentExpansion = GetExpansionLevel()
-	local currentSeason = C_MythicPlus.GetCurrentUIDisplaySeason()
-
-	if not currentSeason or currentSeason == 0 then
-		currentSeason = 1 -- Previous season as fallback incase we're inbetween seasons
-	end
-
-	local currentSeasonTeleportPool = (seasonalTeleports[currentExpansion] ~= nil and seasonalTeleports[currentExpansion] or {})[currentSeason]
-
-	if currentSeasonTeleportPool == nil then
-		return
-	end
-
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
-		local spellID = currentSeasonTeleportPool[mapId]
+		local spellID = seasonalTeleports[tpm.settings.current_season][mapId]
 		if spellID and IsSpellKnown(spellID) then
 			table.insert(availableSeasonalTeleports, spellID)
 		end
@@ -633,7 +621,7 @@ function tpm:CreateSeasonalTeleportFlyout()
 	end
 
 	local tooltipData = { type = "seasonalteleport" }
-	local seasonalFlyOutData = { id = -1, name = L["Season " .. C_MythicPlus.GetCurrentUIDisplaySeason()], iconId = 5927657 }
+	local seasonalFlyOutData = { id = -1, name = L["Season " .. tpm.settings.current_season], iconId = 5927657 }
 	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame()
@@ -723,12 +711,9 @@ function tpm:updateHearthstone()
 		SetTextureByItemId(hearthstoneButton, db["Teleports:Hearthstone"])
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", db["Teleports:Hearthstone"])
-		hearthstoneButton:SetScript(
-			"OnEnter",
-			function(self)
-				setToolTip(self, "toy", db["Teleports:Hearthstone"], true)
-			end
-		)
+		hearthstoneButton:SetScript("OnEnter", function(self)
+			setToolTip(self, "toy", db["Teleports:Hearthstone"], true)
+		end)
 	else
 		if C_Item.GetItemCount(6948) == 0 then
 			print(APPEND .. L["No Hearthtone In Bags"])
@@ -795,13 +780,17 @@ local function createAnchors()
 			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
 		elseif teleport.type == "item" and C_Item.GetItemCount(teleport.id) > 0 then
 			known = true
-		elseif teleport.type == "toy" and PlayerHasToy(teleport.id --[[@as integer]]) then
+		elseif
+			teleport.type == "toy" and PlayerHasToy(teleport.id --[[@as integer]])
+		then
 			if teleport.quest then
 				known = tpm:checkQuestCompletion(teleport.quest)
 			else
 				known = true
 			end
-		elseif teleport.type == "spell" and IsSpellKnown(teleport.id --[[@as integer]]) then
+		elseif
+			teleport.type == "spell" and IsSpellKnown(teleport.id --[[@as integer]])
+		then
 			known = true
 		end
 
@@ -873,8 +862,8 @@ end
 SLASH_TPMENU1 = "/tpm"
 SLASH_TPMENU2 = "/tpmenu"
 SlashCmdList["TPMENU"] = function(msg)
-	local args = { (" "):split(msg:lower()) };
-	msg = args[1];
+	local args = { (" "):split(msg:lower()) }
+	msg = args[1]
 
 	if msg == "" then
 		Settings.OpenToCategory(tpm:GetOptionsCategory())
@@ -930,7 +919,12 @@ function tpm:Setup()
 	tpm:UpdateAvailableSeasonalTeleports()
 	tpm:UpdateAvailableItemTeleports()
 
-	if db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] ~= "rng" and db["Teleports:Hearthstone"] ~= "none" and not PlayerHasToy(db["Teleports:Hearthstone"] --[[@as integer]]) then
+	if
+		db["Teleports:Hearthstone"]
+		and db["Teleports:Hearthstone"] ~= "rng"
+		and db["Teleports:Hearthstone"] ~= "none"
+		and not PlayerHasToy(db["Teleports:Hearthstone"] --[[@as integer]])
+	then
 		print(APPEND .. L["Hearthone Reset Error"]:format(db["Teleports:Hearthstone"]))
 		db["Teleports:Hearthstone"] = "none"
 		tpm:updateHearthstone()
@@ -941,23 +935,40 @@ function tpm:Setup()
 end
 
 -- Event Handlers
-local events = {};
-
+local events = {}
+local normalizedSeasons = {
+	[13] = 1, -- TWW Season 1
+	[14] = 2, -- TWW Season 2
+}
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("BAG_UPDATE_DELAYED")
+f:RegisterEvent("CVAR_UPDATE")
 f:SetScript("OnEvent", function(self, event, ...)
 	events[event](self, ...)
-end);
+end)
 
 function events:ADDON_LOADED(...)
 	local addOnName = ...
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
+		tpm.settings.current_season = normalizedSeasons[tonumber(C_CVar.GetCVar("newMythicPlusSeason"))] or 1
+
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
+	end
+end
+
+function events:CVAR_UPDATE(...)
+	local name, value = ...
+	if name == "newMythicPlusSeason" then
+		tpm.settings.current_season = normalizedSeasons[tonumber(value)] or 1
+		if TeleportMeButtonsFrame then
+			tpm:UpdateAvailableSeasonalTeleports()
+			tpm:ReloadFrames()
+		end
 	end
 end
 

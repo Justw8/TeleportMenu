@@ -18,13 +18,18 @@ tpm.SettingsBase = {
 tpm.settings = {
 	scroll_box_views = {
 		items_in_possession_view = nil,
-		items_to_be_obtained = nil
-	}
+		items_to_be_obtained = nil,
+	},
+	current_season = 1,
 }
 
 local function pack(...)
 	local num = select("#", ...)
-	return setmetatable({ ... }, { __len = function() return num end })
+	return setmetatable({ ... }, {
+		__len = function()
+			return num
+		end,
+	})
 end
 
 local function merge(...)
@@ -32,7 +37,9 @@ local function merge(...)
 	local arg = pack(...)
 	for i = 1, #arg do
 		for k, v in pairs(arg[i]) do
-			if all_teleports[k] then error("\n\n" .. L["AddonNamePrint"] .. "Duplicate key found\n\124cFF34B7EBKey:\124r " .. k .. "\n") end
+			if all_teleports[k] then
+				error("\n\n" .. L["AddonNamePrint"] .. "Duplicate key found\n\124cFF34B7EBKey:\124r " .. k .. "\n")
+			end
 			all_teleports[k] = v
 		end
 	end
@@ -40,7 +47,7 @@ local function merge(...)
 end
 
 function tpm:SourceItemTeleportScrollBoxes(onSourceComplete)
-	local ContinuableContainer = ContinuableContainer:Create();
+	local ContinuableContainer = ContinuableContainer:Create()
 	local items_in_possession, items_to_be_obtained = tpm.player.items_in_possession, tpm.player.items_to_be_obtained
 	for id, _ in pairs(tpm.ItemTeleports) do
 		local item = Item:CreateFromItemID(id)
@@ -70,9 +77,5 @@ function tpm:SourceItemTeleportScrollBoxes(onSourceComplete)
 end
 
 tpm.SettingsBase = setmetatable(tpm.SettingsBase, {
-	__index = merge(
-		tpm.ItemTeleports,
-		tpm.Wormholes,
-		tpm.Hearthstones
-	)
+	__index = merge(tpm.ItemTeleports, tpm.Wormholes, tpm.Hearthstones),
 })
