@@ -428,6 +428,25 @@ local function createFlyOutFrame()
 	return flyOutFrame
 end
 
+---@param id ItemInfo
+---@return boolean
+local function IsItemEquipped(id)
+	return C_Item.IsEquippableItem(id) and C_Item.IsEquippedItem(id)
+end
+
+local function ClearAllInvalidHighlights()
+	for _, button in pairs(secureButtons) do
+		button:ClearHighlightTexture()
+
+		if button:GetAttribute("item") ~= nil then
+			local id = string.match(button:GetAttribute("item"), "%d+")
+			if IsItemEquipped(id) then
+				button:Highlight()
+			end
+		end
+	end
+end
+
 ---@param frame Frame
 ---@param type string
 ---@param text string|nil
@@ -442,16 +461,21 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
 		button.cooldownFrame = createCooldownFrame(button)
 		button.text = button:CreateFontString(nil, "OVERLAY")
+		button:LockHighlight()
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-
 		table.insert(secureButtons, button)
 	end
 
 	function button:Recycle()
 		self:SetParent(nil)
 		self:ClearAllPoints()
+		self:ClearHighlightTexture()
 		self:Hide()
 		table.insert(secureButtonsPool, self)
+	end
+
+	function button:Highlight()
+		self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
 	end
 
 	button:EnableMouse(true)
@@ -475,6 +499,16 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	end)
 	button:SetScript("OnShow", function(self)
 		self.cooldownFrame:CheckCooldown(id, type)
+	end)
+	button:SetScript("PostClick", function(self)
+		if type == "item" and C_Item.IsEquippableItem(id) then
+			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
+				if IsItemEquipped(id) then
+					ClearAllInvalidHighlights()
+					self:Highlight()
+				end
+			end)
+		end
 	end)
 	button.cooldownFrame:CheckCooldown(id, type)
 
@@ -747,6 +781,7 @@ local function createAnchors()
 			local rng = tpm:GetRandomHearthstone()
 			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", rng)
 		end
+		ClearAllInvalidHighlights()
 		return
 	end
 	if not db["Enabled"] then
