@@ -1,8 +1,20 @@
-## Interface: 110002
+## Interface: 110002, 110100
 ## Title: Teleport Menu
 ## Notes: Hearthstone and teleport buttons attached to the game menu.
 ## Notes-zhCN: 主菜单显示炉石玩具和各种传送按钮等。
 ## IconTexture: Interface\Icons\inv_hearthstonepet
+## Category-enUS: User Interface
+## Category-deDE: Benutzerinterface
+## Category-esES: Interfaz de usuario
+## Category-esMX: Interfaz de usuario
+## Category-frFR: Interface utilisateur
+## Category-itIT: Interfaccia utente
+## Category-koKR: 사용자 인터페이스
+## Category-ptBR: Interface do usuário
+## Category-ruRU: Интерфейс пользователя
+## Category-zhCN: 用户界面
+## Category-zhTW: 使用者介面
+
 ## Author: Justwait
 ## Version: @project-version@
 ## SavedVariables: TeleportMenuDB
