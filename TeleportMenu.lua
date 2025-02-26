@@ -428,6 +428,25 @@ local function createFlyOutFrame()
 	return flyOutFrame
 end
 
+---@param id ItemInfo
+---@return boolean
+local function IsItemEquipped(id)
+	return C_Item.IsEquippableItem(id) and C_Item.IsEquippedItem(id)
+end
+
+local function ClearAllInvalidHighlights()
+	for _, button in pairs(secureButtons) do
+		button:ClearHighlightTexture()
+
+		if button:GetAttribute("item") ~= nil then
+			local id = string.match(button:GetAttribute("item"), "%d+")
+			if IsItemEquipped(id) then
+				button:Highlight()
+			end
+		end
+	end
+end
+
 ---@param frame Frame
 ---@param type string
 ---@param text string|nil
@@ -442,8 +461,8 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
 		button.cooldownFrame = createCooldownFrame(button)
 		button.text = button:CreateFontString(nil, "OVERLAY")
+		button:LockHighlight()
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-
 		table.insert(secureButtons, button)
 	end
 
@@ -451,7 +470,14 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		self:SetParent(nil)
 		self:ClearAllPoints()
 		self:Hide()
+		if type == "item" and not C_Item.IsEquippedItem(id) then
+			self:ClearHighlightTexture()
+		end
 		table.insert(secureButtonsPool, self)
+	end
+
+	function button:Highlight()
+		self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
 	end
 
 	button:EnableMouse(true)
@@ -476,6 +502,16 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	button:SetScript("OnShow", function(self)
 		self.cooldownFrame:CheckCooldown(id, type)
 	end)
+	button:SetScript("PostClick", function(self)
+		if type == "item" and C_Item.IsEquippableItem(id) then
+			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
+				if IsItemEquipped(id) then
+					ClearAllInvalidHighlights()
+					self:Highlight()
+				end
+			end)
+		end
+	end)
 	button.cooldownFrame:CheckCooldown(id, type)
 
 	-- Textures
@@ -490,6 +526,9 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	button:SetAttribute("type", type)
 	if type == "item" then
 		button:SetAttribute(type, "item:" .. id)
+		if C_Item.IsEquippableItem(id) and IsItemEquipped(id) then
+			button:Highlight()
+		end
 	else
 		button:SetAttribute(type, id)
 	end
@@ -652,7 +691,8 @@ function tpm:CreateSeasonalTeleportFlyout()
 end
 
 function tpm:CreateWormholeFlyout(flyoutData)
-	if #tpm.AvailableWormholes == 0 then
+	local usableWormholes = tpm.AvailableWormholes:GetUsable()
+	if #usableWormholes == 0 then
 		return
 	end
 
@@ -666,10 +706,12 @@ function tpm:CreateWormholeFlyout(flyoutData)
 
 	local flyoutsCreated = 0
 	for _, wormholeId in ipairs(tpm.AvailableWormholes) do
-		flyoutsCreated = flyoutsCreated + 1
-		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
-		local xOffset = globalWidth * flyoutsCreated
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+		if C_ToyBox.IsToyUsable(wormholeId) then
+			flyoutsCreated = flyoutsCreated + 1
+			local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
+			local xOffset = globalWidth * flyoutsCreated
+			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+		end
 	end
 	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
 
@@ -747,6 +789,7 @@ local function createAnchors()
 			local rng = tpm:GetRandomHearthstone()
 			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", rng)
 		end
+		ClearAllInvalidHighlights()
 		return
 	end
 	if not db["Enabled"] then
@@ -936,7 +979,7 @@ function tpm:Setup()
 	end
 
 	createAnchors()
-	hooksecurefunc("ToggleGameMenu", createAnchors)
+	hooksecurefunc("ToggleGameMenu", tpm.ReloadFrames)
 end
 
 -- Event Handlers
