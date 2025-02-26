@@ -778,9 +778,7 @@ function tpm:updateHearthstone()
 end
 
 local function createAnchors()
-	if InCombatLockdown() then
-		return
-	elseif TeleportMeButtonsFrame and not TeleportMeButtonsFrame.reload then
+	if TeleportMeButtonsFrame and not TeleportMeButtonsFrame.reload then
 		if not db["Enabled"] then
 			TeleportMeButtonsFrame:Hide()
 			return
@@ -886,6 +884,9 @@ local function createAnchors()
 end
 
 function tpm:ReloadFrames()
+	if InCombatLockdown() then
+		return
+	end
 	if db["Button:Size"] then
 		globalWidth = db["Button:Size"]
 		globalHeight = db["Button:Size"]
