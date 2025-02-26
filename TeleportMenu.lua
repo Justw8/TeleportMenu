@@ -469,8 +469,10 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	function button:Recycle()
 		self:SetParent(nil)
 		self:ClearAllPoints()
-		self:ClearHighlightTexture()
 		self:Hide()
+		if type == "item" and not C_Item.IsEquippedItem(id) then
+			self:ClearHighlightTexture()
+		end
 		table.insert(secureButtonsPool, self)
 	end
 
@@ -700,10 +702,12 @@ function tpm:CreateWormholeFlyout(flyoutData)
 
 	local flyoutsCreated = 0
 	for _, wormholeId in ipairs(tpm.AvailableWormholes) do
-		flyoutsCreated = flyoutsCreated + 1
-		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
-		local xOffset = globalWidth * flyoutsCreated
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+		if C_ToyBox.IsToyUsable(wormholeId) then
+			flyoutsCreated = flyoutsCreated + 1
+			local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
+			local xOffset = globalWidth * flyoutsCreated
+			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+		end
 	end
 	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
 
@@ -971,7 +975,7 @@ function tpm:Setup()
 	end
 
 	createAnchors()
-	hooksecurefunc("ToggleGameMenu", createAnchors)
+	hooksecurefunc("ToggleGameMenu", tpm.ReloadFrames)
 end
 
 -- Event Handlers

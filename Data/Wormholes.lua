@@ -15,13 +15,13 @@ tpm.Wormholes = {
 	[168808] = true, -- Wormhole Generator: Zandalar
 	[172924] = true, -- Wormhole Generator: Shadowlands 3
 	[198156] = true, -- Wyrmhole Generator: Dragon Isles 4
-	[221966] = true -- Wormhole Generator: Khaz Algar
+	[221966] = true, -- Wormhole Generator: Khaz Algar
 }
 
 function tpm:UpdateAvailableWormholes()
 	local availableWormholes = {}
 	for id, _ in pairs(tpm.Wormholes) do
-		if PlayerHasToy(id) and C_ToyBox.IsToyUsable(id) then
+		if PlayerHasToy(id) then
 			push(availableWormholes, id)
 		end
 	end
