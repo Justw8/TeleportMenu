@@ -526,6 +526,9 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	button:SetAttribute("type", type)
 	if type == "item" then
 		button:SetAttribute(type, "item:" .. id)
+		if C_Item.IsEquippableItem(id) and IsItemEquipped(id) then
+			button:Highlight()
+		end
 	else
 		button:SetAttribute(type, id)
 	end
@@ -688,10 +691,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 end
 
 function tpm:CreateWormholeFlyout(flyoutData)
-	if #tpm.AvailableWormholes == 0 then
-		return
-	end
-
 	local usableWormholes = tpm.AvailableWormholes:GetUsable()
 	if #usableWormholes == 0 then
 		return

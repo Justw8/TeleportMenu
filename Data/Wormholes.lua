@@ -28,6 +28,10 @@ function tpm:UpdateAvailableWormholes()
 
 	tpm.AvailableWormholes = availableWormholes
 	tpm.AvailableWormholes.GetUsable = function()
+		if #tpm.AvailableWormholes == 0 then
+			return 0
+		end
+
 		local usableWormholes = {}
 		for _, wormholeId in ipairs(availableWormholes) do
 			if C_ToyBox.IsToyUsable(wormholeId) then
