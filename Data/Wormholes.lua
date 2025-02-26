@@ -27,4 +27,13 @@ function tpm:UpdateAvailableWormholes()
 	end
 
 	tpm.AvailableWormholes = availableWormholes
+	tpm.AvailableWormholes.GetUsable = function()
+		local usableWormholes = {}
+		for _, wormholeId in ipairs(availableWormholes) do
+			if C_ToyBox.IsToyUsable(wormholeId) then
+				table.insert(usableWormholes, wormholeId)
+			end
+		end
+		return usableWormholes
+	end
 end

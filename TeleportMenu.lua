@@ -692,6 +692,11 @@ function tpm:CreateWormholeFlyout(flyoutData)
 		return
 	end
 
+	local usableWormholes = tpm.AvailableWormholes:GetUsable()
+	if #usableWormholes == 0 then
+		return
+	end
+
 	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame()
