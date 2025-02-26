@@ -902,7 +902,9 @@ function tpm:ReloadFrames()
 		secureButton:Recycle()
 	end
 
-	TeleportMeButtonsFrame.reload = true
+	if TeleportMeButtonsFrame then
+		TeleportMeButtonsFrame.reload = true
+	end
 
 	createAnchors()
 end
@@ -979,7 +981,6 @@ function tpm:Setup()
 		tpm:updateHearthstone()
 	end
 
-	createAnchors()
 	hooksecurefunc("ToggleGameMenu", tpm.ReloadFrames)
 end
 
