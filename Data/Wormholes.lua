@@ -29,7 +29,7 @@ function tpm:UpdateAvailableWormholes()
 	tpm.AvailableWormholes = availableWormholes
 	tpm.AvailableWormholes.GetUsable = function()
 		if #tpm.AvailableWormholes == 0 then
-			return 0
+			return {}
 		end
 
 		local usableWormholes = {}

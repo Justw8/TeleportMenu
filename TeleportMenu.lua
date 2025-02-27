@@ -705,13 +705,11 @@ function tpm:CreateWormholeFlyout(flyoutData)
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
-	for _, wormholeId in ipairs(tpm.AvailableWormholes) do
-		if C_ToyBox.IsToyUsable(wormholeId) then
-			flyoutsCreated = flyoutsCreated + 1
-			local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
-			local xOffset = globalWidth * flyoutsCreated
-			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
-		end
+	for _, wormholeId in ipairs(usableWormholes) do
+		flyoutsCreated = flyoutsCreated + 1
+		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
+		local xOffset = globalWidth * flyoutsCreated
+		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
 	end
 	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
 
