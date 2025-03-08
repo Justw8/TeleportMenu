@@ -86,6 +86,7 @@ tpm.Hearthstones = {
 	end,
 	[212337] = true, -- Stone of the Hearth
 	[228940] = true, -- Notorious Thread's Hearthstone
+	[236687] = true, -- Explosive Hearthstone
 }
 
 function tpm:GetAvailableHearthstoneToys()
