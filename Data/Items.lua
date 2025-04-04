@@ -28,6 +28,7 @@ tpm.ItemTeleports = {
 	[65274] = UnitFactionGroup("player") == "Horde", -- Cloak of Coordination: Orgrimmar
 	[65360] = UnitFactionGroup("player") == "Alliance", -- Cloak of Coordination: Stormwind
 	-- Other items
+	[46874] = true, -- Argent Crusader's Tabard
 	[58487] = true, -- Potion of Deepholm
 	[61379] = true, -- Gidwin's Hearthstone
 	[63378] = true, -- Hellscream's Reach Tabard
