@@ -926,8 +926,8 @@ function tpm:ReloadFrames()
 	if InCombatLockdown() then
 		return
 	end
-	local buttonSize = db["ButtonSize"]
-	local buttonSpacing = db["ButtonSpacing"]
+	local buttonSize = db["Button:Size"]
+	local buttonSpacing = 0
 	local globalHeight = buttonSize + buttonSpacing
 
 	-- Recycle existing buttons and frames
@@ -1004,8 +1004,8 @@ function tpm:ReloadFrames()
 	if InCombatLockdown() then
 		return
 	end
-	local buttonSize = db["ButtonSize"]
-	local buttonSpacing = db["ButtonSpacing"]
+	local buttonSize = db["Button:Size"]
+	local buttonSpacing = 0
 	local globalHeight = buttonSize + buttonSpacing
 
 	-- Recycle existing buttons and frames
