@@ -15,6 +15,11 @@ local APPEND = L["AddonNamePrint"]
 local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 local globalWidth, globalHeight = 40, 40 -- defaults
 
+-- Initialize available teleports tables
+tpm.AvailableWormholes = {}
+tpm.AvailableHearthstones = {}
+tpm.AvailableItemTeleports = {}
+
 --------------------------------------
 -- Teleport Tables
 --------------------------------------
@@ -327,7 +332,7 @@ local function CloseAllFlyouts()
 	end
 end
 
-local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyout Data needs: id, name, iconId
+local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData)
 	local flyOutButton
 	if next(flyOutButtonsPool) then
 		flyOutButton = table.remove(flyOutButtonsPool)
@@ -339,7 +344,7 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 		table.insert(flyOutButtons, flyOutButton)
 	end
 
-	-- Functions
+	-- Set up flyout frame reference
 	function flyOutButton:SetFlyOutFrame(frame)
 		flyOutButton.flyoutFrame = frame
 	end
@@ -353,17 +358,21 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 		table.insert(flyOutButtonsPool, self)
 	end
 
-	-- Mouse Interaction
+	-- Enable mouse interaction and click propagation
 	flyOutButton:EnableMouse(true)
-	flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
+	flyOutButton:RegisterForClicks("AnyUp", "AnyDown")
+	flyOutButton:SetPropagateMouseClicks(true)
+	flyOutButton:SetPropagateMouseMotion(true)
 
-	-- Tooltips
+	-- Set up tooltip data
 	local tooltipType = "flyout"
 	local tooltipId = flyoutData.id
 	if tooltipData then
 		tooltipType = tooltipData.type
 		tooltipId = tooltipData.id
 	end
+	
+	-- Set up event handlers
 	flyOutButton:SetScript("OnEnter", function(self)
 		if InCombatLockdown() then
 			setCombatTooltip(self)
@@ -371,13 +380,29 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 		end
 		CloseAllFlyouts()
 		setToolTip(self, tooltipType, tooltipId)
-		self.flyoutFrame:Show()
+		if self.flyoutFrame then
+			self.flyoutFrame:Show()
+		end
 	end)
+	
 	flyOutButton:SetScript("OnLeave", function(self)
 		GameTooltip:Hide()
 	end)
 
-	-- Text
+	-- Handle flyout menu toggle on click
+	flyOutButton:SetScript("OnClick", function(self, button)
+		if InCombatLockdown() then return end
+		if self.flyoutFrame then
+			if self.flyoutFrame:IsShown() then
+				self.flyoutFrame:Hide()
+			else
+				CloseAllFlyouts()
+				self.flyoutFrame:Show()
+			end
+		end
+	end)
+
+	-- Set up button text if enabled
 	flyOutButton.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
 	flyOutButton.text:SetTextColor(1, 1, 1, 1)
 	flyOutButton.text:Hide()
@@ -386,10 +411,8 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 		flyOutButton.text:Show()
 	end
 
-	-- Texture
+	-- Set button texture and frame properties
 	flyOutButton:SetNormalTexture(flyoutData.iconId)
-
-	-- Positioning/Size
 	flyOutButton:SetFrameStrata("HIGH")
 	flyOutButton:SetFrameLevel(101)
 	flyOutButton:SetSize(globalWidth, globalHeight)
@@ -480,10 +503,26 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
 	end
 
+	-- Register for mouse interaction and set up secure attributes
 	button:EnableMouse(true)
-	button:RegisterForClicks("AnyDown", "AnyUp")
+	button:RegisterForClicks("AnyUp", "AnyDown")
+	
+	-- Set secure attributes based on button type (must be set before any click handlers)
+	if type == "item" then
+		button:SetAttribute("type", "item")
+		button:SetAttribute("item", "item:" .. id)
+		if C_Item.IsEquippableItem(id) and IsItemEquipped(id) then
+			button:Highlight()
+		end
+	elseif type == "spell" then
+		button:SetAttribute("type", "spell")
+		button:SetAttribute("spell", id)
+	elseif type == "toy" then
+		button:SetAttribute("type", "toy")
+		button:SetAttribute("toy", id)
+	end
 
-	-- Text
+	-- Set up button text if enabled
 	button.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
 	button.text:SetTextColor(1, 1, 1, 1)
 	button.text:Hide()
@@ -492,7 +531,7 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		button.text:Show()
 	end
 
-	-- Scripts
+	-- Set up event handlers
 	button:SetScript("OnLeave", function(self)
 		GameTooltip:Hide()
 	end)
@@ -504,7 +543,7 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	end)
 	button:SetScript("PostClick", function(self)
 		if type == "item" and C_Item.IsEquippableItem(id) then
-			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
+			C_Timer.After(0.25, function()
 				if IsItemEquipped(id) then
 					ClearAllInvalidHighlights()
 					self:Highlight()
@@ -514,7 +553,7 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	end)
 	button.cooldownFrame:CheckCooldown(id, type)
 
-	-- Textures
+	-- Set button texture based on type
 	if type == "spell" then
 		local spellTexture = C_Spell.GetSpellTexture(id)
 		button:SetNormalTexture(spellTexture)
@@ -522,22 +561,11 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		SetTextureByItemId(button, id)
 	end
 
-	-- Attributes
-	button:SetAttribute("type", type)
-	if type == "item" then
-		button:SetAttribute(type, "item:" .. id)
-		if C_Item.IsEquippableItem(id) and IsItemEquipped(id) then
-			button:Highlight()
-		end
-	else
-		button:SetAttribute(type, id)
-	end
-
-	-- Positioning/Size
+	-- Set up button frame properties
 	button:SetParent(frame)
 	button:SetSize(globalWidth, globalHeight)
 	button:SetFrameStrata("HIGH")
-	button:SetFrameLevel(102) -- This needs to be lower than the flyout frame
+	button:SetFrameLevel(102) -- Must be lower than flyout frame level
 
 	button:Show()
 	return button
@@ -691,7 +719,12 @@ function tpm:CreateSeasonalTeleportFlyout()
 end
 
 function tpm:CreateWormholeFlyout(flyoutData)
-	local usableWormholes = tpm.AvailableWormholes:GetUsable()
+	-- Initialize AvailableWormholes if not already done
+	if not self.AvailableWormholes then
+		self.AvailableWormholes = {}
+	end
+	
+	local usableWormholes = self.AvailableWormholes
 	if #usableWormholes == 0 then
 		return
 	end
@@ -791,11 +824,16 @@ local function createAnchors()
 	if not db["Enabled"] then
 		return
 	end
+	
+	-- Create the main frame if it doesn't exist
 	local buttonsFrame = TeleportMeButtonsFrame or CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
 	buttonsFrame.reload = nil
 	buttonsFrame:SetSize(1, 1)
 	local yOffset = globalHeight / 2
 	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, -yOffset)
+	
+	-- Make sure the frame is visible
+	buttonsFrame:Show()
 
 	buttonsFrame.buttonAmount = 0
 	function buttonsFrame:IncrementButtons()
@@ -879,31 +917,26 @@ local function createAnchors()
 
 	CreateCurrentSeasonTeleports()
 	tpm:updateHearthstone() -- XXX Temp as this fixes the rng icon if it's selected
+	
+	-- Make sure the frame is visible after creating all buttons
+	buttonsFrame:Show()
 end
 
 function tpm:ReloadFrames()
 	if InCombatLockdown() then
 		return
 	end
-	if db["Button:Size"] then
-		globalWidth = db["Button:Size"]
-		globalHeight = db["Button:Size"]
-	end
+	local buttonSize = db["ButtonSize"]
+	local buttonSpacing = db["ButtonSpacing"]
+	local globalHeight = buttonSize + buttonSpacing
 
-	for _, button in ipairs(flyOutButtons) do
-		button:Recycle()
-	end
-	for _, frame in ipairs(flyOutFrames) do
-		frame:Recycle()
-	end
-	for _, secureButton in ipairs(secureButtons) do
-		secureButton:Recycle()
-	end
-
+	-- Recycle existing buttons and frames
 	if TeleportMeButtonsFrame then
 		TeleportMeButtonsFrame.reload = true
+		TeleportMeButtonsFrame:Hide()
 	end
 
+	-- Create new frames and buttons
 	createAnchors()
 end
 
@@ -958,28 +991,31 @@ local function checkItemsLoaded(self)
 end
 
 function tpm:Setup()
-	if db["Button:Size"] then
-		globalWidth = db["Button:Size"]
-		globalHeight = db["Button:Size"]
+	-- Initialize the menu immediately
+	if not TeleportMeButtonsFrame then
+		createAnchors()
 	end
 
-	tpm:UpdateAvailableHearthstones()
-	tpm:UpdateAvailableWormholes()
-	tpm:UpdateAvailableSeasonalTeleports()
-	tpm:UpdateAvailableItemTeleports()
-
-	if
-		db["Teleports:Hearthstone"]
-		and db["Teleports:Hearthstone"] ~= "rng"
-		and db["Teleports:Hearthstone"] ~= "none"
-		and not PlayerHasToy(db["Teleports:Hearthstone"] --[[@as integer]])
-	then
-		print(APPEND .. L["Hearthone Reset Error"]:format(db["Teleports:Hearthstone"]))
-		db["Teleports:Hearthstone"] = "none"
-		tpm:updateHearthstone()
-	end
-
+	-- Hook into ToggleGameMenu to reload frames when the menu is opened
 	hooksecurefunc("ToggleGameMenu", tpm.ReloadFrames)
+end
+
+function tpm:ReloadFrames()
+	if InCombatLockdown() then
+		return
+	end
+	local buttonSize = db["ButtonSize"]
+	local buttonSpacing = db["ButtonSpacing"]
+	local globalHeight = buttonSize + buttonSpacing
+
+	-- Recycle existing buttons and frames
+	if TeleportMeButtonsFrame then
+		TeleportMeButtonsFrame.reload = true
+		TeleportMeButtonsFrame:Hide()
+	end
+
+	-- Create new frames and buttons
+	createAnchors()
 end
 
 -- Event Handlers
