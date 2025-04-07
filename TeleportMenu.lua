@@ -1002,6 +1002,7 @@ function events:ADDON_LOADED(...)
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
 
+		C_MythicPlus.RequestMapInfo()
 		local currentSeason = C_MythicPlus.GetCurrentSeason()
 		tpm.settings.current_season = normalizedSeasons[tonumber(currentSeason)] or 1
 
