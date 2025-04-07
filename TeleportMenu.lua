@@ -984,10 +984,6 @@ end
 
 -- Event Handlers
 local events = {}
-local normalizedSeasons = {
-	[13] = 1, -- TWW Season 1
-	[14] = 2, -- TWW Season 2
-}
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
@@ -1001,10 +997,7 @@ function events:ADDON_LOADED(...)
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
-
-		C_MythicPlus.RequestMapInfo()
-		local currentSeason = C_MythicPlus.GetCurrentSeason()
-		tpm.settings.current_season = normalizedSeasons[tonumber(currentSeason)] or 1
+		tpm.settings.current_season = 2
 
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
