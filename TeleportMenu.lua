@@ -984,15 +984,10 @@ end
 
 -- Event Handlers
 local events = {}
-local normalizedSeasons = {
-	[13] = 1, -- TWW Season 1
-	[14] = 2, -- TWW Season 2
-}
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("BAG_UPDATE_DELAYED")
-f:RegisterEvent("CVAR_UPDATE")
 f:SetScript("OnEvent", function(self, event, ...)
 	events[event](self, ...)
 end)
@@ -1002,21 +997,10 @@ function events:ADDON_LOADED(...)
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
-		tpm.settings.current_season = normalizedSeasons[tonumber(C_CVar.GetCVar("newMythicPlusSeason"))] or 1
+		tpm.settings.current_season = 2
 
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
-	end
-end
-
-function events:CVAR_UPDATE(...)
-	local name, value = ...
-	if name == "newMythicPlusSeason" then
-		tpm.settings.current_season = normalizedSeasons[tonumber(value)] or 1
-		if TeleportMeButtonsFrame then
-			tpm:UpdateAvailableSeasonalTeleports()
-			tpm:ReloadFrames()
-		end
 	end
 end
 
