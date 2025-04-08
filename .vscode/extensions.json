@@ -1,3 +1,7 @@
 {
-    "recommendations": ["ketho.wow-api", "sumneko.lua"]
+    "recommendations": [
+		"ketho.wow-api",
+		"sumneko.lua",
+		"JohnnyMorganz.stylua"
+	]
 }
