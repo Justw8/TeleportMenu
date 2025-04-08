@@ -47,12 +47,12 @@ tpm.ItemTeleports = {
 	[117389] = true, -- Draenor Archaeologist's Lodestone
 	[118662] = true, -- Bladespire Relic
 	[118663] = true, -- Relic of Karabor
-	[118908] = UnitFactionGroup("player") == "Horde", -- Pit Fighter's Punching Ring (Brawl'gar Arena)
 	[118907] = UnitFactionGroup("player") == "Alliance", -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
+	[118908] = UnitFactionGroup("player") == "Horde", -- Pit Fighter's Punching Ring (Brawl'gar Arena)
 	[119183] = true, -- Scroll of Risky Recall
+	[128353] = true, -- Admiral's Compass
 	[128502] = true, -- Hunter's Seeking Crystal
 	[128503] = true, -- Master Hunter's Seeking Crystal
-	[128353] = true, -- Admiral's Compass
 	[129276] = true, -- Beginner's Guide to Dimensional Rifting
 	[132119] = UnitFactionGroup("player") == "Horde", -- Orgrimmar Portal Stone
 	[132120] = UnitFactionGroup("player") == "Alliance", -- Stormwind Portal Stone
@@ -88,8 +88,8 @@ tpm.ItemTeleports = {
 	[172203] = true, -- Cracked Hearthstone
 	[173373] = true, -- Faol's Hearthstone
 	[173430] = true, -- Nexus Teleport Scroll
-	[173532] = true, -- Tirisfal Camp Scroll
 	[173528] = true, -- Gilded Hearthstone
+	[173532] = true, -- Tirisfal Camp Scroll
 	[173537] = true, -- Glowing Hearthstone
 	[173716] = true, -- Mossy Hearthstone
 	[180817] = true, -- Cypher of Relocation (Ve'nari's Refuge)
@@ -109,6 +109,12 @@ tpm.ItemTeleports = {
 	[205458] = true, -- Lost Dragonscale (2)
 	[211788] = true, -- Tess's Peacebloom
 	[230850] = true, -- Delve-O-Bot 7001
+	[234389] = true, -- Gallagio Loyalty Rewards Card: Silver
+	[234390] = true, -- Gallagio Loyalty Rewards Card: Gold
+	[234391] = true, -- Gallagio Loyalty Rewards Card: Platinum
+	[234392] = true, -- Gallagio Loyalty Rewards Card: Black
+	[234393] = true, -- Gallagio Loyalty Rewards Card: Diamond
+	[234394] = true, -- Gallagio Loyalty Rewards Card: Legendary
 }
 
 function tpm:GetAvailableItemTeleports()
