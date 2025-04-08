@@ -107,6 +107,7 @@ tpm.ItemTeleports = {
 	[205456] = true, -- Lost Dragonscale (1)
 	[205458] = true, -- Lost Dragonscale (2)
 	[211788] = true, -- Tess's Peacebloom
+	[230850] = true, -- Delve-O-Bot 7001
 }
 
 function tpm:GetAvailableItemTeleports()
