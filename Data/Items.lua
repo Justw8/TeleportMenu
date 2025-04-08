@@ -28,6 +28,8 @@ tpm.ItemTeleports = {
 	[65274] = UnitFactionGroup("player") == "Horde", -- Cloak of Coordination: Orgrimmar
 	[65360] = UnitFactionGroup("player") == "Alliance", -- Cloak of Coordination: Stormwind
 	-- Other items
+	[46874] = true, -- Argent Crusader's Tabard
+	[50287] = true, -- Boots of the Bay
 	[58487] = true, -- Potion of Deepholm
 	[61379] = true, -- Gidwin's Hearthstone
 	[63378] = true, -- Hellscream's Reach Tabard
@@ -45,12 +47,12 @@ tpm.ItemTeleports = {
 	[117389] = true, -- Draenor Archaeologist's Lodestone
 	[118662] = true, -- Bladespire Relic
 	[118663] = true, -- Relic of Karabor
-	[118908] = UnitFactionGroup("player") == "Horde", -- Pit Fighter's Punching Ring (Brawl'gar Arena)
 	[118907] = UnitFactionGroup("player") == "Alliance", -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
+	[118908] = UnitFactionGroup("player") == "Horde", -- Pit Fighter's Punching Ring (Brawl'gar Arena)
 	[119183] = true, -- Scroll of Risky Recall
+	[128353] = true, -- Admiral's Compass
 	[128502] = true, -- Hunter's Seeking Crystal
 	[128503] = true, -- Master Hunter's Seeking Crystal
-	[128353] = true, -- Admiral's Compass
 	[129276] = true, -- Beginner's Guide to Dimensional Rifting
 	[132119] = UnitFactionGroup("player") == "Horde", -- Orgrimmar Portal Stone
 	[132120] = UnitFactionGroup("player") == "Alliance", -- Stormwind Portal Stone
@@ -74,6 +76,7 @@ tpm.ItemTeleports = {
 	[144391] = UnitFactionGroup("player") == "Alliance", -- Pugilist's Powerful Punching Ring (Alliance)
 	[144392] = UnitFactionGroup("player") == "Horde", -- Pugilist's Powerful Punching Ring (Horde)
 	[150733] = true, -- Scroll of Town Portal (Ar'gorok in Arathi)
+	[151016] = true, -- Fractured Necrolyte Skull
 	[159224] = true, -- Zuldazar Hearthstone
 	[160219] = true, -- Scroll of Town Portal (Stromgarde in Arathi)
 	[163694] = true, -- Scroll of Luxurious Recall
@@ -86,8 +89,8 @@ tpm.ItemTeleports = {
 	[172203] = true, -- Cracked Hearthstone
 	[173373] = true, -- Faol's Hearthstone
 	[173430] = true, -- Nexus Teleport Scroll
-	[173532] = true, -- Tirisfal Camp Scroll
 	[173528] = true, -- Gilded Hearthstone
+	[173532] = true, -- Tirisfal Camp Scroll
 	[173537] = true, -- Glowing Hearthstone
 	[173716] = true, -- Mossy Hearthstone
 	[180817] = true, -- Cypher of Relocation (Ve'nari's Refuge)
@@ -99,6 +102,7 @@ tpm.ItemTeleports = {
 	[184504] = true, -- Attendant's Pocket Portal: Oribos
 	[189827] = true, -- Cartel Xy's Proof of Initiation
 	[191029] = true, -- Lilian's Hearthstone
+	[193000] = true, -- Ring-Bound Hourglass
 	[201957] = true, -- Thrall's Hearthstone
 	[202046] = true, -- Lucky Tortollan Charm
 	[204481] = true, -- Morqut Hearth Totem
@@ -106,6 +110,13 @@ tpm.ItemTeleports = {
 	[205456] = true, -- Lost Dragonscale (1)
 	[205458] = true, -- Lost Dragonscale (2)
 	[211788] = true, -- Tess's Peacebloom
+	[230850] = true, -- Delve-O-Bot 7001
+	[234389] = true, -- Gallagio Loyalty Rewards Card: Silver
+	[234390] = true, -- Gallagio Loyalty Rewards Card: Gold
+	[234391] = true, -- Gallagio Loyalty Rewards Card: Platinum
+	[234392] = true, -- Gallagio Loyalty Rewards Card: Black
+	[234393] = true, -- Gallagio Loyalty Rewards Card: Diamond
+	[234394] = true, -- Gallagio Loyalty Rewards Card: Legendary
 }
 
 function tpm:GetAvailableItemTeleports()
@@ -113,7 +124,7 @@ function tpm:GetAvailableItemTeleports()
 end
 
 function tpm:UpdateAvailableItemTeleports()
-	AvailableItemTeleports = {}
+	local AvailableItemTeleports = {}
 	for id, _ in pairs(tpm.ItemTeleports) do
 		if C_Item.GetItemCount(id) > 0 and TeleportMenuDB[id] == true then
 			table.insert(AvailableItemTeleports, id)

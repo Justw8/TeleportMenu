@@ -149,7 +149,7 @@ L["%s icons"] = "%s 圖示"
 L["Item Teleports"] = "物品傳送"
 L["Item Teleports Tooltip"] = "\124cFF34B7EB所有您擁有的傳送的物品\124r\n\n\124cFFFF0000陣營披風等物品需要點擊兩次！\124r"
 L["Teleports:Items:Filters:Held_Items"] = "您擁有的物品"
---L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Unavailable items"
+L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "不可用的物品"
 
 -- Settings
 L["ADDON_NAME"] = "傳送選單"
