@@ -76,6 +76,7 @@ tpm.ItemTeleports = {
 	[144391] = UnitFactionGroup("player") == "Alliance", -- Pugilist's Powerful Punching Ring (Alliance)
 	[144392] = UnitFactionGroup("player") == "Horde", -- Pugilist's Powerful Punching Ring (Horde)
 	[150733] = true, -- Scroll of Town Portal (Ar'gorok in Arathi)
+	[151016] = true, -- Fractured Necrolyte Skull
 	[159224] = true, -- Zuldazar Hearthstone
 	[160219] = true, -- Scroll of Town Portal (Stromgarde in Arathi)
 	[163694] = true, -- Scroll of Luxurious Recall
