@@ -119,20 +119,22 @@ function tpm:UpdateAvailableHearthstones()
 	tpm.AvailableHearthstones = AvailableHearthstones
 end
 
-function tpm:GetRandomHearthstone(retry)
-	local lastRandomHearthstone
-	if #tpm.AvailableHearthstones == 0 then
-		return
+do
+	local lastRandomHearthstone = nil
+	function tpm:GetRandomHearthstone(retry)
+		if #tpm.AvailableHearthstones == 0 then
+			return
+		end
+		if #tpm.AvailableHearthstones == 1 then
+			return tpm.AvailableHearthstones[1]
+		end -- Don't even bother
+		local randomHs = tpm.AvailableHearthstones[math.random(#tpm.AvailableHearthstones)]
+		if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
+			randomHs = self:GetRandomHearthstone(true) --[[@as integer]]
+		end
+		if not retry then
+			lastRandomHearthstone = randomHs
+		end
+		return randomHs
 	end
-	if #tpm.AvailableHearthstones == 1 then
-		return tpm.AvailableHearthstones[1]
-	end -- Don't even bother
-	local randomHs = tpm.AvailableHearthstones[math.random(#tpm.AvailableHearthstones)]
-	if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
-		randomHs = self:GetRandomHearthstone(true) --[[@as integer]]
-	end
-	if not retry then
-		lastRandomHearthstone = randomHs
-	end
-	return randomHs
 end

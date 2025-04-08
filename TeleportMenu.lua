@@ -207,31 +207,31 @@ local function SetTextureByItemId(frame, itemId)
 	end)
 end
 
-local function retrySetNormalTexture(button, itemId, attempt)
-	local attempts = attempt or 1
-	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
-	if itemTexture then
-		button:SetNormalTexture(itemTexture)
-		return
-	end
-	if attempts < 5 then
-		C_Timer.After(1, function()
-			retrySetNormalTexture(button, itemId, attempts + 1)
-		end)
-	else
-		print(APPEND .. L["Missing Texture %s"]:format(itemId))
-	end
-end
+-- local function retrySetNormalTexture(button, itemId, attempt)
+-- 	local attempts = attempt or 1
+-- 	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
+-- 	if itemTexture then
+-- 		button:SetNormalTexture(itemTexture)
+-- 		return
+-- 	end
+-- 	if attempts < 5 then
+-- 		C_Timer.After(1, function()
+-- 			retrySetNormalTexture(button, itemId, attempts + 1)
+-- 		end)
+-- 	else
+-- 		print(APPEND .. L["Missing Texture %s"]:format(itemId))
+-- 	end
+-- end
 
-local function retryGetToyTexture(toyId, attempt)
-	local attempts = attempt or 1
-	local _, name, texture = C_ToyBox.GetToyInfo(toyId)
-	if attempts < 5 then
-		C_Timer.After(0.1, function()
-			retryGetToyTexture(toyId, attempts + 1)
-		end)
-	end
-end
+-- local function retryGetToyTexture(toyId, attempt)
+-- 	local attempts = attempt or 1
+-- 	local _, name, texture = C_ToyBox.GetToyInfo(toyId)
+-- 	if attempts < 5 then
+-- 		C_Timer.After(0.1, function()
+-- 			retryGetToyTexture(toyId, attempts + 1)
+-- 		end)
+-- 	end
+-- end
 
 --------------------------------------
 --- Tooltip
@@ -557,16 +557,15 @@ end
 
 function tpm:UpdateAvailableSeasonalTeleports()
 	availableSeasonalTeleports = {}
+
+	local factionTeleports = {
+		Alliance = { siegeOfBoralus = 445418, motherlode = 467553 },
+		Horde = { siegeOfBoralus = 464256, motherlode = 467555 }
+	}
 	local playerFaction = UnitFactionGroup("player")
-	local siegeOfBoralus = -1
-	local motherlode = -1
-	if playerFaction == "Alliance" then
-		siegeOfBoralus = 445418
-		motherlode = 467553
-	else
-		siegeOfBoralus = 464256
-		motherlode = 467555
-	end
+	local factionData = factionTeleports[playerFaction] or {}
+	local siegeOfBoralus = factionData.siegeOfBoralus
+	local motherlode = factionData.motherlode
 
 	local seasonalTeleports = {
 		-- TWW S1
@@ -676,7 +675,6 @@ function tpm:CreateSeasonalTeleportFlyout()
 
 	local flyoutsCreated = 0
 	for _, spellId in ipairs(availableSeasonalTeleports) do
-		local flyname = nil
 		if IsSpellKnown(spellId) then
 			flyoutsCreated = flyoutsCreated + 1
 			local text = tpm:GetIconText(spellId)
@@ -756,8 +754,8 @@ function tpm:updateHearthstone()
 		SetTextureByItemId(hearthstoneButton, db["Teleports:Hearthstone"])
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", db["Teleports:Hearthstone"])
-		hearthstoneButton:SetScript("OnEnter", function(self)
-			setToolTip(self, "toy", db["Teleports:Hearthstone"], true)
+		hearthstoneButton:SetScript("OnEnter", function(s)
+			setToolTip(s, "toy", db["Teleports:Hearthstone"], true)
 		end)
 	else
 		if C_Item.GetItemCount(6948) == 0 then
@@ -768,8 +766,8 @@ function tpm:updateHearthstone()
 		SetTextureByItemId(hearthstoneButton, 6948)
 		hearthstoneButton:SetAttribute("type", "item")
 		hearthstoneButton:SetAttribute("item", "item:6948")
-		hearthstoneButton:SetScript("OnEnter", function(self)
-			setToolTip(self, "item", 6948, true)
+		hearthstoneButton:SetScript("OnEnter", function(s)
+			setToolTip(s, "item", 6948, true)
 		end)
 	end
 	hearthstoneButton:Show()
@@ -794,8 +792,8 @@ local function createAnchors()
 	local buttonsFrame = TeleportMeButtonsFrame or CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
 	buttonsFrame.reload = nil
 	buttonsFrame:SetSize(1, 1)
-	local yOffset = globalHeight / 2
-	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, -yOffset)
+	local buttonFrameYOffset = globalHeight / 2
+	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, -buttonFrameYOffset)
 
 	buttonsFrame.buttonAmount = 0
 	function buttonsFrame:IncrementButtons()
@@ -806,7 +804,7 @@ local function createAnchors()
 		return self.buttonAmount
 	end
 
-	for i, teleport in ipairs(tpTable) do
+	for _, teleport in ipairs(tpTable) do
 		local texture
 		local known
 
@@ -870,7 +868,7 @@ local function createAnchors()
 		end
 	end
 
-	function CreateCurrentSeasonTeleports()
+	local function CreateCurrentSeasonTeleports()
 		local created = tpm:CreateSeasonalTeleportFlyout()
 		if created then
 			buttonsFrame:IncrementButtons()
@@ -1004,7 +1002,7 @@ function events:ADDON_LOADED(...)
 	end
 end
 
-function events:PLAYER_LOGIN(...)
+function events:PLAYER_LOGIN()
 	checkItemsLoaded(f)
 	f:UnregisterEvent("PLAYER_LOGIN")
 end

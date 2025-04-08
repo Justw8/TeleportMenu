@@ -121,7 +121,6 @@ function tpm:LoadOptions()
 			local container = Settings.CreateControlTextContainer()
 			container:Add("none", L["None"])
 			container:Add("rng", "|T1669494:16:16:0:0:64:64:4:60:4:60|t " .. L["Random"])
-			local startOption = 2
 			local hearthstones = tpm:GetAvailableHearthstoneToys()
 			for id, hearthstoneInfo in pairs(hearthstones) do
 				container:Add(tostring(id), "|T" .. hearthstoneInfo.texture .. ":16:16:0:0:64:64:4:60:4:60|t " .. hearthstoneInfo.name)
@@ -303,8 +302,8 @@ function tpm:LoadOptions()
 				end
 				frame.UpdateVisual()
 			end)
-			frame:SetScript("OnEnter", function(self)
-				GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+			frame:SetScript("OnEnter", function(s)
+				GameTooltip:SetOwner(s, "ANCHOR_CURSOR")
 				GameTooltip:SetItemByID(elementData.id)
 			end)
 			frame:SetScript("OnLeave", function()

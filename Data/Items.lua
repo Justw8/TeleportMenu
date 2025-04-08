@@ -115,7 +115,7 @@ function tpm:GetAvailableItemTeleports()
 end
 
 function tpm:UpdateAvailableItemTeleports()
-	AvailableItemTeleports = {}
+	local AvailableItemTeleports = {}
 	for id, _ in pairs(tpm.ItemTeleports) do
 		if C_Item.GetItemCount(id) > 0 and TeleportMenuDB[id] == true then
 			table.insert(AvailableItemTeleports, id)
