@@ -102,6 +102,7 @@ tpm.ItemTeleports = {
 	[184504] = true, -- Attendant's Pocket Portal: Oribos
 	[189827] = true, -- Cartel Xy's Proof of Initiation
 	[191029] = true, -- Lilian's Hearthstone
+	[193000] = true, -- Ring-Bound Hourglass
 	[201957] = true, -- Thrall's Hearthstone
 	[202046] = true, -- Lucky Tortollan Charm
 	[204481] = true, -- Morqut Hearth Totem
