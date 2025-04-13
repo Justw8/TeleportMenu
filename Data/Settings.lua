@@ -7,6 +7,7 @@ local GetItemCount, GetItemNameByID, GetItemIconByID, sort, push = C_Item.GetIte
 tpm.SettingsBase = {
 	["Enabled"] = true,
 	["Teleports:Seasonal:Only"] = false,
+	["General:AutoClose"] = false,
 	["Teleports:Mage:Reverse"] = false,
 	["Teleports:Hearthstone"] = "none",
 	["Button:Size"] = 40,

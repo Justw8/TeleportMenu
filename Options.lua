@@ -236,6 +236,15 @@ function tpm:LoadOptions()
 		Settings.CreateCheckbox(generalOptions, setting, tooltip)
 	end
 
+	do -- Auto Close Menu After Click
+		local optionsKey = "General:AutoClose"
+		local tooltip = L["Auto Close Toggle Tooltip"]
+		local setting =
+			Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Auto Close"], defaults[optionsKey])
+		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
+		Settings.CreateCheckbox(generalOptions, setting, tooltip)
+	end
+
 	do
 		local loader = CreateFrame("Frame", nil, teleportFiltersFrame, "SpinnerTemplate")
 		loader:SetWidth(100)

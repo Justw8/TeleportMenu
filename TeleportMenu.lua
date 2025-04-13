@@ -504,12 +504,25 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	end)
 	button:SetScript("PostClick", function(self)
 		if type == "item" and C_Item.IsEquippableItem(id) then
-			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
+			C_Timer.After(0.25, function()
 				if IsItemEquipped(id) then
 					ClearAllInvalidHighlights()
 					self:Highlight()
 				end
 			end)
+	
+			-- Check if it's a cape
+			local itemLocation = ItemLocation:CreateFromEquipmentSlot(INVSLOT_BACK) -- 15 = back slot
+			local equippedItemID = itemLocation and C_Item.DoesItemExist(itemLocation) and C_Item.GetItemID(itemLocation)
+	
+			if equippedItemID ~= id then
+				-- Not yet equipped, don't close the menu
+				return
+			end
+		end
+	
+		if db["General:AutoClose"] then 
+			HideUIPanel(GameMenuFrame)
 		end
 	end)
 	button.cooldownFrame:CheckCooldown(id, type)
