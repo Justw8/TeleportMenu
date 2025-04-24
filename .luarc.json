@@ -1,20 +1,29 @@
 {
-    "diagnostics.globals": [
-        "Settings",
-        "ScrollUtil",
-        "CreateScrollBoxListLinearView",
-        "MinimalSliderWithSteppersMixin",
-        "CreateDataProvider",
-        "SlashCmdList",
-        "STANDARD_TEXT_FONT",
-        "GameMenuFrame",
-        "DevTool",
-        "InterfaceOptionsFramePanelContainer",
-        "TeleportMeButtonsFrame",
-        "ToggleGameMenu"
-    ],
-    "workspace.library": [
-        "~/Documents/GitHub/AddonDev/LuaLS/Libraries/vscode-wow-api/Annotations",
-        "~/Documents/GitHub/AddonDev/LuaLS/Libraries/wow-api-type-definitions"
-    ]
+	"$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+	"diagnostics.globals": [
+		"Settings",
+		"ScrollUtil",
+		"CreateScrollBoxListLinearView",
+		"MinimalSliderWithSteppersMixin",
+		"CreateDataProvider",
+		"SlashCmdList",
+		"STANDARD_TEXT_FONT",
+		"GameMenuFrame",
+		"DevTool",
+		"InterfaceOptionsFramePanelContainer",
+		"TeleportMeButtonsFrame",
+		"ToggleGameMenu",
+		"LE_EXPANSION_WAR_WITHIN",
+		"MYTHIC_DUNGEON_SEASON"
+	],
+	"workspace.library": [
+		"~/Documents/GitHub/AddonDev/LuaLS/Libraries/vscode-wow-api/Annotations",
+		"~/Documents/GitHub/AddonDev/LuaLS/Libraries/wow-api-type-definitions",
+		"~\\.vscode\\extensions\\ketho.wow-api-0.18.2\\Annotations"
+	],
+	"workspace.ignoreDir": [".vscode", "Libs"],
+	"diagnostics.enable": true,
+	"diagnostics.ignoredFiles": "Disable",
+	"diagnostics.libraryFiles": "Disable",
+	"runtime.version": "Lua 5.1"
 }
