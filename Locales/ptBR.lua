@@ -77,6 +77,7 @@ if not L then return end
 --L["Ara-Kara, City of Echoes"] = "AK"
 --L["Darkflame Cleft"] = "DFC"
 -- L["Operation: Floodgate"] = "FL"
+--L["Liberation of Undermine"] = "LOU"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"
@@ -89,6 +90,7 @@ if not L then return end
 --L["Dragonflight"] = "DF"
 --L["Dragonflight Raids"] = "DF R"
 --L["The War Within"] = "TWW"
+--L["The War Within Raids"] = "TWW R"
 --L["Season 1"] = "S1"
 -- L["Season 2"] = "S2"
 -- L["Season 3"] = "S3"
