@@ -100,6 +100,8 @@ local shortNames = {
 	[445417] = L["Ara-Kara, City of Echoes"],
 	[445441] = L["Darkflame Cleft"],
 	[1216786] = L["Operation: Floodgate"],
+	-- TWW R
+	[1226482] = L["Liberation of Undermine"],
 	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
@@ -190,6 +192,7 @@ local tpTable = {
 	{ id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path" }, -- Hero's Path: Dragonflight
 	{ id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path" }, -- Hero's Path: Dragonflight Raids
 	{ id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path" }, -- Hero's Path: The War Within
+	{ id = 242, type = "flyout", iconId = 6392630, name = L["The War Within Raids"], subtype = "path" }, -- Hero's Path: The War Within Raids
 }
 
 local GetItemCount = C_Item.GetItemCount
