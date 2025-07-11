@@ -41,8 +41,8 @@ tpm.ItemTeleports = {
 	[92510] = true, -- Vol'jin's Hearthstone
 	[95050] = UnitFactionGroup("player") == "Horde", -- The Brassiest Knuckle (Brawl'gar Arena)
 	[95051] = UnitFactionGroup("player") == "Alliance", -- The Brassiest Knuckle (Bizmo's Brawlpub)
-	[95567] = true, -- Kirin Tor Beacon
-	[95568] = true, -- Sunreaver Beacon
+	[95567] = UnitFactionGroup("player") == "Alliance", -- Kirin Tor Beacon
+	[95568] = UnitFactionGroup("player") == "Horde", -- Sunreaver Beacon
 	[103678] = true, -- Time-Lost Artifact
 	[117389] = true, -- Draenor Archaeologist's Lodestone
 	[118662] = true, -- Bladespire Relic
@@ -85,7 +85,7 @@ tpm.ItemTeleports = {
 	[167075] = true, -- Ultrasafe Transporter: Mechagon
 	[168862] = true, -- G.E.A.R. Tracking Beacon
 	[169064] = true, -- Montebank's Colorful Cloak
-	[169297] = true, -- Stormpike Insignia
+	[169297] = UnitFactionGroup("player") == "Alliance", -- Stormpike Insignia
 	[172203] = true, -- Cracked Hearthstone
 	[173373] = true, -- Faol's Hearthstone
 	[173430] = true, -- Nexus Teleport Scroll
@@ -109,7 +109,7 @@ tpm.ItemTeleports = {
 	[205255] = true, -- Niffen Diggin' Mitts
 	[205456] = true, -- Lost Dragonscale (1)
 	[205458] = true, -- Lost Dragonscale (2)
-	[211788] = true, -- Tess's Peacebloom
+	[211788] = UnitRace("player") == "Worgen", -- Tess's Peacebloom
 	[230850] = true, -- Delve-O-Bot 7001
 	[234389] = true, -- Gallagio Loyalty Rewards Card: Silver
 	[234390] = true, -- Gallagio Loyalty Rewards Card: Gold
@@ -119,10 +119,12 @@ tpm.ItemTeleports = {
 	[234394] = true, -- Gallagio Loyalty Rewards Card: Legendary
 }
 
+
 function tpm:GetAvailableItemTeleports()
 	return tpm.AvailableItemTeleports
 end
 
+--[[
 function tpm:UpdateAvailableItemTeleports()
 	local AvailableItemTeleports = {}
 	for id, _ in pairs(tpm.ItemTeleports) do
@@ -130,5 +132,23 @@ function tpm:UpdateAvailableItemTeleports()
 			table.insert(AvailableItemTeleports, id)
 		end
 	end
+	tpm.AvailableItemTeleports = AvailableItemTeleports
+end
+]]
+
+
+--updated function for toys
+function tpm:UpdateAvailableItemTeleports()
+	local AvailableItemTeleports = {}
+
+	for id, _ in pairs(tpm.ItemTeleports) do
+		local hasItem = (C_Item.GetItemCount(id) or 0) > 0
+		local isToy = select(1, C_ToyBox.GetToyInfo(id)) ~= nil  -- check if toy exsist
+
+		if (hasItem or isToy) and TeleportMenuDB[id] == true then
+			table.insert(AvailableItemTeleports, id)
+		end
+	end
+
 	tpm.AvailableItemTeleports = AvailableItemTeleports
 end
