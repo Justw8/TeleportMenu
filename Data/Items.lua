@@ -103,6 +103,7 @@ tpm.ItemTeleports = {
 	[189827] = true, -- Cartel Xy's Proof of Initiation
 	[191029] = true, -- Lilian's Hearthstone
 	[193000] = true, -- Ring-Bound Hourglass
+	[200613] = true, -- Aylaag Windstone Fragment
 	[201957] = true, -- Thrall's Hearthstone
 	[202046] = true, -- Lucky Tortollan Charm
 	[204481] = true, -- Morqut Hearth Totem
