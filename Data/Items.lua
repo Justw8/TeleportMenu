@@ -4,6 +4,8 @@ local _, tpm = ...
 tpm.ItemTeleports = {
 	-- Kirin Tor rings
 	-- Slight note on these, it is technically possible to have ALL of them, but that'd cost too much inventory space if you ask me.
+	[32757] = true, -- Blessed Medallion of Karabor
+	[37863] = true, -- Direbrew's Remote
 	[40586] = true, -- Band of the Kirin Tor
 	[44935] = true, -- Ring of the Kirin Tor
 	[40585] = true, -- Signet of the Kirin Tor
@@ -20,6 +22,7 @@ tpm.ItemTeleports = {
 	[51558] = true, -- Runed Loop of the Kirin Tor
 	[51559] = true, -- Runed Ring of the Kirin Tor
 	[51560] = true, -- Runed Band of the Kirin Tor
+	[52251] = true, -- Jaina's Locket
 	-- Faction Cloaks
 	[63206] = UnitFactionGroup("player") == "Alliance", -- Wrap of Unity: Stormwind
 	[63207] = UnitFactionGroup("player") == "Horde", -- Wrap of Unity: Orgrimmar
