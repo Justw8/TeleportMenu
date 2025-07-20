@@ -7,8 +7,8 @@ L["Not In Combat Tooltip"] = "\124cFFFF0000<Недоступно в бою>\124r
 L["Random Hearthstone"] = "Случайный камень возвращения"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EBНажмите, чтобы использовать случайный камень возвращения.\nНовый камень выбирается при повторном открытии меню.\124r"
 L["Random Hearthstone Location"] = "\n\124cFF34B7EBМесто камня возвращения:\124r \124cFF1EFF0C%s\124r"
-L["No Hearthtone In Bags"] = "У вас нет камня возвращения в сумках или не установлен пользовательский. Используйте /tpm для настройки."
-L["Hearthone Reset Error"] = "Ваш камень возвращения сброшен на стандартный, так как игрушка с ID: %s отсутствует в вашей коллекции."
+L["No Hearthtone In Bags"] = "У Вас нет камня возвращения в сумках или не установлен пользовательский. Используйте /tpm для настройки."
+L["Hearthone Reset Error"] = "Ваш камень возвращения сброшен на стандартный, так как игрушка с ID: %s отсутствует в Вашей коллекции."
 
 -- dungeons abreviated Text
 L["The Vortex Pinnacle"] = "ВС"
@@ -78,7 +78,7 @@ L["Ara-Kara, City of Echoes"] = "АРА"
 L["Darkflame Cleft"] = "РТП"
 L["Operation: Floodgate"] = "ОШ"
 L["Liberation of Undermine"] = "ОНШ"
---L["Eco-Dome Al'dani"] = "EDA"
+L["Eco-Dome Al'dani"] = "ЗА"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "КАТ"
@@ -150,7 +150,7 @@ L["Icons Per Flyout Row"] = "Иконок в строке меню"
 L["Icons Per Flyout Row Tooltip"] = "Устанавливает максимальное количество иконок в строке перед созданием новой строки."
 L["%s icons"] = "%s иконок"
 L["Item Teleports"] = "Телепорты предметов"
-L["Item Teleports Tooltip"] = "\124cFF34B7EBВсе предметы с телепортами, которые у вас есть.\124r\n\n\124cFFFF0000Для предметов, таких как плащи фракций, требуется двойной клик!\124r"
+L["Item Teleports Tooltip"] = "\124cFF34B7EBВсе предметы с телепортами, которые у Вас есть.\124r\n\n\124cFFFF0000Для таких предметов, как плащи фракций, требуется двойной клик!\124r"
 L["Teleports:Items:Filters:Held_Items"] = "Имеющиеся предметы"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Недоступные предметы"
 
