@@ -635,7 +635,6 @@ function tpm:CreateFlyout(flyoutData)
 	local childButtons = {}
 	local flyoutsCreated = 0
 	local rowNr = 1
-
 	local inverse = db["Teleports:Mage:Reverse"] and flyoutData.subtype == "mage"
 	local start, endLoop, step = 1, spells, 1
 	if inverse then -- Inverse loop params
@@ -650,7 +649,7 @@ function tpm:CreateFlyout(flyoutData)
 			end
 			flyoutsCreated = flyoutsCreated + 1
 			local flyOutButton = CreateSecureButton(flyOutFrame, "spell", shortNames[spellId], spellId)
-			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * -globalHeight)
+			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
 			table.insert(childButtons, flyOutButton)
 		end
 	end
@@ -677,16 +676,21 @@ function tpm:CreateSeasonalTeleportFlyout()
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
+	local rowNr = 1
 	for _, spellId in ipairs(availableSeasonalTeleports) do
 		if IsSpellKnown(spellId) then
+			if flyoutsCreated == db["Flyout:Max_Per_Row"] then
+				flyoutsCreated = 0
+				rowNr = rowNr + 1
+			end
 			flyoutsCreated = flyoutsCreated + 1
 			local text = tpm:GetIconText(spellId)
 			local flyOutButton = CreateSecureButton(flyOutFrame, "spell", text, spellId)
-			local xOffset = globalWidth * flyoutsCreated
-			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
 		end
 	end
-	flyOutFrame:SetSize(globalWidth + (globalWidth * flyoutsCreated), globalHeight)
+	local frameWidth = rowNr > 1 and globalWidth * (db["Flyout:Max_Per_Row"] + 1) or globalWidth * (flyoutsCreated + 1)
+	flyOutFrame:SetSize(frameWidth, globalHeight * rowNr)
 
 	return button
 end
@@ -706,13 +710,18 @@ function tpm:CreateWormholeFlyout(flyoutData)
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
+	local rowNr = 1
 	for _, wormholeId in ipairs(usableWormholes) do
+		if flyoutsCreated == db["Flyout:Max_Per_Row"] then
+			flyoutsCreated = 0
+			rowNr = rowNr + 1
+		end
 		flyoutsCreated = flyoutsCreated + 1
 		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
-		local xOffset = globalWidth * flyoutsCreated
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
 	end
-	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
+	local frameWidth = rowNr > 1 and globalWidth * (db["Flyout:Max_Per_Row"] + 1) or globalWidth * (flyoutsCreated + 1)
+	flyOutFrame:SetSize(frameWidth, globalHeight * rowNr)
 
 	return button
 end
@@ -731,13 +740,20 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
+	local rowNr = 1
 	for _, itemTeleportId in ipairs(tpm.AvailableItemTeleports) do
+		if flyoutsCreated == db["Flyout:Max_Per_Row"] then
+			flyoutsCreated = 0
+			rowNr = rowNr + 1
+		end
 		flyoutsCreated = flyoutsCreated + 1
-		local flyOutButton = CreateSecureButton(flyOutFrame, "item", nil, itemTeleportId)
-		local xOffset = globalWidth * flyoutsCreated
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", xOffset, 0)
+		local isToy = tpm:IsToyTeleport(itemTeleportId)
+		local flyOutButton = CreateSecureButton(flyOutFrame, isToy and "toy" or "item", nil, itemTeleportId)
+		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
 	end
-	flyOutFrame:SetSize(globalWidth * (flyoutsCreated + 1), globalHeight)
+
+	local frameWidth = rowNr > 1 and globalWidth * (db["Flyout:Max_Per_Row"] + 1) or globalWidth * (flyoutsCreated + 1)
+	flyOutFrame:SetSize(frameWidth, globalHeight * rowNr)
 
 	return button
 end
