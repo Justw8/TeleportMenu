@@ -78,6 +78,7 @@ L["Ara-Kara, City of Echoes"] = "아라카라"
 L["Darkflame Cleft"] = "어불동"
 L["Operation: Floodgate"] = "수문"
 L["Liberation of Undermine"] = "언더 마인"
+--L["Eco-Dome Al'dani"] = "EDA"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "대격변"

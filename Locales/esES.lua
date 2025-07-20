@@ -76,8 +76,9 @@ if not L then return end
 --L["Priory of the Sacred Flame"] = "PoSF"
 --L["Ara-Kara, City of Echoes"] = "AK"
 --L["Darkflame Cleft"] = "DFC"
--- L["Operation: Floodgate"] = "FL"
+--L["Operation: Floodgate"] = "FL"
 --L["Liberation of Undermine"] = "LOU"
+--L["Eco-Dome Al'dani"] = "EDA"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"
@@ -92,19 +93,19 @@ if not L then return end
 --L["The War Within"] = "TWW"
 --L["The War Within Raids"] = "TWW R"
 --L["Season 1"] = "S1"
--- L["Season 2"] = "S2"
--- L["Season 3"] = "S3"
--- L["Season 4"] = "S4"
+--L["Season 2"] = "S2"
+--L["Season 3"] = "S3"
+--L["Season 4"] = "S4"
 
 -- -- Mage teleport/portal abreviated text
 -- -- Alliance
--- L["Stormwind"] = "SW"
--- L["Ironforge"] = "IF"
--- L["Darnassus"] = "DS"
--- L["Exodar"] = "EX"
--- L["Theramore"] = "TH"
--- L["Stormshield"] = "SS"
--- L["Boralus"] = "BO"
+--L["Stormwind"] = "SW"
+--L["Ironforge"] = "IF"
+--L["Darnassus"] = "DS"
+--L["Exodar"] = "EX"
+--L["Theramore"] = "TH"
+--L["Stormshield"] = "SS"
+--L["Boralus"] = "BO"
 
 -- -- Horde
 -- L["Orgrimmar"] = "ORG"

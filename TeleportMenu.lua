@@ -100,6 +100,7 @@ local shortNames = {
 	[445417] = L["Ara-Kara, City of Echoes"],
 	[445441] = L["Darkflame Cleft"],
 	[1216786] = L["Operation: Floodgate"],
+	[1237215] = L["Eco-Dome Al'dani"],
 	-- TWW R
 	[1226482] = L["Liberation of Undermine"],
 	-- Mage teleports

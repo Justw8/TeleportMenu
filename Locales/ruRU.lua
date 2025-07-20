@@ -78,11 +78,12 @@ L["Ara-Kara, City of Echoes"] = "АРА"
 L["Darkflame Cleft"] = "РТП"
 L["Operation: Floodgate"] = "ОШ"
 L["Liberation of Undermine"] = "ОНШ"
+--L["Eco-Dome Al'dani"] = "EDA"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "КАТ"
 L["Mists of Pandaria"] = "ТП"
-L["Warlords of Draenor"] = "ВД" 
+L["Warlords of Draenor"] = "ВД"
 L["Legion"] = "ЛЕГ"
 L["Battle for Azeroth"] = "БФА"
 L["Shadowlands"] = "ТЗ"

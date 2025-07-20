@@ -78,6 +78,7 @@ if not L then return end
 --L["Darkflame Cleft"] = "DFC"
 -- L["Operation: Floodgate"] = "FL"
 --L["Liberation of Undermine"] = "LOU"
+--L["Eco-Dome Al'dani"] = "EDA"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"
