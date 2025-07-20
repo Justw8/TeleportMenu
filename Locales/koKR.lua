@@ -1,12 +1,12 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "koKR")
 if not L then return end
 
-L["AddonNamePrint"] = "|cFFFF0000텔레포트 메뉴:|r "
+L["AddonNamePrint"] = "\124cFFFF0000텔레포트 메뉴:\124r " -- 1 space after the :
 L["Common:Loading"] = "불러오는 중"
-L["Not In Combat Tooltip"] = "|cFFFF0000<전투 중에는 사용할 수 없습니다>|r"
+L["Not In Combat Tooltip"] = "\124cFFFF0000<전투 중에는 사용할 수 없습니다>\124r"
 L["Random Hearthstone"] = "무작위 귀환석"
-L["Random Hearthstone Tooltip"] = "|cFF34B7EB클릭 시 무작위 귀환석을 사용합니다.\n메뉴를 다시 열 때마다 새로운 귀환석이 선택됩니다.|r"
-L["Random Hearthstone Location"] = "\n|cFF34B7EB귀환 위치:|r |cFF1EFF0C%s|r"
+L["Random Hearthstone Tooltip"] = "\124cFF34B7EB클릭 시 무작위 귀환석을 사용합니다.\n메뉴를 다시 열 때마다 새로운 귀환석이 선택됩니다.\124r"
+L["Random Hearthstone Location"] = "\n\124cFF34B7EB귀환 위치:\124r \124cFF1EFF0C%s\124r"
 L["No Hearthtone In Bags"] = "가방에 귀환석이 없거나 사용자 지정 귀환석이 설정되지 않았습니다. /tpm 명령어를 통해 설정할 수 있습니다."
 L["Hearthone Reset Error"] = "귀하의 수집품에 아이템 ID: %s 장난감이 없어 기본 귀환석으로 초기화되었습니다."
 
@@ -140,7 +140,7 @@ L["ButtonText Tooltip"] = "활성화 시, 던전 텔레포트에 던전 이름�
 L["Reverse Mage Flyouts"] = "마법사 확장 목록 반전"
 L["Reverse Mage Flyouts Tooltip"] = "가장 최근 확장의 텔레포트가 먼저 나오도록 마법사 기술의 확장 목록 순서를 반전합니다."
 L["Seasonal Teleports"] = "시즌별 텔레포트"
-L["Seasonal Teleports Tooltip"] = "|cFF34B7EB현재 쐐기돌 시즌용 텔레포트입니다.|r"
+L["Seasonal Teleports Tooltip"] = "\124cFF34B7EB현재 쐐기돌 시즌용 텔레포트입니다.\124r"
 L["Seasonal Teleports Toggle Tooltip"] = "시즌 텔레포트만 표시하도록 활성화/비활성화합니다."
 L["Icon Size"] = "아이콘 크기"
 L["Icon Size Tooltip"] = "아이콘 크기를 키우거나 줄입니다."
@@ -149,7 +149,7 @@ L["Icons Per Flyout Row"] = "행당 아이콘 수"
 L["Icons Per Flyout Row Tooltip"] = "한 행에 표시될 최대 아이콘 수를 설정합니다. 초과 시 새 행이 생성됩니다."
 L["%s icons"] = "%s개 아이콘"
 L["Item Teleports"] = "아이템 텔레포트"
-L["Item Teleports Tooltip"] = "|cFF34B7EB소지 중인 모든 텔레포트 아이템|r\n\n|cFFFF0000진영 망토처럼 두 번 클릭해야 하는 아이템도 있습니다!|r"
+L["Item Teleports Tooltip"] = "\124cFF34B7EB소지 중인 모든 텔레포트 아이템\124r\n\n\124cFFFF0000진영 망토처럼 두 번 클릭해야 하는 아이템도 있습니다!\124r"
 L["Teleports:Items:Filters:Held_Items"] = "보유 중인 아이템"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "획득하지 않은 아이템"
 
