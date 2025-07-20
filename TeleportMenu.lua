@@ -180,6 +180,7 @@ local tpTable = {
 	-- Racials
 	{ id = 312370, type = "spell" }, -- Make Camp (Vulpera)
 	{ id = 312372, type = "spell" }, -- Return to Camp (Vulpera)
+	{ id = 265225, type = "spell" }, -- Mole Machine (Dark Iron Dwarf)
 
 	-- Dungeon/Raid Teleports
 	{ id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path" }, -- Hero's Path: Cataclysm
