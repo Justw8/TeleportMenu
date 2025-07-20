@@ -18,7 +18,6 @@
 ## Author: Justwait
 ## Version: @project-version@
 ## SavedVariables: TeleportMenuDB
-## Dependencies: Blizzard_Collections
 
 ## X-Curse-Project-ID: 1087836
 
