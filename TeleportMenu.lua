@@ -594,6 +594,17 @@ function tpm:UpdateAvailableSeasonalTeleports()
 			[506] = 445440, -- Cinderbrew Meadery
 			[525] = 1216786, -- Operation: Floodgate
 		},
+		-- TWW S3
+		[3] = {
+			[499] = 445444, -- Priory of the Sacred Flame
+			[542] = 1237215, -- Eco-Dome Al'dani
+			[378] = 354465, -- Halls of Atonement
+			[525] = 1216786, -- Operation: Floodgate
+			[503] = 445417, -- Ara-Kara, City of Echoes
+			[392] = 367416, -- Tazavesh: So'leah's Gambit
+			-- [391] = 367416, -- Tazavesh: Streets of Wonder
+			[505] = 445414, -- The Dawnbreaker
+		},
 	}
 
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
