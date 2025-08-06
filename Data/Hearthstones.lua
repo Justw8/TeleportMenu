@@ -88,6 +88,8 @@ tpm.Hearthstones = {
 	[228940] = true, -- Notorious Thread's Hearthstone
 	[236687] = true, -- Explosive Hearthstone
 	[235016] = true, -- Redeployment Module
+	[245970] = true, -- P.O.S.T. Master's Express Hearthstone
+	[246565] = true, -- Cosmic Hearthstone
 }
 
 function tpm:GetAvailableHearthstoneToys()
