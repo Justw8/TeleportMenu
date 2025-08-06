@@ -1027,7 +1027,7 @@ function events:ADDON_LOADED(...)
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
-		tpm.settings.current_season = 2
+		tpm.settings.current_season = 3
 
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
