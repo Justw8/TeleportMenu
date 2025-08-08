@@ -135,6 +135,7 @@ if not L then return end
 -- L["Hearthstone Toy"] = "Hearthstone Toy"
 -- L["Hearthstone Toy Tooltip"] = "Sets the preferred hearthstone toy to use.\n\nIf set to Random, a random hearthstone toy will be choosen every time you open the game menu."
 -- L["None"] = "None"
+-- L["Disabled"] = "Disabled"
 -- L["Random"] = "Random"
 -- L["ButtonText"] = "Show Teleport Icon Text"
 -- L["ButtonText Tooltip"] = "When enabled, an abbreviated name of the dungeon will be added to dungeon teleports."
