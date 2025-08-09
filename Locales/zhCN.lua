@@ -2,7 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhCN")
 if not L then return end
 
 L["AddonNamePrint"] = "\124cFFFF0000传送菜单：\124r " -- 1 space after the :
-L["Common:Loading"] = "LOADING"
+L["Common:Loading"] = "加载中"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<战斗中不可用>\124r"
 L["Random Hearthstone"] = "随机炉石"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EB点击后，会随机使用一个炉石。\n当你重新打开主菜单时，它会选择一个新炉石。\124r"
@@ -126,7 +126,7 @@ L["Oribos"] = "奥利"
 L["Valdrakken"] = "瓦德拉"
 L["Dalaran - Ancient"] = "达-远古"
 L["Hall of the Guardian"] = "守-圣殿"
-L["Dornogal"] = "多恩"
+L["Dornogal"] = "多恩岛"
 
 -- Options
 L["Opening Options Menu"] = "打开选项菜单"
@@ -135,7 +135,7 @@ L["Enable Tooltip"] = "启用/禁用传送菜单"
 L["Hearthstone Toy"] = "炉石玩具"
 L["Hearthstone Toy Tooltip"] = "设置首选的炉石\n\n如果设置为随机，每次打开游戏菜单都会随机选择一个炉石玩具。"
 L["None"] = "无"
---L["Disabled"] = "Disabled"
+L["Disabled"] = "禁用"
 L["Random"] = "随机"
 L["ButtonText"] = "显示传送缩写"
 L["ButtonText Tooltip"] = "启用后，地下城的缩写名被添加到地下城传送阵上。"
