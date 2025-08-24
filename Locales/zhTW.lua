@@ -1,7 +1,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhTW")
 if not L then return end
 
-L["AddonNamePrint"] = "\124cFFFF0000傳送選單：\124r " -- 1 space after the :
+L["AddonNamePrint"] = "\124cFFFF0000TeleportMenu：\124r " -- 1 space after the :
 L["Common:Loading"] = "載入中"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<戰鬥中不可用>\124r"
 L["Random Hearthstone"] = "隨機爐石"
@@ -156,8 +156,8 @@ L["Teleports:Items:Filters:Held_Items"] = "您擁有的物品"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "不可用的物品"
 
 -- Settings
-L["ADDON_NAME"] = "傳送選單"
-L["TITLE"] = "傳送選單設定"
+L["ADDON_NAME"] = "TeleportMenu"
+L["TITLE"] = "TeleportMenu設定"
 L["GENERAL"] = "一般設定"
 L["BUTTON_SETTINGS"] = "按鈕設定"
 L["TELEPORT_SETTINGS"] = "傳送設定"
