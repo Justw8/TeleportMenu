@@ -121,6 +121,7 @@ tpm.ItemTeleports = {
 	[234392] = true, -- Gallagio Loyalty Rewards Card: Black
 	[234393] = true, -- Gallagio Loyalty Rewards Card: Diamond
 	[234394] = true, -- Gallagio Loyalty Rewards Card: Legendary
+	[249699] = true, -- Shadowguard Translocator
 }
 
 function tpm:GetAvailableItemTeleports()
