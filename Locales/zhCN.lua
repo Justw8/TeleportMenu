@@ -1,9 +1,9 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhCN")
 if not L then return end
 
-L["AddonNamePrint"] = "\124cFFFF0000传送菜单：\124r " -- 1 space after the :
+L["AddonNamePrint"] = "\124cFFFF0000TeleportMenu：\124r " -- 1 space after the :
 L["Common:Loading"] = "加载中"
-L["Not In Combat Tooltip"] = "\124cFFFF0000<战斗中不可用>\124r"
+L["Not In Combat Tooltip"] = "\124cFFFF0000<你无法在战斗中实施那个动作>\124r" --ERR_NOT_IN_COMBAT
 L["Random Hearthstone"] = "随机炉石"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EB点击后，会随机使用一个炉石。\n当你重新打开主菜单时，它会选择一个新炉石。\124r"
 L["Random Hearthstone Location"] = "\n\124cFF34B7EB炉石位置：\124r \124cFF1EFF0C%s\124r"
@@ -156,8 +156,8 @@ L["Teleports:Items:Filters:Held_Items"] = "你拥有的物品"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "不可用的物品"
 
 -- Settings
-L["ADDON_NAME"] = "传送菜单"
-L["TITLE"] = "传送菜单设置"
+L["ADDON_NAME"] = "TeleportMenu"
+L["TITLE"] = "TeleportMenu设置"
 L["GENERAL"] = "通用设置"
 L["BUTTON_SETTINGS"] = "按键设置"
 L["TELEPORT_SETTINGS"] = "传送设置"

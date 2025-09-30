@@ -1,7 +1,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "zhTW")
 if not L then return end
 
-L["AddonNamePrint"] = "\124cFFFF0000傳送選單：\124r " -- 1 space after the :
+L["AddonNamePrint"] = "\124cFFFF0000TeleportMenu：\124r " -- 1 space after the :
 L["Common:Loading"] = "載入中"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<戰鬥中不可用>\124r"
 L["Random Hearthstone"] = "隨機爐石"
@@ -135,7 +135,7 @@ L["Enable Tooltip"] = "啟用/停用 此傳送選單。"
 L["Hearthstone Toy"] = "爐石玩具"
 L["Hearthstone Toy Tooltip"] = "設置首選的爐石玩具。\n\n如果設置為隨機，則每次打開遊戲選單時都會選擇一個隨機的爐石玩具。"
 L["None"] = "無"
---L["Disabled"] = "Disabled"
+L["Disabled"] = "停用"
 L["Random"] = "隨機"
 L["ButtonText"] = "顯示傳送縮寫"
 L["ButtonText Tooltip"] = "啟用後，地下城的縮寫名被添加到地下城傳送陣上。"
@@ -156,8 +156,8 @@ L["Teleports:Items:Filters:Held_Items"] = "您擁有的物品"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "不可用的物品"
 
 -- Settings
-L["ADDON_NAME"] = "傳送選單"
-L["TITLE"] = "傳送選單設定"
+L["ADDON_NAME"] = "TeleportMenu"
+L["TITLE"] = "TeleportMenu設定"
 L["GENERAL"] = "一般設定"
 L["BUTTON_SETTINGS"] = "按鈕設定"
 L["TELEPORT_SETTINGS"] = "傳送設定"
