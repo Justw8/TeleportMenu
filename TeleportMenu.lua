@@ -15,6 +15,8 @@ local APPEND = L["AddonNamePrint"]
 local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 local globalWidth, globalHeight = 40, 40 -- defaults
 
+local IsSpellKnown = C_SpellBook.IsSpellKnown
+
 --------------------------------------
 -- Teleport Tables
 --------------------------------------
@@ -310,7 +312,7 @@ local function createCooldownFrame(frame)
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
 			start, duration, enabled = C_Item.GetItemCooldown(id)
-		else
+		elseif not issecurevalue then
 			local cooldown = C_Spell.GetSpellCooldown(id)
 			start = cooldown.startTime
 			duration = cooldown.duration
