@@ -79,6 +79,7 @@ if not L then return end
 -- L["Operation: Floodgate"] = "FL"
 --L["Liberation of Undermine"] = "LOU"
 --L["Eco-Dome Al'dani"] = "EDA"
+--L["Manaforge Omega"] = "MOG"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"
