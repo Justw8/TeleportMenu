@@ -298,6 +298,11 @@ local flyOutFramesPool = {}
 local secureButtons = {}
 local secureButtonsPool = {}
 
+--- @class Cooldown
+--- @field cooldownFrame Cooldown
+--- @field CheckCooldown fun(self: Cooldown, id: ItemInfo, type: string): nil
+--- @param frame Cooldown|Button
+--- @return Cooldown
 local function createCooldownFrame(frame)
 	if frame.cooldownFrame then
 		return frame.cooldownFrame
@@ -435,8 +440,8 @@ local function createFlyOutFrame()
 	return flyOutFrame
 end
 
----@param id ItemInfo
----@return boolean
+--- @param id ItemInfo
+--- @return boolean
 local function IsItemEquipped(id)
 	return C_Item.IsEquippableItem(id) and C_Item.IsEquippedItem(id)
 end
@@ -454,13 +459,15 @@ local function ClearAllInvalidHighlights()
 	end
 end
 
----@param frame Frame
----@param type string
----@param text string|nil
----@param id integer
----@param hearthstone? boolean
----@return Frame
+--- @param frame Frame
+--- @param type string
+--- @param text string|nil
+--- @param id integer
+--- @param hearthstone? boolean
+--- @return Frame
 local function CreateSecureButton(frame, type, text, id, hearthstone)
+	---@class Button
+	---@field cooldownFrame Cooldown
 	local button
 	if next(secureButtonsPool) then
 		button = table.remove(secureButtonsPool)
@@ -479,6 +486,9 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		self:Hide()
 		if type == "item" and not C_Item.IsEquippedItem(id) then
 			self:ClearHighlightTexture()
+		end
+		if self.cooldownFrame then
+			self.cooldownFrame:CheckCooldown(id, type)
 		end
 		table.insert(secureButtonsPool, self)
 	end
@@ -518,6 +528,7 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 				end
 			end)
 		end
+		self.cooldownFrame:CheckCooldown(id, type)
 	end)
 	button.cooldownFrame:CheckCooldown(id, type)
 
