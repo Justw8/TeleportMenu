@@ -78,7 +78,7 @@ L["Darkflame Cleft"] = "DFC"
 L["Operation: Floodgate"] = "FL"
 L["Liberation of Undermine"] = "LOU"
 L["Eco-Dome Al'dani"] = "EDA"
-L["Manaforge Omega"] = "MOG"
+L["Manaforge Omega"] = "MO"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "CATA"
