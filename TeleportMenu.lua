@@ -166,6 +166,7 @@ local shortNames = {
 local tpTable = {
 	-- Hearthstones
 	{ id = 6948, type = "item", hearthstone = true }, -- Hearthstone
+	{ id = 1233637, type = "housing"}, -- Teleport Home (Housing)
 	{ id = 556, type = "spell" }, -- Astral Recall (Shaman)
 	{ id = 110560, type = "toy", quest = { 34378, 34586 } }, -- Garrison Hearthstone
 	{ id = 140192, type = "toy", quest = { 44184, 44663 } }, -- Dalaran Hearthstone
@@ -248,7 +249,7 @@ end
 local function setCombatTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	local yOffset = globalHeight / 2
-	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 	GameTooltip:SetText(L["Not In Combat Tooltip"], 1, 1, 1)
 	GameTooltip:Show()
 end
@@ -256,7 +257,7 @@ end
 local function setToolTip(self, type, id, hs)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	local yOffset = globalHeight / 2
-	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 	if hs and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
 		local bindLocation = GetBindLocation()
 		GameTooltip:SetText(L["Random Hearthstone"], 1, 1, 1)
@@ -307,12 +308,17 @@ local function createCooldownFrame(frame)
 	cooldownFrame:SetAllPoints()
 
 	function cooldownFrame:CheckCooldown(id, type)
-		if not id then
+		if type ~= "housing" and not id then
 			return
 		end
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
 			start, duration, enabled = C_Item.GetItemCooldown(id)
+		elseif type == "housing" then
+			local cdInfo = C_Housing.GetVisitCooldownInfo()
+			start = cdInfo.startTime
+			duration = cdInfo.duration
+			enabled = cdInfo.isEnabled
 		elseif not issecurevalue then
 			local cooldown = C_Spell.GetSpellCooldown(id)
 			start = cooldown.startTime
@@ -335,12 +341,12 @@ local function CloseAllFlyouts()
 	end
 end
 
-local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyout Data needs: id, name, iconId
+local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) -- Flyout Data needs: id, name, iconId
 	local flyOutButton
 	if next(flyOutButtonsPool) then
 		flyOutButton = table.remove(flyOutButtonsPool)
 	else
-		flyOutButton = CreateFrame("Button", nil, TeleportMeButtonsFrame, "SecureActionButtonTemplate")
+		flyOutButton = CreateFrame("Button", nil, side == "LEFT" and TeleportMeButtonsFrameLeft or TeleportMeButtonsFrameRight, "SecureActionButtonTemplate")
 		flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
 		flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
 
@@ -406,14 +412,15 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData) -- Flyou
 	return flyOutButton
 end
 
-local function createFlyOutFrame()
+local function createFlyOutFrame(side)
 	local flyOutFrame
 	if next(flyOutFramesPool) then
 		flyOutFrame = table.remove(flyOutFramesPool)
 	else
-		flyOutFrame = CreateFrame("Frame", "FlyOutFrame" .. #flyOutFrames + 1, TeleportMeButtonsFrame)
+		flyOutFrame = CreateFrame("Frame", "FlyOutFrame" .. #flyOutFrames + 1)
 		table.insert(flyOutFrames, flyOutFrame)
 	end
+	flyOutFrame:SetParent(side == "LEFT" and TeleportMeButtonsFrameLeft or TeleportMeButtonsFrameRight)
 
 	function flyOutFrame:Recycle()
 		self:ClearAllPoints()
@@ -455,6 +462,8 @@ local function ClearAllInvalidHighlights()
 	end
 end
 
+local housingButton = nil
+
 ---@param frame Frame
 ---@param type string
 ---@param text string|nil
@@ -463,15 +472,30 @@ end
 ---@return Frame
 local function CreateSecureButton(frame, type, text, id, hearthstone)
 	local button
-	if next(secureButtonsPool) then
-		button = table.remove(secureButtonsPool)
+	if type == "housing" then -- special case for now
+		button = housingButton
+		if not button then
+			button = CreateFrame("Button", nil, UIParent, "SecureActionButtonTemplate")
+			button:SetAttribute("type1", "macro")
+			local IsInsideHouseOrPlot = C_Housing.IsInsideHouseOrPlot()
+			button:SetAttribute("macrotext1", "/run local h=C_Housing.GetCurrentHouseInfo()C_Housing.TeleportHome(h.neighborhoodGUID,h.houseGUID,h.plotID)") -- Housing Macro
+			button.text = button:CreateFontString(nil, "OVERLAY")
+			button:LockHighlight()
+			button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
+			button.cooldownFrame = createCooldownFrame(button)
+			housingButton = button
+		end
 	else
-		button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
-		button.cooldownFrame = createCooldownFrame(button)
-		button.text = button:CreateFontString(nil, "OVERLAY")
-		button:LockHighlight()
-		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
-		table.insert(secureButtons, button)
+		if next(secureButtonsPool) then
+			button = table.remove(secureButtonsPool)
+		else
+			button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
+			button.cooldownFrame = createCooldownFrame(button)
+			button.text = button:CreateFontString(nil, "OVERLAY")
+			button:LockHighlight()
+			button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
+			table.insert(secureButtons, button)
+		end
 	end
 
 	function button:Recycle()
@@ -525,6 +549,9 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	-- Textures
 	if type == "spell" then
 		local spellTexture = C_Spell.GetSpellTexture(id)
+		button:SetNormalTexture(spellTexture)
+	elseif type == "housing" then
+		local spellTexture = C_Spell.GetSpellTexture(1263273)
 		button:SetNormalTexture(spellTexture)
 	else -- item or toy
 		SetTextureByItemId(button, id)
@@ -631,7 +658,8 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
-function tpm:CreateFlyout(flyoutData)
+function tpm:CreateFlyout(flyoutData, side)
+	local ButtonFrame = side == "LEFT" and TeleportMeButtonsFrameLeft or TeleportMeButtonsFrameRight
 	if db["Teleports:Seasonal:Only"] and (flyoutData.subtype == "path" and not flyoutData.currentExpansion) then
 		return
 	end
@@ -640,13 +668,13 @@ function tpm:CreateFlyout(flyoutData)
 		return
 	end
 
-	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
-	local flyOutFrame = createFlyOutFrame()
-	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local yOffset = -globalHeight * ButtonFrame:GetButtonAmount()
+	local flyOutFrame = createFlyOutFrame(side)
+	flyOutFrame:SetPoint(side == "LEFT" and "RIGHT" or "LEFT", ButtonFrame, side == "LEFT" and "TOPLEFT" or "TOPRIGHT", side == "LEFT" and globalWidth or 0, yOffset)
 
 	-- Flyout Main Button
-	local button = createFlyOutButton(flyOutFrame, flyoutData)
-	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local button = createFlyOutButton(flyOutFrame, flyoutData, nil, side)
+	button:SetPoint("LEFT", ButtonFrame, "TOPRIGHT", 0, yOffset)
 
 	local childButtons = {}
 	local flyoutsCreated = 0
@@ -665,7 +693,12 @@ function tpm:CreateFlyout(flyoutData)
 			end
 			flyoutsCreated = flyoutsCreated + 1
 			local flyOutButton = CreateSecureButton(flyOutFrame, "spell", shortNames[spellId], spellId)
-			flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
+			local offsetY = (rowNr - 1) * - globalHeight
+			local offsetX = globalWidth * flyoutsCreated
+			if side == "LEFT" then
+				offsetX = -globalWidth * flyoutsCreated
+			end
+			flyOutButton:SetPoint(side == "LEFT" and "TOPRIGHT" or "TOPLEFT", flyOutFrame, side == "LEFT" and "TOPRIGHT" or "TOPLEFT", offsetX, offsetY)
 			table.insert(childButtons, flyOutButton)
 		end
 	end
@@ -683,13 +716,13 @@ function tpm:CreateSeasonalTeleportFlyout()
 
 	local tooltipData = { type = "seasonalteleport" }
 	local seasonalFlyOutData = { id = -1, name = L["Season " .. tpm.settings.current_season], iconId = 5927657 }
-	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
+	local yOffset = -globalHeight * TeleportMeButtonsFrameRight:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame()
-	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, seasonalFlyOutData, tooltipData)
-	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local button = createFlyOutButton(flyOutFrame, seasonalFlyOutData, tooltipData, "RIGHT")
+	button:SetPoint("LEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
 	local rowNr = 1
@@ -717,13 +750,13 @@ function tpm:CreateWormholeFlyout(flyoutData)
 		return
 	end
 
-	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
+	local yOffset = -globalHeight * TeleportMeButtonsFrameLeft:GetButtonAmount()
 
-	local flyOutFrame = createFlyOutFrame()
-	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local flyOutFrame = createFlyOutFrame("LEFT")
+	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", globalWidth, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "profession", id = 202 })
-	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "profession", id = 202 }, "LEFT")
+	button:SetPoint("LEFT", TeleportMeButtonsFrameLeft, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
 	local rowNr = 1
@@ -734,7 +767,7 @@ function tpm:CreateWormholeFlyout(flyoutData)
 		end
 		flyoutsCreated = flyoutsCreated + 1
 		local flyOutButton = CreateSecureButton(flyOutFrame, "toy", nil, wormholeId)
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
+		flyOutButton:SetPoint("TOPRIGHT", flyOutFrame, "TOPRIGHT", -globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
 	end
 	local frameWidth = rowNr > 1 and globalWidth * (db["Flyout:Max_Per_Row"] + 1) or globalWidth * (flyoutsCreated + 1)
 	flyOutFrame:SetSize(frameWidth, globalHeight * rowNr)
@@ -747,13 +780,13 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 		return
 	end
 
-	local yOffset = -globalHeight * TeleportMeButtonsFrame:GetButtonAmount()
+	local yOffset = -globalHeight * TeleportMeButtonsFrameLeft:GetButtonAmount()
 
-	local flyOutFrame = createFlyOutFrame()
-	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local flyOutFrame = createFlyOutFrame("LEFT")
+	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", 0, yOffset)
 
-	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "item_teleports" })
-	button:SetPoint("LEFT", TeleportMeButtonsFrame, "TOPRIGHT", 0, yOffset)
+	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "item_teleports" }, "LEFT")
+	button:SetPoint("LEFT", TeleportMeButtonsFrameLeft, "TOPRIGHT", 0, yOffset)
 
 	local flyoutsCreated = 0
 	local rowNr = 1
@@ -775,7 +808,7 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 end
 
 function tpm:updateHearthstone()
-	local hearthstoneButton = TeleportMeButtonsFrame.hearthstoneButton
+	local hearthstoneButton = TeleportMeButtonsFrameLeft.hearthstoneButton
 	if not hearthstoneButton then
 		return
 	end
@@ -811,27 +844,11 @@ function tpm:updateHearthstone()
 	hearthstoneButton:Show()
 end
 
-local function createAnchors()
-	if TeleportMeButtonsFrame and not TeleportMeButtonsFrame.reload then
-		if not db["Enabled"] then
-			TeleportMeButtonsFrame:Hide()
-			return
-		end
-		if TeleportMeButtonsFrame:IsVisible() and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
-			local rng = tpm:GetRandomHearthstone()
-			TeleportMeButtonsFrame.hearthstoneButton:SetAttribute("toy", rng)
-		end
-		ClearAllInvalidHighlights()
-		return
-	end
-	if not db["Enabled"] then
-		return
-	end
-	local buttonsFrame = TeleportMeButtonsFrame or CreateFrame("Frame", "TeleportMeButtonsFrame", GameMenuFrame)
+local function anchorInit(side)
+	local frameName = side == "LEFT" and "TeleportMeButtonsFrameLeft" or "TeleportMeButtonsFrameRight"
+	local buttonsFrame = CreateFrame("Frame", frameName, GameMenuFrame)
 	buttonsFrame.reload = nil
 	buttonsFrame:SetSize(1, 1)
-	local buttonFrameYOffset = globalHeight / 2
-	buttonsFrame:SetPoint("TOPLEFT", GameMenuFrame, "TOPRIGHT", 0, -buttonFrameYOffset)
 
 	buttonsFrame.buttonAmount = 0
 	function buttonsFrame:IncrementButtons()
@@ -841,6 +858,35 @@ local function createAnchors()
 	function buttonsFrame:GetButtonAmount()
 		return self.buttonAmount
 	end
+
+	return buttonsFrame
+end
+
+local function createAnchors()
+	if TeleportMeButtonsFrameRight and not TeleportMeButtonsFrameRight.reload then
+		if not db["Enabled"] then
+			TeleportMeButtonsFrameRight:Hide()
+			TeleportMeButtonsFrameLeft:Hide()
+			return
+		end
+		if TeleportMeButtonsFrameLeft:IsVisible() and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
+			local rng = tpm:GetRandomHearthstone()
+			TeleportMeButtonsFrameLeft.hearthstoneButton:SetAttribute("toy", rng)
+		end
+		ClearAllInvalidHighlights()
+		return
+	end
+	if not db["Enabled"] then
+		return
+	end
+
+	local buttonsFrameRight = TeleportMeButtonsFrameRight or anchorInit("RIGHT")
+	local buttonsFrameLeft = TeleportMeButtonsFrameLeft or anchorInit("LEFT")
+	buttonsFrameRight.buttonAmount = 0
+	buttonsFrameLeft.buttonAmount = 0
+	local buttonFrameYOffset = globalHeight / 2
+	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight, -buttonFrameYOffset)
+	buttonsFrameRight:SetPoint("TOPLEFT", GameMenuFrame,  "TOPRIGHT", 0, -buttonFrameYOffset)
 
 	for _, teleport in ipairs(tpTable) do
 		local showHearthstone = db["Teleports:Hearthstone"] ~= "disabled"
@@ -882,27 +928,33 @@ local function createAnchors()
 		-- Create Stuff
 		if known and (teleport.type == "toy" or teleport.type == "item" or teleport.type == "spell" or (showHearthstone and teleport.hearthstone)) then
 			tpm:DebugPrint(teleport.hearthstone)
-			local button = CreateSecureButton(buttonsFrame, teleport.type, nil, teleport.id --[[@as integer]], teleport.hearthstone)
-			local yOffset = -globalHeight * buttonsFrame:GetButtonAmount()
-			button:SetPoint("LEFT", buttonsFrame, "TOPRIGHT", 0, yOffset)
+			local button = CreateSecureButton(buttonsFrameLeft, teleport.type, nil, teleport.id --[[@as integer]], teleport.hearthstone)
+			local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
+			button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
 			if teleport.hearthstone then -- store to replace item later
-				buttonsFrame.hearthstoneButton = button
+				buttonsFrameLeft.hearthstoneButton = button
 			end
-			buttonsFrame:IncrementButtons()
+			buttonsFrameLeft:IncrementButtons()
+		elseif teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
+			local button = CreateSecureButton(buttonsFrameLeft, teleport.type)
+			local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
+			button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
+			buttonsFrameLeft:IncrementButtons()
 		elseif teleport.type == "wormholes" then
 			local created = tpm:CreateWormholeFlyout(teleport)
 			if created then
-				buttonsFrame:IncrementButtons()
+				buttonsFrameLeft:IncrementButtons()
 			end
 		elseif teleport.type == "item_teleports" then
 			local created = tpm:CreateItemTeleportsFlyout(teleport)
 			if created then
-				buttonsFrame:IncrementButtons()
+				buttonsFrameLeft:IncrementButtons()
 			end
 		elseif teleport.type == "flyout" then
-			local created = tpm:CreateFlyout(teleport)
+			local created = tpm:CreateFlyout(teleport, teleport.subtype == "mage" and "LEFT")
 			if created then
-				buttonsFrame:IncrementButtons()
+				local frameAdded = teleport.subtype == "mage" and buttonsFrameLeft or buttonsFrameRight
+				frameAdded:IncrementButtons()
 			end
 		end
 	end
@@ -910,7 +962,7 @@ local function createAnchors()
 	local function CreateCurrentSeasonTeleports()
 		local created = tpm:CreateSeasonalTeleportFlyout()
 		if created then
-			buttonsFrame:IncrementButtons()
+			buttonsFrameRight:IncrementButtons()
 		end
 	end
 
@@ -937,8 +989,8 @@ function tpm:ReloadFrames()
 		secureButton:Recycle()
 	end
 
-	if TeleportMeButtonsFrame then
-		TeleportMeButtonsFrame.reload = true
+	if TeleportMeButtonsFrameRight then
+		TeleportMeButtonsFrameRight.reload = true
 	end
 
 	createAnchors()
