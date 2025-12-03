@@ -42,7 +42,7 @@ end
 --L["Freehold"] = "FH"
 --L["The Underrot"] = "UR"
 --L["Mechagon"] = "MECH"
--- L["The MOTHERLODE!!"] = "ML"
+--L["The MOTHERLODE!!"] = "ML"
 --L["Waycrest Manor"] = "WM"
 --L["Atal'Dazar"] = "AD"
 --L["Siege of Boralus"] = "SoB"
@@ -81,6 +81,7 @@ end
 --L["Operation: Floodgate"] = "FL"
 --L["Liberation of Undermine"] = "LOU"
 --L["Eco-Dome Al'dani"] = "EDA"
+--L["Manaforge Omega"] = "MO"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"

@@ -79,6 +79,7 @@ L["Darkflame Cleft"] = "暗焰"
 L["Operation: Floodgate"] = "水闸"
 L["Liberation of Undermine"] = "安德麦"
 L["Eco-Dome Al'dani"] = "圆顶"  --奥尔达尼生态圆顶用“生态”因为以前有副本“生态船”
+L["Manaforge Omega"] = "欧米伽"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "大裂变"

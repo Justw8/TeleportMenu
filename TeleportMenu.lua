@@ -105,6 +105,7 @@ local shortNames = {
 	[1237215] = L["Eco-Dome Al'dani"],
 	-- TWW R
 	[1226482] = L["Liberation of Undermine"],
+	[1239155] = L["Manaforge Omega"],
 	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],

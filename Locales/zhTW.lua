@@ -79,6 +79,7 @@ L["Darkflame Cleft"] = "暗焰"
 L["Operation: Floodgate"] = "水閘"
 L["Liberation of Undermine"] = "幽坑城"
 L["Eco-Dome Al'dani"] = "秘境"
+L["Manaforge Omega"] = "歐美加"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "浩劫重生"
