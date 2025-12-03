@@ -319,7 +319,7 @@ local function createCooldownFrame(frame)
 			start = cdInfo.startTime
 			duration = cdInfo.duration
 			enabled = cdInfo.isEnabled
-		elseif not issecurevalue then
+		else
 			local cooldown = C_Spell.GetSpellCooldown(id)
 			start = cooldown.startTime
 			duration = cooldown.duration
