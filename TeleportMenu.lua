@@ -298,6 +298,26 @@ local flyOutFrames = {}
 local flyOutFramesPool = {}
 local secureButtons = {}
 local secureButtonsPool = {}
+local invTypeToSlot =
+{
+	["INVTYPE_HEAD"] = INVSLOT_HEAD,
+	["INVTYPE_NECK"] = INVSLOT_NECK,
+	["INVTYPE_SHOULDER"] = INVSLOT_SHOULDER,
+	["INVTYPE_BODY"] = INVSLOT_BODY,
+	["INVTYPE_CHEST"] = INVSLOT_CHEST,
+	["INVTYPE_ROBE"] = INVSLOT_CHEST,
+	["INVTYPE_WAIST"] = INVSLOT_WAIST,
+	["INVTYPE_LEGS"] = INVSLOT_LEGS,
+	["INVTYPE_FEET"] = INVSLOT_FEET,
+	["INVTYPE_WRIST"] = INVSLOT_WRIST,
+	["INVTYPE_HAND"] = INVSLOT_HAND,
+	["INVTYPE_FINGER"] = INVSLOT_FINGER1,
+	["INVTYPE_TRINKET"] = INVSLOT_TRINKET1,
+	["INVTYPE_CLOAK"] = INVSLOT_BACK,
+	["INVTYPE_2HWEAPON"] = INVSLOT_MAINHAND,
+	["INVTYPE_WEAPONMAINHAND"] = INVSLOT_MAINHAND,
+	["INVTYPE_TABARD"] = INVSLOT_TABARD
+}
 
 local function createCooldownFrame(frame)
 	if frame.cooldownFrame then
@@ -443,7 +463,7 @@ local function IsItemEquipped(id)
 end
 
 local function ClearAllInvalidHighlights()
-	for _, button in pairs(secureButtons) do
+	for _, button in ipairs(secureButtons) do
 		button:ClearHighlightTexture()
 
 		if button:GetAttribute("item") ~= nil then
@@ -453,6 +473,21 @@ local function ClearAllInvalidHighlights()
 			end
 		end
 	end
+end
+
+local function EquipOriginalItem(button, id, type)
+	if not button.originalItem or type ~= "item" then
+		return
+	end
+	if InCombatLockdown() then
+		button:RegisterEvent("PLAYER_REGEN_ENABLED")
+		return
+	end
+	if IsItemEquipped(id) then
+		button:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+		C_Item.EquipItemByName(button.originalItem)
+	end
+	button.originalItem = nil
 end
 
 ---@param frame Frame
@@ -511,15 +546,45 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		self.cooldownFrame:CheckCooldown(id, type)
 	end)
 	button:SetScript("PostClick", function(self)
-		if type == "item" and C_Item.IsEquippableItem(id) then
-			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
-				if IsItemEquipped(id) then
-					ClearAllInvalidHighlights()
-					self:Highlight()
-				end
-			end)
+		self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+		self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	end)
+	button:SetScript("OnEvent", function (self, event, ...)
+		if event == "UNIT_SPELLCAST_SUCCEEDED" then
+			local unitTarget, _, spellID = ...
+			if unitTarget ~= "player" or spellID ~= (type == "spell" and id or select(2, C_Item.GetItemSpell(id))) then
+				return
+			end
+			self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+			EquipOriginalItem(self, id, type)
+		elseif event == "ZONE_CHANGED_NEW_AREA" then
+			EquipOriginalItem(self, id, type)
+			self:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+			self:UnregisterEvent(event)
+		elseif event == "SPELL_UPDATE_COOLDOWN" then
+			self.cooldownFrame:CheckCooldown(id, type)
+			self:UnregisterEvent(event)
+		elseif event == "PLAYER_EQUIPMENT_CHANGED" then
+			ClearAllInvalidHighlights()
+			self.cooldownFrame:CheckCooldown(id, type)
+			self:UnregisterEvent(event)
+		elseif event == "PLAYER_REGEN_ENABLED" then
+			EquipOriginalItem(self, id, type)
+			self:UnregisterEvent(event)
+		elseif event == "ITEM_LOCKED" and self:IsVisible() then
+			local bagOrSlotIndex, slotIndex = ...
+			if not slotIndex then
+				return
+			end
+			local itemID = C_Container.GetContainerItemID(bagOrSlotIndex, slotIndex)
+			if id == itemID then
+				local _, _, _, itemEquipLoc = C_Item.GetItemInfoInstant(itemID)
+				self.originalItem = C_Item.GetItemGUID(ItemLocation:CreateFromEquipmentSlot(invTypeToSlot[itemEquipLoc]))
+				self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+			end
 		end
 	end)
+	button:RegisterEvent("ITEM_LOCKED")
 	button.cooldownFrame:CheckCooldown(id, type)
 
 	-- Textures
@@ -534,7 +599,7 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 	button:SetAttribute("type", type)
 	if type == "item" then
 		button:SetAttribute(type, "item:" .. id)
-		if C_Item.IsEquippableItem(id) and IsItemEquipped(id) then
+		if IsItemEquipped(id) then
 			button:Highlight()
 		end
 	else
