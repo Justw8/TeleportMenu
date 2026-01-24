@@ -17,6 +17,11 @@ local globalWidth, globalHeight = 40, 40 -- defaults
 
 local IsSpellKnown = C_SpellBook.IsSpellKnown
 
+local issecretvalue = issecretvalue or function() return false end
+local function isSecret(value)
+	return issecretvalue(value)
+end
+
 --------------------------------------
 -- Teleport Tables
 --------------------------------------
@@ -325,7 +330,7 @@ local function createCooldownFrame(frame)
 			duration = cooldown.duration
 			enabled = true
 		end
-		if enabled and duration > 0 then
+		if enabled and not isSecret(duration) and duration > 0 then
 			self:SetCooldown(start, duration)
 		else
 			self:Clear()
