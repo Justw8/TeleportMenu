@@ -26,4 +26,5 @@ embeds.xml
 Locales\Locales.xml
 Data\Data.xml
 Options.lua
+Buttons\Housing.lua
 TeleportMenu.lua
