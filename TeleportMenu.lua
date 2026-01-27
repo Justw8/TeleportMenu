@@ -375,6 +375,7 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 	-- Mouse Interaction
 	flyOutButton:EnableMouse(true)
 	flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
+	flyOutButton:SetAttribute("useOnKeyDown", true)
 
 	-- Tooltips
 	local tooltipType = "flyout"
@@ -517,8 +518,36 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
 	end
 
+	-- Interaction
 	button:EnableMouse(true)
 	button:RegisterForClicks("AnyDown", "AnyUp")
+	button:SetAttribute("useOnKeyDown", true)
+	button:SetScript("PostClick", function(self)
+		if buttonType == "item" and C_Item.IsEquippableItem(id) then
+			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
+				if IsItemEquipped(id) then
+					ClearAllInvalidHighlights()
+					self:Highlight()
+				end
+			end)
+			if IsItemEquipped(id) then
+				tpm:CloseMainMenu()
+			end
+		else
+			tpm:CloseMainMenu()
+		end
+	end)
+	button:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+
+	button:SetScript("OnEnter", function(self)
+		setToolTip(self,buttonType, id, hearthstone)
+	end)
+
+	button:SetScript("OnShow", function(self)
+		self.cooldownFrame:CheckCooldown(id, buttonType)
+	end)
 
 	-- Text
 	button.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
@@ -529,27 +558,8 @@ local function CreateSecureButton(frame, type, text, id, hearthstone)
 		button.text:Show()
 	end
 
-	-- Scripts
-	button:SetScript("OnLeave", function(self)
-		GameTooltip:Hide()
-	end)
-	button:SetScript("OnEnter", function(self)
-		setToolTip(self, type, id, hearthstone)
-	end)
-	button:SetScript("OnShow", function(self)
-		self.cooldownFrame:CheckCooldown(id, type)
-	end)
-	button:SetScript("PostClick", function(self)
-		if type == "item" and C_Item.IsEquippableItem(id) then
-			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
-				if IsItemEquipped(id) then
-					ClearAllInvalidHighlights()
-					self:Highlight()
-				end
-			end)
-		end
-	end)
-	button.cooldownFrame:CheckCooldown(id, type)
+	-- Cooldown
+	button.cooldownFrame:CheckCooldown(id, buttonType)
 
 	-- Textures
 	if type == "spell" then
@@ -976,6 +986,9 @@ local function createAnchors()
 end
 
 function tpm:ReloadFrames()
+	if not GameMenuFrame:IsShown() then
+		return
+	end
 	if InCombatLockdown() then
 		return
 	end
@@ -999,6 +1012,13 @@ function tpm:ReloadFrames()
 	end
 
 	createAnchors()
+end
+
+function tpm:CloseMainMenu()
+	local db = tpm:GetOptions()
+	if db["General:AutoClose"] and GameMenuFrame:IsShown() then
+		HideUIPanel(GameMenuFrame)
+	end
 end
 
 -- Slash Commands
@@ -1094,7 +1114,7 @@ function events:ADDON_LOADED(...)
 		db = tpm:GetOptions()
 		tpm.settings.current_season = 3
 
-		db.debug = true
+		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
 	end
 end

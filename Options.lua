@@ -10,37 +10,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 -- Locales
 --------------------------------------
 
-function tpm:ConvertOldSettings()
-	if not TeleportMenuDB then return end
-
-	local mappedKeysToNewFormat = {
-		enabled = "Enabled",
-		debug = "Developers:Debug_Mode:Enabled",
-		iconSize = "Button:Size",
-		hearthstone = "Teleports:Hearthstone",
-		buttonText = "Button:Text:Show",
-		maxFlyoutIcons = "Flyout:Max_Per_Row",
-		reverseMageFlyouts = "Teleports:Mage:Reverse",
-		showOnlySeasonalHerosPath = "Teleports:Seasonal:Only"
-	}
-
-	for oldKey, newKey in pairs(mappedKeysToNewFormat) do
-		if TeleportMenuDB[oldKey] ~= nil then
-			TeleportMenuDB[newKey] = TeleportMenuDB[oldKey]
-			TeleportMenuDB[oldKey] = nil
-		end
-	end
-
-	TeleportMenuDB = setmetatable(TeleportMenuDB, {
-		__index = tpm.SettingsBase
-	})
-end
-
 -- Get all options and verify them
 local RawSettings
 function tpm:GetOptions()
-	if not TeleportMenuDB then TeleportMenuDB = {} end
-	tpm:ConvertOldSettings()
+	TeleportMenuDB = setmetatable(TeleportMenuDB, {
+		__index = tpm.SettingsBase
+	})
 	RawSettings = TeleportMenuDB
 	return RawSettings
 end
@@ -224,6 +199,14 @@ function tpm:LoadOptions()
 		local optionsKey = "Teleports:Mage:Reverse"
 		local tooltip = L["Reverse Mage Flyouts Tooltip"]
 		local setting = Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Reverse Mage Flyouts"], defaults[optionsKey])
+		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
+		Settings.CreateCheckbox(generalOptions, setting, tooltip)
+	end
+
+	do -- Auto Close
+		local optionsKey = "General:AutoClose"
+		local tooltip = L["Auto Close Toggle Tooltip"]
+		local setting = Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Auto Close"], defaults[optionsKey])
 		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
 		Settings.CreateCheckbox(generalOptions, setting, tooltip)
 	end
