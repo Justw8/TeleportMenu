@@ -14,7 +14,7 @@ local function setToolTip(self)
 	local yOffset = globalHeight / 2
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 
-	local text = IsInsideHouseOrPlot and "Return to Previous Location" or "Teleport Home"
+	local text = IsInsideHouseOrPlot and _G.HOUSING_DASHBOARD_RETURN or _G.HOUSING_DASHBOARD_TELEPORT_TO_PLOT
 	GameTooltip:SetText(text, 1, 1, 1)
 
 	GameTooltip:Show()

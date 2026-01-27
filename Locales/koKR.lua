@@ -98,8 +98,8 @@ L["Season 2"] = "시즌 2"
 L["Season 3"] = "시즌 3"
 L["Season 4"] = "시즌 4"
 
--- -- Mage teleport/portal abreviated text
--- -- Alliance
+-- Mage teleport/portal abreviated text
+-- Alliance
 L["Stormwind"] = "스톰"
 L["Ironforge"] = "아포"
 L["Darnassus"] = "다르"
@@ -108,7 +108,7 @@ L["Theramore"] = "테라모어"
 L["Stormshield"] = "폭풍방패"
 L["Boralus"] = "보랄"
 
--- -- Horde
+-- Horde
 L["Orgrimmar"] = "오그"
 L["Undercity"] = "언더"
 L["Thunder Bluff"] = "썬더"
@@ -117,7 +117,7 @@ L["Stonard"] = "스토나드"
 L["Warspear"] = "전쟁의 창"
 L["Dazar'alor"] = "다자알로"
 
--- -- Shared
+-- Shared
 L["Shattrath"] = "샤트라스"
 L["Dalaran - Northrend"] = "달라란\n노스렌드"
 L["Tol Barad"] = "톨 바라드"
@@ -129,10 +129,12 @@ L["Dalaran - Ancient"] = "달라란\n고대"
 L["Hall of the Guardian"] = "수호자의 전당"
 L["Dornogal"] = "도르노갈"
 
--- -- Options
+-- Options
 L["Opening Options Menu"] = "옵션 메뉴 열기"
 L["Enabled"] = "사용함"
 L["Enable Tooltip"] = "텔레포트 메뉴를 활성화/비활성화합니다."
+--L["Auto Close"] = "Auto Close"
+--L["Auto Close Tooltip"] = "Auto Close The Game Menu When Clicking A Teleport"
 L["Hearthstone Toy"] = "귀환석 장난감"
 L["Hearthstone Toy Tooltip"] = "사용할 선호 귀환석 장난감을 설정합니다.\n\n'무작위'로 설정 시, 게임 메뉴를 열 때마다 무작위 귀환석 장난감이 선택됩니다."
 L["None"] = "없음"
@@ -156,7 +158,7 @@ L["Item Teleports Tooltip"] = "\124cFF34B7EB소지 중인 모든 텔레포트 �
 L["Teleports:Items:Filters:Held_Items"] = "보유 중인 아이템"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "획득하지 않은 아이템"
 
--- -- Settings
+-- Settings
 L["ADDON_NAME"] = "텔레포트 메뉴"
 L["TITLE"] = "텔레포트 메뉴 설정"
 L["GENERAL"] = "일반 설정"

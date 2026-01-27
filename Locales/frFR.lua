@@ -98,8 +98,8 @@ if not L then return end
 -- L["Season 3"] = "S3"
 -- L["Season 4"] = "S4"
 
--- -- Mage teleport/portal abreviated text
--- -- Alliance
+-- Mage teleport/portal abreviated text
+-- Alliance
 -- L["Stormwind"] = "SW"
 -- L["Ironforge"] = "IF"
 -- L["Darnassus"] = "DS"
@@ -108,7 +108,7 @@ if not L then return end
 -- L["Stormshield"] = "SS"
 -- L["Boralus"] = "BO"
 
--- -- Horde
+-- Horde
 -- L["Orgrimmar"] = "ORG"
 -- L["Undercity"] = "UC"
 -- L["Thunder Bluff"] = "TB"
@@ -117,7 +117,7 @@ if not L then return end
 -- L["Warspear"] = "WS"
 -- L["Dazar'alor"] = "DAZ"
 
--- -- Shared
+-- Shared
 -- L["Shattrath"] = "SH"
 -- L["Dalaran - Northrend"] = "D-N"
 -- L["Tol Barad"] = "TOL"
@@ -129,10 +129,12 @@ if not L then return end
 -- L["Hall of the Guardian"] = "HotG"
 -- L["Dornogal"] = "DG"
 
--- -- Options
+-- Options
 -- L["Opening Options Menu"] = "Opening Options Menu"
 -- L["Enabled"] = "Enabled"
 -- L["Enable Tooltip"] = "Enable/Disable the Teleport Menu."
+-- L["Auto Close"] = "Auto Close"
+-- L["Auto Close Tooltip"] = "Auto Close The Game Menu When Clicking A Teleport"
 -- L["Hearthstone Toy"] = "Hearthstone Toy"
 -- L["Hearthstone Toy Tooltip"] = "Sets the preferred hearthstone toy to use.\n\nIf set to Random, a random hearthstone toy will be choosen every time you open the game menu."
 -- L["None"] = "None"
@@ -156,7 +158,7 @@ if not L then return end
 -- L["Teleports:Items:Filters:Held_Items"] = "Items you have"
 -- L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Unavailable items"
 
--- -- Settings
+-- Settings
 -- L["ADDON_NAME"] = "Teleport Menu"
 -- L["TITLE"] = "Teleport Menu Settings"
 -- L["GENERAL"] = "General Settings"

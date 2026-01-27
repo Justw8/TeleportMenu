@@ -1001,8 +1001,9 @@ function tpm:ReloadFrames()
 		TeleportMeButtonsFrameRight.reload = true
 	end
 
-	secureButtons = {}
-	housingButtons = {}
+	-- Why can't we clear these? causes bugs when re-sizing.
+	-- secureButtons = {}
+	-- housingButtons = {}
 
 	createAnchors()
 end

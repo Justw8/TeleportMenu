@@ -205,7 +205,7 @@ function tpm:LoadOptions()
 
 	do -- Auto Close
 		local optionsKey = "General:AutoClose"
-		local tooltip = L["Auto Close Toggle Tooltip"]
+		local tooltip = L["Auto Close Tooltip"]
 		local setting = Settings.RegisterAddOnSetting(generalOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Auto Close"], defaults[optionsKey])
 		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
 		Settings.CreateCheckbox(generalOptions, setting, tooltip)
