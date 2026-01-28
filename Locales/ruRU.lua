@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "ruRU")
 if not L then return end
--- Translator ZamestoTV
+
 L["AddonNamePrint"] = "\124cFFFF0000Меню телепорта:\124r "
 L["Common:Loading"] = "ЗАГРУЗКА"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<Недоступно в бою>\124r"
@@ -133,12 +133,12 @@ L["Dornogal"] = "ДР"
 L["Opening Options Menu"] = "Открытие меню настроек"
 L["Enabled"] = "Включено"
 L["Enable Tooltip"] = "Включить/отключить меню телепорта."
---L["Auto Close"] = "Auto Close"
---L["Auto Close Tooltip"] = "Auto Close The Game Menu When Clicking A Teleport"
+L["Auto Close"] = "Автозакрытие"
+L["Auto Close Tooltip"] = "Автозакрытие игрового меню при нажатии на телепорт."
 L["Hearthstone Toy"] = "Игрушка камня возвращения"
 L["Hearthstone Toy Tooltip"] = "Устанавливает предпочтительный камень возвращения.\n\nЕсли выбрано «Случайный», каждый раз при открытии игрового меню будет выбран случайный камень."
 L["None"] = "Нет"
---L["Disabled"] = "Disabled"
+L["Disabled"] = "Отключено"
 L["Random"] = "Случайный"
 L["ButtonText"] = "Показать текст иконок телепорта"
 L["ButtonText Tooltip"] = "Если включено, к телепортам в подземелья будет добавлено сокращенное название."
