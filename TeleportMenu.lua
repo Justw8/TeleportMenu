@@ -801,7 +801,7 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 	local yOffset = -(globalHeight + SPACING) * TeleportMeButtonsFrameLeft:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame("LEFT")
-	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", 0, yOffset)
+	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", globalWidth, yOffset)
 
 	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "item_teleports" }, "LEFT")
 	button:SetPoint("LEFT", TeleportMeButtonsFrameLeft, "TOPRIGHT", 0, yOffset)
