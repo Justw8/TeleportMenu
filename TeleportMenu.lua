@@ -881,7 +881,7 @@ local function createAnchors()
 	buttonsFrameRight.buttonAmount = 0
 	buttonsFrameLeft.buttonAmount = 0
 	local buttonFrameYOffset = globalHeight / 2
-	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight, -buttonFrameYOffset)
+	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight - 1, -buttonFrameYOffset)
 	buttonsFrameRight:SetPoint("TOPLEFT", GameMenuFrame,  "TOPRIGHT", 0, -buttonFrameYOffset)
 
 	for _, teleport in ipairs(tpTable) do
