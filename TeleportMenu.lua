@@ -268,7 +268,7 @@ local function setToolTip(self, tpType, id, hs)
 		local bindLocation = GetBindLocation()
 		GameTooltip:SetText(L["Random Hearthstone"], 1, 1, 1)
 		GameTooltip:AddLine(L["Random Hearthstone Tooltip"], 1, 1, 1)
-		GameTooltip:AddLine(L["Random Hearthstone Location"]:format(bindLocation), 1, 1, 1)
+		GameTooltip:AddLine(L["Random Hearthstone Location"]:format(bindLocation), 1, 1, 1, true) -- `false` is supposed to disable text wrapping, but somehow `true` works that way in action
 	elseif tpType == "item" then
 		GameTooltip:SetItemByID(id)
 	elseif tpType == "item_teleports" then
