@@ -12,14 +12,13 @@ function Housing:CanReturn()
 end
 
 local function setToolTip(self)
-	local IsInsideHouseOrPlot = C_Housing.IsInsideHouseOrPlot()
 	local db = tpm:GetOptions()
 	local globalHeight = db["Button:Size"] or 40 -- default size
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	local yOffset = globalHeight / 2
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 
-	local text = IsInsideHouseOrPlot and _G.HOUSING_DASHBOARD_RETURN or _G.HOUSING_DASHBOARD_TELEPORT_TO_PLOT
+	local text = Housing:CanReturn() and _G.HOUSING_DASHBOARD_RETURN or _G.HOUSING_DASHBOARD_TELEPORT_TO_PLOT
 	GameTooltip:SetText(text, 1, 1, 1)
 
 	GameTooltip:Show()
@@ -131,6 +130,10 @@ end
 
 function Housing:GetActiveHousingButtons()
 	return #activeHousingButtons
+end
+
+function Housing:HasAPlot()
+	return #houseData > 0
 end
 
 local events = {}

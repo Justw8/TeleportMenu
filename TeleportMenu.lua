@@ -933,12 +933,10 @@ local function createAnchors()
 			buttonsFrameLeft:IncrementButtons()
 		elseif teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
 			local playerFaction = UnitFactionGroup("player")
-			if tpm.Housing:GetActiveHousingButtons() == 0 and (#houseData == 1 or playerFaction == teleport.faction) then -- only 1 house for now, fix more
+			if tpm.Housing:HasAPlot() and tpm.Housing:GetActiveHousingButtons() == 0 and (#houseData == 1 or playerFaction == teleport.faction) then -- only 1 house for now, fix more
 				local button = tpm.Housing:CreateSecureHousingButton(teleport.faction)
 				button:SetParent(buttonsFrameLeft)
 				button:SetSize(globalWidth, globalHeight)
-				-- button:SetFrameStrata("HIGH")
-				-- button:SetFrameLevel(102) -- This needs to be lower than the flyout frame
 				button:Show()
 				local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
 				button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
