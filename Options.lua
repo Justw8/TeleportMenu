@@ -13,7 +13,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 -- Get all options and verify them
 local RawSettings
 function tpm:GetOptions()
-	TeleportMenuDB = setmetatable(TeleportMenuDB, {
+	TeleportMenuDB = setmetatable(TeleportMenuDB or {}, {
 		__index = tpm.SettingsBase
 	})
 	RawSettings = TeleportMenuDB
