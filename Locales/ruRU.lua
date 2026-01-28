@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("TeleportMenu", "ruRU")
 if not L then return end
--- Translator ZamestoTV
+
 L["AddonNamePrint"] = "\124cFFFF0000Меню телепорта:\124r "
 L["Common:Loading"] = "ЗАГРУЗКА"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<Недоступно в бою>\124r"
