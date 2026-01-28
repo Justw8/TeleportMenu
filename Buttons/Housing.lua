@@ -3,6 +3,10 @@ local _, tpm = ...
 local Housing = {}
 tpm.Housing = Housing
 
+local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
+local MSQ = LibStub("Masque", true)
+local MasqueGroup = MSQ and MSQ:Group(L["ADDON_NAME"])
+
 local housingButtonsPool = {}
 local activeHousingButtons = {}
 
@@ -52,6 +56,8 @@ local function createCooldownFrame(frame)
 end
 
 function Housing:CreateSecureHousingButton(tpInfo)
+	local db = tpm:GetOptions()
+	local size = db["Button:Size"] or 40
 	local button, houseInfo = nil, nil
 
 	if #houseData == 1 or tpInfo.faction == "alliance" then
@@ -64,8 +70,11 @@ function Housing:CreateSecureHousingButton(tpInfo)
 		button = table.remove(housingButtonsPool)
 	else
 		button = CreateFrame("Button", nil, UIParent, "SecureActionButtonTemplate")
+		button:SetSize(size, size)
 
 		button.text = button:CreateFontString(nil, "OVERLAY")
+		button.Icon = button:CreateTexture(nil, "BACKGROUND")
+		button.Icon:SetAllPoints()
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
 		button.cooldownFrame = createCooldownFrame(button)
 
@@ -99,11 +108,15 @@ function Housing:CreateSecureHousingButton(tpInfo)
 	end
 
 	-- Textures
+	if button:GetNormalTexture() then
+		button:GetNormalTexture():SetTexture(nil)
+	end
+
 	if self:CanReturn() then
-		button:SetNormalAtlas("dashboard-panel-homestone-teleport-out-button")
+		button.Icon:SetAtlas("dashboard-panel-homestone-teleport-out-button")
 	else
 		local spellTexture =  C_Spell.GetSpellTexture(1263273)
-		button:SetNormalTexture(spellTexture)
+		button.Icon:SetTexture(spellTexture)
 	end
 
 	-- Attributes
@@ -118,6 +131,11 @@ function Housing:CreateSecureHousingButton(tpInfo)
 
 	button.cooldownFrame:CheckCooldown()
 	table.insert(activeHousingButtons, button)
+
+	if MasqueGroup then
+		MasqueGroup:AddButton(button, { Icon = button.Icon })
+	end
+
 	return button
 end
 
