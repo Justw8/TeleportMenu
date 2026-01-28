@@ -6,6 +6,11 @@ tpm.Housing = Housing
 local housingButtonsPool = {}
 local activeHousingButtons = {}
 
+
+function Housing:CanReturn()
+	return C_HousingNeighborhood.CanReturnAfterVisitingHouse()
+end
+
 local function setToolTip(self)
 	local IsInsideHouseOrPlot = C_Housing.IsInsideHouseOrPlot()
 	local db = tpm:GetOptions()
@@ -28,11 +33,16 @@ local function createCooldownFrame(frame)
 	cooldownFrame:SetAllPoints()
 
 	function cooldownFrame:CheckCooldown()
+		if Housing:CanReturn() then
+			self:Clear() -- this has no CD
+			return
+		end
+
 		local cdInfo = C_Housing.GetVisitCooldownInfo()
 		start = cdInfo.startTime
 		duration = cdInfo.duration
 		enabled = cdInfo.isEnabled
-		if enabled and not tpm:isSecret(duration) and duration > 0 then
+		if enabled and not tpm:IsSecret(duration) and duration > 0 then
 			self:SetCooldown(start, duration)
 		else
 			self:Clear()
@@ -44,7 +54,6 @@ end
 
 function Housing:CreateSecureHousingButton(tpInfo)
 	local button, houseInfo = nil, nil
-	local IsInsideHouseOrPlot = C_Housing.IsInsideHouseOrPlot()
 
 	if #houseData == 1 or tpInfo.faction == "alliance" then
 		houseInfo = houseData[1]
@@ -60,37 +69,38 @@ function Housing:CreateSecureHousingButton(tpInfo)
 		button.text = button:CreateFontString(nil, "OVERLAY")
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
 		button.cooldownFrame = createCooldownFrame(button)
+
+		function button:Recycle()
+			self:SetParent(nil)
+			self:ClearAllPoints()
+			self:Hide()
+			table.insert(housingButtonsPool, self)
+		end
+
+		button:EnableMouse(true)
+		button:RegisterForClicks("AnyDown", "AnyUp")
+		button:SetAttribute("useOnKeyDown", true)
+		button:SetScript("PostClick", function()
+			tpm:CloseMainMenu()
+		end)
+
+		button:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+
+		button:SetScript("OnEnter", function(self)
+			setToolTip(self)
+		end)
+
+		button:SetScript("OnShow", function(self)
+			if not Housing:CanReturn() then
+				self.cooldownFrame:CheckCooldown()
+			end
+		end)
 	end
-
-	function button:Recycle()
-		self:SetParent(nil)
-		self:ClearAllPoints()
-		self:Hide()
-		table.insert(housingButtonsPool, self)
-	end
-
-	-- Interaction
-	button:EnableMouse(true)
-	button:RegisterForClicks("AnyDown", "AnyUp")
-	button:SetAttribute("useOnKeyDown", true)
-	button:SetScript("PostClick", function()
-		tpm:CloseMainMenu()
-	end)
-
-	-- Scripts
-	button:SetScript("OnLeave", function(self)
-		GameTooltip:Hide()
-	end)
-	button:SetScript("OnEnter", function(self)
-		setToolTip(self)
-	end)
-	button:SetScript("OnShow", function(self)
-		self.cooldownFrame:CheckCooldown()
-	end)
-	button.cooldownFrame:CheckCooldown()
 
 	-- Textures
-	if IsInsideHouseOrPlot then
+	if self:CanReturn() then
 		button:SetNormalAtlas("dashboard-panel-homestone-teleport-out-button")
 	else
 		local spellTexture =  C_Spell.GetSpellTexture(1263273)
@@ -98,17 +108,16 @@ function Housing:CreateSecureHousingButton(tpInfo)
 	end
 
 	-- Attributes
-	if IsInsideHouseOrPlot then
+	if self:CanReturn() then
 		button:SetAttribute("type", "returnhome")
-		button.cooldownFrame:Hide()
 	else
 		button:SetAttribute("type", "teleporthome")
 		button:SetAttribute("house-neighborhood-guid", houseInfo.neighborhoodGUID)
 		button:SetAttribute("house-guid", houseInfo.houseGUID)
 		button:SetAttribute("house-plot-id", houseInfo.plotID)
-		button.cooldownFrame:Show()
 	end
 
+	button.cooldownFrame:CheckCooldown()
 	table.insert(activeHousingButtons, button)
 	return button
 end

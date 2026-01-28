@@ -18,7 +18,7 @@ local globalWidth, globalHeight = 40, 40 -- defaults
 local IsSpellKnown = C_SpellBook.IsSpellKnown
 
 local issecretvalue = issecretvalue or function() return false end
-function tpm:isSecret(value)
+function tpm:IsSecret(value)
 	return issecretvalue(value)
 end
 
@@ -331,7 +331,7 @@ local function createCooldownFrame(frame)
 			duration = cooldown.duration
 			enabled = true
 		end
-		if enabled and not tpm:isSecret(duration) and duration > 0 then
+		if enabled and not tpm:IsSecret(duration) and duration > 0 then
 			self:SetCooldown(start, duration)
 		else
 			self:Clear()
