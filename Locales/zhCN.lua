@@ -6,7 +6,7 @@ L["Common:Loading"] = "加载中"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<你无法在战斗中实施那个动作>\124r" --ERR_NOT_IN_COMBAT
 L["Random Hearthstone"] = "随机炉石"
 L["Random Hearthstone Tooltip"] = "\124cFF34B7EB点击后，会随机使用一个炉石。\n当你重新打开主菜单时，它会选择一个新炉石。\124r"
-L["Random Hearthstone Location"] = "\n\124cFF34B7EB炉石位置：\124r \124cFF1EFF0C%s\124r"
+L["Random Hearthstone Location"] = "\n\124cFF34B7EB炉石位置：\124r\n\124cFF1EFF0C%s\124r"
 L["No Hearthtone In Bags"] = "你背包里没有炉石，也没有设置自定义炉石，请使用 /tpm 命令设置一个炉石。"
 L["Hearthone Reset Error"] = "我们已将你的炉石重置为默认状态，因为你的收藏中没有物品ID：%s  的炉石玩具。"
 
