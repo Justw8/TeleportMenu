@@ -881,8 +881,8 @@ local function createAnchors()
 	buttonsFrameRight.buttonAmount = 0
 	buttonsFrameLeft.buttonAmount = 0
 	local buttonFrameYOffset = globalHeight / 2
-	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight - 1, -buttonFrameYOffset)
-	buttonsFrameRight:SetPoint("TOPLEFT", GameMenuFrame,  "TOPRIGHT", 0, -buttonFrameYOffset)
+	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight - 1, -buttonFrameYOffset + 1)
+	buttonsFrameRight:SetPoint("TOPLEFT", GameMenuFrame,  "TOPRIGHT", 0, -buttonFrameYOffset + 1)
 
 	for _, teleport in ipairs(tpTable) do
 		local showHearthstone = db["Teleports:Hearthstone"] ~= "disabled"
