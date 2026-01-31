@@ -38,6 +38,7 @@ function tpm:UpdateAvailableWormholes()
 				table.insert(usableWormholes, wormholeId)
 			end
 		end
+		table.sort(usableWormholes)
 		return usableWormholes
 	end
 end
