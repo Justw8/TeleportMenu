@@ -14,6 +14,7 @@ local db = {}
 local APPEND = L["AddonNamePrint"]
 local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 local globalWidth, globalHeight = 40, 40 -- defaults
+tpm.TEXTURE_SCALE = 0
 
 local IsSpellKnown = C_SpellBook.IsSpellKnown
 
@@ -409,6 +410,12 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 
 	-- Texture
 	flyOutButton:SetNormalTexture(flyoutData.iconId)
+	local tex = flyOutButton:GetNormalTexture()
+	if tex then
+		local zoomFactor = tpm.TEXTURE_SCALE
+		local offset = zoomFactor / 2
+		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
+	end
 
 	-- Positioning/Size
 	flyOutButton:SetFrameStrata("HIGH")
@@ -551,6 +558,13 @@ local function CreateSecureButton(frame, buttonType, text, id, hearthstone)
 		button:SetNormalTexture(spellTexture)
 	else -- item or toy
 		SetTextureByItemId(button, id)
+	end
+
+	local tex = button:GetNormalTexture()
+	if tex then
+		local zoomFactor = tpm.TEXTURE_SCALE
+		local offset = zoomFactor / 2
+		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
 	end
 
 	-- Attributes
@@ -837,6 +851,14 @@ function tpm:updateHearthstone()
 			setToolTip(s, "item", 6948, true)
 		end)
 	end
+
+	local tex = hearthstoneButton:GetNormalTexture()
+	if tex then
+		local zoomFactor = tpm.TEXTURE_SCALE
+		local offset = zoomFactor / 2
+		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
+	end
+
 	hearthstoneButton:Show()
 end
 
@@ -983,6 +1005,8 @@ function tpm:ReloadFrames()
 		globalWidth = db["Button:Size"]
 		globalHeight = db["Button:Size"]
 	end
+
+	tpm.TEXTURE_SCALE = db["Button:Texture:Zoom"] or 0
 
 	for _, button in ipairs(flyOutButtons) do
 		button:Recycle()

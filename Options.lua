@@ -195,6 +195,32 @@ function tpm:LoadOptions()
 		Settings.CreateSlider(buttonOptions, setting, options, tooltip)
 	end
 
+	do
+		local optionsKey = "Button:Texture:Zoom"
+		local text = L["Icon Texture Zoom"]
+		local tooltip = L["Icon Texture Zoom Tooltip"]
+		local options = Settings.CreateSliderOptions(0, 0.3, 0.01)
+		local label = "%d%%"
+
+		local function GetValue()
+			return TeleportMenuDB[optionsKey] or defaults[optionsKey]
+		end
+
+		local function SetValue(value)
+			TeleportMenuDB[optionsKey] = value
+			tpm:ReloadFrames()
+		end
+
+		local setting = Settings.RegisterProxySetting(buttonOptions, optionsKey, type(defaults[optionsKey]), text, defaults[optionsKey], GetValue, SetValue)
+
+		local function Formatter(value)
+			return label:format(value * 100)
+		end
+		options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, Formatter)
+
+		Settings.CreateSlider(buttonOptions, setting, options, tooltip)
+	end
+
 	do -- Reverse the mage teleport flyouts
 		local optionsKey = "Teleports:Mage:Reverse"
 		local tooltip = L["Reverse Mage Flyouts Tooltip"]

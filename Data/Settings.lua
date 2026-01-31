@@ -13,6 +13,7 @@ tpm.SettingsBase = {
 	["Button:Size"] = 40,
 	["Button:Text:Size"] = 14,
 	["Button:Text:Show"] = true,
+	["Button:Texture:Zoom"] = 0,
 	["Flyout:Max_Per_Row"] = 5,
 }
 

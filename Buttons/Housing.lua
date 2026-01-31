@@ -106,6 +106,13 @@ function Housing:CreateSecureHousingButton(tpInfo)
 		button:SetNormalTexture(spellTexture)
 	end
 
+	local tex = button:GetNormalTexture()
+	if tex then
+		local zoomFactor = tpm.TEXTURE_SCALE
+		local offset = zoomFactor / 2
+		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
+	end
+
 	-- Attributes
 	if self:CanReturn() then
 		button:SetAttribute("type", "returnhome")
