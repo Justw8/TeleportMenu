@@ -1,11 +1,26 @@
 local _, tpm = ...
-
 local Housing = {}
 tpm.Housing = Housing
+
+--------------------------------------
+-- Libraries
+--------------------------------------
+
+local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
+local MSQ = LibStub("Masque", true)
+local MasqueGroup = MSQ and MSQ:Group(L["ADDON_NAME"])
+
+--------------------------------------
+-- Locales
+--------------------------------------
+
 
 local housingButtonsPool = {}
 local activeHousingButtons = {}
 
+--------------------------------------
+-- Functions
+--------------------------------------
 
 function Housing:CanReturn()
 	return C_HousingNeighborhood.CanReturnAfterVisitingHouse()
@@ -74,6 +89,10 @@ function Housing:CreateSecureHousingButton(tpInfo)
 			self:ClearAllPoints()
 			self:Hide()
 			table.insert(housingButtonsPool, self)
+
+			if MasqueGroup then
+				MasqueGroup:RemoveButton(self)
+			end
 		end
 
 		button:EnableMouse(true)
@@ -96,22 +115,23 @@ function Housing:CreateSecureHousingButton(tpInfo)
 				self.cooldownFrame:CheckCooldown()
 			end
 		end)
+
+		-- Icon
+		button.icon = button:CreateTexture(nil, "BACKGROUND")
+		button.icon:SetAllPoints()
 	end
 
 	-- Textures
 	if self:CanReturn() then
-		button:SetNormalAtlas("dashboard-panel-homestone-teleport-out-button")
+		button.icon:SetAtlas("dashboard-panel-homestone-teleport-out-button")
 	else
 		local spellTexture =  C_Spell.GetSpellTexture(1263273)
-		button:SetNormalTexture(spellTexture)
+		button.icon:SetTexture(spellTexture)
 	end
 
-	local tex = button:GetNormalTexture()
-	if tex then
-		local zoomFactor = tpm.TEXTURE_SCALE
-		local offset = zoomFactor / 2
-		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
-	end
+	local zoomFactor = tpm.TEXTURE_SCALE
+	local offset = zoomFactor / 2
+	button.icon:SetTexCoord(offset, 1-offset, offset, 1-offset)
 
 	-- Attributes
 	if self:CanReturn() then
@@ -125,6 +145,15 @@ function Housing:CreateSecureHousingButton(tpInfo)
 
 	button.cooldownFrame:CheckCooldown()
 	table.insert(activeHousingButtons, button)
+
+	local db = tpm:GetOptions()
+	local size = db["Button:Size"] or 40
+	button:SetSize(size, size)
+	button:Show()
+
+	if MasqueGroup then
+		MasqueGroup:AddButton(button, { Icon = button.icon })
+	end
 	return button
 end
 
@@ -142,6 +171,10 @@ end
 function Housing:HasAPlot()
 	return #houseData > 0
 end
+
+--------------------------------------
+-- Event Handlers
+--------------------------------------
 
 local events = {}
 local f = CreateFrame("Frame")
