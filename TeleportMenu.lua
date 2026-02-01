@@ -1072,6 +1072,8 @@ SlashCmdList["TPMENU"] = function(msg)
 		Settings.OpenToCategory(tpm:GetOptionsCategory())
 	elseif msg == "filters" then
 		Settings.OpenToCategory(tpm:GetOptionsCategory(msg))
+	elseif msg == "housing" then
+		tpm.Housing:DumpHouseData()
 	else
 		print(APPEND .. " unknown command: " .. msg)
 	end

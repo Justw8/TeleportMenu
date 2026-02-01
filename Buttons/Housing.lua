@@ -191,3 +191,7 @@ function tpm:LoadHouses()
 	f:RegisterEvent("PLAYER_HOUSE_LIST_UPDATED")
 	C_Housing.GetPlayerOwnedHouses()
 end
+
+function Housing:DumpHouseData()
+	dump(houseData)
+end
