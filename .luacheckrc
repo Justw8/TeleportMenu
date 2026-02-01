@@ -29,6 +29,7 @@ globals = {
 	"C_Timer",
 	"C_CVar",
 	"CopyTable",
+	"DevTools_Dump",
 	"GetFlyoutSlotInfo",
 	"InCombatLockdown",
 	"STANDARD_TEXT_FONT",

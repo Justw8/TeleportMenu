@@ -193,5 +193,5 @@ function tpm:LoadHouses()
 end
 
 function Housing:DumpHouseData()
-	dump(houseData)
+	DevTools_Dump(houseData)
 end
