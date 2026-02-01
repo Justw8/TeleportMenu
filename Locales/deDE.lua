@@ -156,7 +156,7 @@ end
 --L["Icons Per Flyout Row Tooltip"] = "Set the maximum amount of flyout icons before a new row will be created."
 --L["%s icons"] = "%s icons"
 --L["Icon Texture Zoom"] = "Icon Texture Zoom"
---L["Icon Texture Zoom Tooltip"] = "Zoom in on the icon textures to remove possible borders inside textures."
+--L["Icon Texture Zoom Tooltip"] = "Zoom in on the icon textures to remove possible borders inside textures.\n\nThis has no effect when Masque is enabled."
 --L["Item Teleports"] = "Item Teleports"
 --L["Item Teleports Tooltip"] = "\124cFF34B7EBAll items that have a teleport that are in your possession\124r\n\n\124cFFFF0000Items such as faction cloaks require clicking twice!\124r"
 --L["Teleports:Items:Filters:Held_Items"] = "Items you have"

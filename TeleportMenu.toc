@@ -19,6 +19,7 @@
 ## Author: Justwait
 ## Version: @project-version@
 ## SavedVariables: TeleportMenuDB
+## OptionalDeps: Masque
 
 ## X-Curse-Project-ID: 1087836
 

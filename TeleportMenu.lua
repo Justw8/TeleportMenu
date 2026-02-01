@@ -5,6 +5,8 @@ local _, tpm = ...
 --------------------------------------
 
 local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
+local MSQ = LibStub("Masque", true)
+local MasqueGroup = MSQ and MSQ:Group(L["ADDON_NAME"])
 
 --------------------------------------
 -- Locales
@@ -215,39 +217,13 @@ local GetItemCount = C_Item.GetItemCount
 --------------------------------------
 
 local function SetTextureByItemId(frame, itemId)
-	frame:SetNormalTexture(DEFAULT_ICON) -- Temp while loading
+	frame.icon:SetTexture(DEFAULT_ICON) -- Temp while loading
 	local item = Item:CreateFromItemID(tonumber(itemId))
 	item:ContinueOnItemLoad(function()
 		local icon = item:GetItemIcon()
-		frame:SetNormalTexture(icon)
+		frame.icon:SetTexture(icon)
 	end)
 end
-
--- local function retrySetNormalTexture(button, itemId, attempt)
--- 	local attempts = attempt or 1
--- 	local _, _, _, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(itemId)
--- 	if itemTexture then
--- 		button:SetNormalTexture(itemTexture)
--- 		return
--- 	end
--- 	if attempts < 5 then
--- 		C_Timer.After(1, function()
--- 			retrySetNormalTexture(button, itemId, attempts + 1)
--- 		end)
--- 	else
--- 		print(APPEND .. L["Missing Texture %s"]:format(itemId))
--- 	end
--- end
-
--- local function retryGetToyTexture(toyId, attempt)
--- 	local attempts = attempt or 1
--- 	local _, name, texture = C_ToyBox.GetToyInfo(toyId)
--- 	if attempts < 5 then
--- 		C_Timer.After(0.1, function()
--- 			retryGetToyTexture(toyId, attempts + 1)
--- 		end)
--- 	end
--- end
 
 --------------------------------------
 --- Tooltip
@@ -354,30 +330,45 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 		flyOutButton = table.remove(flyOutButtonsPool)
 	else
 		flyOutButton = CreateFrame("Button", nil, side == "LEFT" and TeleportMeButtonsFrameLeft or TeleportMeButtonsFrameRight, "SecureActionButtonTemplate")
+
+
+		function flyOutButton:SetFlyOutFrame(frame)
+			self.flyoutFrame = frame
+		end
+
+		function flyOutButton:Recycle()
+			self:ClearAllPoints()
+			self:SetFlyOutFrame(nil)
+			self:Hide()
+			table.insert(flyOutButtonsPool, self)
+
+			if MasqueGroup then
+				MasqueGroup:RemoveButton(self)
+			end
+		end
+
+		-- Text
 		flyOutButton.text = flyOutButton:CreateFontString(nil, "OVERLAY")
 		flyOutButton.text:SetPoint("BOTTOM", flyOutButton, "BOTTOM", 0, 5)
+		flyOutButton.text:SetTextColor(1, 1, 1, 1)
+
+		-- Icon
+		flyOutButton.icon = flyOutButton:CreateTexture(nil, "BACKGROUND")
+		flyOutButton.icon:SetAllPoints()
+
+		-- Frame Levels
+		flyOutButton:SetFrameStrata("HIGH")
+		flyOutButton:SetFrameLevel(101)
+
+		-- Mouse Interaction
+		flyOutButton:EnableMouse(true)
+		flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
+		flyOutButton:SetAttribute("useOnKeyDown", true)
 
 		table.insert(flyOutButtons, flyOutButton)
 	end
 
-	-- Functions
-	function flyOutButton:SetFlyOutFrame(frame)
-		flyOutButton.flyoutFrame = frame
-	end
-
 	flyOutButton:SetFlyOutFrame(flyOutFrame)
-
-	function flyOutButton:Recycle()
-		self:ClearAllPoints()
-		self:SetFlyOutFrame(nil)
-		self:Hide()
-		table.insert(flyOutButtonsPool, self)
-	end
-
-	-- Mouse Interaction
-	flyOutButton:EnableMouse(true)
-	flyOutButton:RegisterForClicks("AnyDown", "AnyUp")
-	flyOutButton:SetAttribute("useOnKeyDown", true)
 
 	-- Tooltips
 	local tooltipType = "flyout"
@@ -400,29 +391,27 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 	end)
 
 	-- Text
-	flyOutButton.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
-	flyOutButton.text:SetTextColor(1, 1, 1, 1)
 	flyOutButton.text:Hide()
 	if db["Button:Text:Show"] == true and flyoutData.name then
+		flyOutButton.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
 		flyOutButton.text:SetText(flyoutData.name)
 		flyOutButton.text:Show()
 	end
 
 	-- Texture
-	flyOutButton:SetNormalTexture(flyoutData.iconId)
-	local tex = flyOutButton:GetNormalTexture()
-	if tex then
-		local zoomFactor = tpm.TEXTURE_SCALE
-		local offset = zoomFactor / 2
-		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
+	flyOutButton.icon:SetTexture(flyoutData.iconId)
+	local zoomFactor = tpm.TEXTURE_SCALE
+	local offset = zoomFactor / 2
+	flyOutButton.icon:SetTexCoord(offset, 1-offset, offset, 1-offset)
+
+	-- Size
+	flyOutButton:SetSize(globalWidth, globalHeight)
+	flyOutButton:Show()
+
+	if MasqueGroup then
+		MasqueGroup:AddButton(flyOutButton, { Icon = flyOutButton.icon })
 	end
 
-	-- Positioning/Size
-	flyOutButton:SetFrameStrata("HIGH")
-	flyOutButton:SetFrameLevel(101)
-	flyOutButton:SetSize(globalWidth, globalHeight)
-
-	flyOutButton:Show()
 	return flyOutButton
 end
 
@@ -432,28 +421,30 @@ local function createFlyOutFrame(side)
 		flyOutFrame = table.remove(flyOutFramesPool)
 	else
 		flyOutFrame = CreateFrame("Frame", "FlyOutFrame" .. #flyOutFrames + 1)
+
+		function flyOutFrame:Recycle()
+			self:ClearAllPoints()
+			self:Hide()
+			table.insert(flyOutFramesPool, self)
+		end
+
+		flyOutFrame:SetFrameStrata("HIGH")
+		flyOutFrame:SetFrameLevel(103)
+		flyOutFrame:SetPropagateMouseClicks(true)
+		flyOutFrame:SetPropagateMouseMotion(true)
+		flyOutFrame:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+			if not InCombatLockdown() then -- XXX Needed?
+				self:Hide()
+			end
+		end)
+
 		table.insert(flyOutFrames, flyOutFrame)
 	end
+
 	flyOutFrame:SetParent(side == "LEFT" and TeleportMeButtonsFrameLeft or TeleportMeButtonsFrameRight)
-
-	function flyOutFrame:Recycle()
-		self:ClearAllPoints()
-		self:Hide()
-		table.insert(flyOutFramesPool, self)
-	end
-
-	flyOutFrame:SetFrameStrata("HIGH")
-	flyOutFrame:SetFrameLevel(103)
-	flyOutFrame:SetPropagateMouseClicks(true)
-	flyOutFrame:SetPropagateMouseMotion(true)
-	flyOutFrame:SetScript("OnLeave", function(self)
-		GameTooltip:Hide()
-		if not InCombatLockdown() then -- XXX Needed?
-			self:Hide()
-		end
-	end)
-
 	flyOutFrame:Hide()
+
 	return flyOutFrame
 end
 
@@ -490,82 +481,109 @@ local function CreateSecureButton(frame, buttonType, text, id, hearthstone)
 		button = table.remove(secureButtonsPool)
 	else
 		button = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
+
+		function button:Recycle()
+			self.buttonType = nil
+			self.id = nil
+			self.hearthstone = nil
+
+			self:ClearHighlightTexture()
+			self:SetParent(nil)
+			self:ClearAllPoints()
+			self:Hide()
+			table.insert(secureButtonsPool, self)
+
+			if MasqueGroup then
+				MasqueGroup:RemoveButton(self)
+			end
+		end
+
+		-- Icon
+		button.icon = button:CreateTexture(nil, "BACKGROUND")
+		button.icon:SetAllPoints()
+
+		-- Cooldown Frame
 		button.cooldownFrame = createCooldownFrame(button)
+
+		function button:CheckCooldown()
+			self.cooldownFrame:CheckCooldown(self.id, self.buttonType)
+		end
+
+		-- Text
 		button.text = button:CreateFontString(nil, "OVERLAY")
-		button:LockHighlight()
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
+		button.text:SetTextColor(1, 1, 1, 1)
+
+		-- Highlighting
+		function button:Highlight()
+			self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
+		end
+		button:LockHighlight()
+
+		-- Mouse Interaction
+		button:EnableMouse(true)
+		button:RegisterForClicks("AnyDown", "AnyUp")
+		button:SetAttribute("useOnKeyDown", true)
+
+		-- Scripts
+		button:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+
+		button:SetScript("PostClick", function(self)
+			if self.buttonType == "item" and C_Item.IsEquippableItem(id) then
+				C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
+					if IsItemEquipped(id) then
+						ClearAllInvalidHighlights()
+						self:Highlight()
+					end
+				end)
+				if IsItemEquipped(id) then
+					tpm:CloseMainMenu()
+				end
+			else
+				tpm:CloseMainMenu()
+			end
+		end)
+
+		button:SetScript("OnEnter", function(self)
+			setToolTip(self, self.buttonType, self.id, self.hearthstone)
+		end)
+
+		button:SetScript("OnShow", function(self)
+			self:CheckCooldown()
+		end)
+
 		table.insert(secureButtons, button)
 	end
 
-	function button:Recycle()
-		self:ClearHighlightTexture()
-		self:SetParent(nil)
-		self:ClearAllPoints()
-		self:Hide()
-		table.insert(secureButtonsPool, self)
-	end
-
-	function button:Highlight()
-		self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
-	end
-
-	-- Interaction
-	button:EnableMouse(true)
-	button:RegisterForClicks("AnyDown", "AnyUp")
-	button:SetAttribute("useOnKeyDown", true)
-	button:SetScript("PostClick", function(self)
-		if buttonType == "item" and C_Item.IsEquippableItem(id) then
-			C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
-				if IsItemEquipped(id) then
-					ClearAllInvalidHighlights()
-					self:Highlight()
-				end
-			end)
-			if IsItemEquipped(id) then
-				tpm:CloseMainMenu()
-			end
-		else
-			tpm:CloseMainMenu()
-		end
-	end)
-	button:SetScript("OnLeave", function(self)
-		GameTooltip:Hide()
-	end)
-
-	button:SetScript("OnEnter", function(self)
-		setToolTip(self,buttonType, id, hearthstone)
-	end)
-
-	button:SetScript("OnShow", function(self)
-		self.cooldownFrame:CheckCooldown(id, buttonType)
-	end)
+	-- Properties
+	button.buttonType = buttonType
+	button.id = id
+	button.hearthstone = hearthstone
 
 	-- Text
-	button.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
-	button.text:SetTextColor(1, 1, 1, 1)
 	button.text:Hide()
 	if db["Button:Text:Show"] == true and text then
+		button.text:SetFont(STANDARD_TEXT_FONT, db["Button:Text:Size"], "OUTLINE")
 		button.text:SetText(text)
 		button.text:Show()
 	end
 
 	-- Cooldown
-	button.cooldownFrame:CheckCooldown(id, buttonType)
+	button:CheckCooldown()
 
 	-- Textures
 	if buttonType == "spell" then
 		local spellTexture = C_Spell.GetSpellTexture(id)
-		button:SetNormalTexture(spellTexture)
+		button.icon:SetTexture(spellTexture)
 	else -- item or toy
 		SetTextureByItemId(button, id)
 	end
 
-	local tex = button:GetNormalTexture()
-	if tex then
-		local zoomFactor = tpm.TEXTURE_SCALE
-		local offset = zoomFactor / 2
-		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
-	end
+	local zoomFactor = tpm.TEXTURE_SCALE
+	local offset = zoomFactor / 2
+	button.icon:SetTexCoord(offset, 1-offset, offset, 1-offset)
 
 	-- Attributes
 	button:SetAttribute("type", buttonType)
@@ -583,6 +601,10 @@ local function CreateSecureButton(frame, buttonType, text, id, hearthstone)
 	button:SetSize(globalWidth, globalHeight)
 	button:SetFrameStrata("HIGH")
 	button:SetFrameLevel(102) -- This needs to be lower than the flyout frame
+
+	if MasqueGroup then
+		MasqueGroup:AddButton(button, { Icon = button.icon })
+	end
 
 	button:Show()
 	return button
@@ -819,13 +841,16 @@ end
 
 function tpm:updateHearthstone()
 	local hearthstoneButton = TeleportMeButtonsFrameLeft.hearthstoneButton
+	if MasqueGroup then
+		MasqueGroup:RemoveButton(hearthstoneButton)
+	end
 	if not hearthstoneButton then
 		return
 	end
 
 	if db["Teleports:Hearthstone"] == "rng" then
 		local rng = math.random(#tpm.AvailableHearthstones)
-		hearthstoneButton:SetNormalTexture(1669494) -- misc_rune_pvp_random
+		hearthstoneButton:SetTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", tpm.AvailableHearthstones[rng])
 	elseif db["Teleports:Hearthstone"] == "disabled" then
@@ -852,11 +877,12 @@ function tpm:updateHearthstone()
 		end)
 	end
 
-	local tex = hearthstoneButton:GetNormalTexture()
-	if tex then
-		local zoomFactor = tpm.TEXTURE_SCALE
-		local offset = zoomFactor / 2
-		tex:SetTexCoord(offset, 1-offset, offset, 1-offset)
+	local zoomFactor = tpm.TEXTURE_SCALE
+	local offset = zoomFactor / 2
+	hearthstoneButton.icon:SetTexCoord(offset, 1-offset, offset, 1-offset)
+
+	if MasqueGroup then
+		MasqueGroup:AddButton(hearthstoneButton, { Icon = hearthstoneButton.icon })
 	end
 
 	hearthstoneButton:Show()
@@ -958,8 +984,6 @@ local function createAnchors()
 			if tpm.Housing:HasAPlot() and tpm.Housing:GetActiveHousingButtons() == 0 and (#houseData == 1 or playerFaction == teleport.faction) then -- only 1 house for now, fix more
 				local button = tpm.Housing:CreateSecureHousingButton(teleport.faction)
 				button:SetParent(buttonsFrameLeft)
-				button:SetSize(globalWidth, globalHeight)
-				button:Show()
 				local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
 				button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
 				buttonsFrameLeft:IncrementButtons()
