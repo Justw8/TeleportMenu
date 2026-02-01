@@ -31,6 +31,7 @@ tpm.ItemTeleports = {
 	[65274] = UnitFactionGroup("player") == "Horde", -- Cloak of Coordination: Orgrimmar
 	[65360] = UnitFactionGroup("player") == "Alliance", -- Cloak of Coordination: Stormwind
 	-- Other items
+	[43824] = true, -- The Schools of Arcane Magic - Mastery
 	[46874] = true, -- Argent Crusader's Tabard
 	[50287] = true, -- Boots of the Bay
 	[58487] = true, -- Potion of Deepholm
