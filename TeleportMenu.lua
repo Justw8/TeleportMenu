@@ -815,7 +815,7 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 	local yOffset = -globalHeight * TeleportMeButtonsFrameLeft:GetButtonAmount()
 
 	local flyOutFrame = createFlyOutFrame("LEFT")
-	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", 0, yOffset)
+	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", globalWidth, yOffset)
 
 	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "item_teleports" }, "LEFT")
 	button:SetPoint("LEFT", TeleportMeButtonsFrameLeft, "TOPRIGHT", 0, yOffset)
@@ -830,7 +830,7 @@ function tpm:CreateItemTeleportsFlyout(flyoutData)
 		flyoutsCreated = flyoutsCreated + 1
 		local isToy = tpm:IsToyTeleport(itemTeleportId)
 		local flyOutButton = CreateSecureButton(flyOutFrame, isToy and "toy" or "item", nil, itemTeleportId)
-		flyOutButton:SetPoint("TOPLEFT", flyOutFrame, "TOPLEFT", globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
+		flyOutButton:SetPoint("TOPRIGHT", flyOutFrame, "TOPRIGHT", -globalWidth * flyoutsCreated, (rowNr - 1) * - globalHeight)
 	end
 
 	local frameWidth = rowNr > 1 and globalWidth * (db["Flyout:Max_Per_Row"] + 1) or globalWidth * (flyoutsCreated + 1)
