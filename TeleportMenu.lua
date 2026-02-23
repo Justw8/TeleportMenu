@@ -191,6 +191,7 @@ local tpTable = {
 	{ id = 50977, type = "spell" }, -- Death Gate (Death Knight)
 	{ id = 18960, type = "spell" }, -- Teleport: Moonglade (Druid)
 	{ id = 193753, type = "spell" }, -- Dreamwalk (Druid) (replaces Teleport: Moonglade)
+	{ id = 136849, type = "toy" }, -- Nature's Beacon (Druid)
 	-- Racials
 	{ id = 312370, type = "spell" }, -- Make Camp (Vulpera)
 	{ id = 312372, type = "spell" }, -- Return to Camp (Vulpera)
