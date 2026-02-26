@@ -80,6 +80,12 @@ L["Operation: Floodgate"] = "ОШ"
 L["Liberation of Undermine"] = "ОНШ"
 L["Eco-Dome Al'dani"] = "ЗА"
 L["Manaforge Omega"] = "MO"
+--L["Windrunner Spire"] = "SPIRE"
+--L["Maisara Caverns"] = "CAVERN"
+--L["Nexus-Point Xenas"] = "XENAS"
+--L["Magisters' Terrace"] = "MT"
+--L["Seat of the Triumvirate"] = "SOTT"
+--L["Pit of Saron"] = "PIT"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "КАТ"
@@ -97,6 +103,8 @@ L["Season 1"] = "С1"
 L["Season 2"] = "С2"
 L["Season 3"] = "С3"
 L["Season 4"] = "С4"
+--L["Midnight"] = "MN"
+--L["Midnight Raids"] = "MN R"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
@@ -112,7 +120,7 @@ L["Boralus"] = "БО"
 L["Orgrimmar"] = "ОРГ"
 L["Undercity"] = "ПГ"
 L["Thunder Bluff"] = "ГУ"
-L["Silvermoon"] = "ЛУ"
+L["Silvermoon"] = "ЛУ-BC"
 L["Stonard"] = "КАМ"
 L["Warspear"] = "КВ"
 L["Dazar'alor"] = "ДАЗ"
@@ -128,6 +136,7 @@ L["Valdrakken"] = "ВАЛ"
 L["Dalaran - Ancient"] = "Д-ДР"
 L["Hall of the Guardian"] = "ОХ"
 L["Dornogal"] = "ДР"
+L["Silvermoon City"] = "ЛУ"
 
 -- Options
 L["Opening Options Menu"] = "Открытие меню настроек"
