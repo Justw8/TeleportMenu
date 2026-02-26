@@ -648,16 +648,16 @@ function tpm:UpdateAvailableSeasonalTeleports()
 	local motherlode = factionData.motherlode
 
 	local seasonalTeleports = {
-		-- TWW S1
+		-- Midnight S1
 		[1] = {
-			[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
-			[375] = 354464, -- Mists
-			[376] = 354462, -- Necrotic Wake
-			[501] = 445269, -- Stonevault
-			[502] = 445416, -- City of Threads
-			[503] = 445417, -- Ara Ara
-			[505] = 445414, -- The Dawnbreaker
-			[507] = 445424, -- Grim Batol
+			[161] = 1254557, -- Skyreach
+			[402] = 393273, -- Algeth'ar Academy
+			[556] = 1254555, -- Pit of Saron
+			[557] = 1254400, -- Windrunner Spire
+			[558] = 1254572, -- Magisters' Terrace
+			[559] = 1254563, -- Nexus-Point Xenas
+			[560] = 1254559, -- Maisara Caverns
+			[583] = 1254551, -- Seat of the Triumvirate
 		},
 		-- TWW S2
 		[2] = {
@@ -1168,7 +1168,7 @@ function events:ADDON_LOADED(...)
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
-		tpm.settings.current_season = 3
+		tpm.settings.current_season = 1
 
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
