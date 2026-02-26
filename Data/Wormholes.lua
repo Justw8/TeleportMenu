@@ -16,6 +16,7 @@ tpm.Wormholes = {
 	[172924] = true, -- Wormhole Generator: Shadowlands 3
 	[198156] = true, -- Wyrmhole Generator: Dragon Isles 4
 	[221966] = true, -- Wormhole Generator: Khaz Algar
+	[248485] = true, -- Wormhole Generator: Quel'Thalas 12.0
 }
 
 function tpm:UpdateAvailableWormholes()
