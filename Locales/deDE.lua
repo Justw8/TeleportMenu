@@ -106,7 +106,7 @@ end
 --L["Season 3"] = "S3"
 --L["Season 4"] = "S4"
 --L["Midnight"] = "MN"
---L["Midnight Raids"] = "Mn R"
+--L["Midnight Raids"] = "MN R"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
