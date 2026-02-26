@@ -4,11 +4,11 @@ if not L then return end
 L["AddonNamePrint"] = "\124cFFFF0000Меню телепорта:\124r "
 L["Common:Loading"] = "ЗАГРУЗКА"
 L["Not In Combat Tooltip"] = "\124cFFFF0000<Недоступно в бою>\124r"
-L["Random Hearthstone"] = "Случайный камень возвращения"
-L["Random Hearthstone Tooltip"] = "\124cFF34B7EBНажмите, чтобы использовать случайный камень возвращения.\nНовый камень выбирается при повторном открытии меню.\124r"
-L["Random Hearthstone Location"] = "\n\124cFF34B7EBМесто камня возвращения:\124r \124cFF1EFF0C%s\124r"
-L["No Hearthtone In Bags"] = "У Вас нет камня возвращения в сумках или не установлен пользовательский. Используйте /tpm для настройки."
-L["Hearthone Reset Error"] = "Ваш камень возвращения сброшен на стандартный, так как игрушка с ID: %s отсутствует в Вашей коллекции."
+L["Random Hearthstone"] = "Случайный Камень Возвращения"
+L["Random Hearthstone Tooltip"] = "\124cFF34B7EBНажмите, чтобы использовать случайный Камень Возвращения.\nНовый Камень выбирается при повторном открытии меню.\124r"
+L["Random Hearthstone Location"] = "\n\124cFF34B7EBСлучайное местоположение Камня Возвращения:\124r \124cFF1EFF0C%s\124r"
+L["No Hearthtone In Bags"] = "У Вас нет Камня Возвращения в сумках или не установлен пользовательский. Используйте /tpm для настройки."
+L["Hearthone Reset Error"] = "Ваш Камень Возвращения сброшен на стандартный, так как игрушка с ID: %s отсутствует в Вашей коллекции."
 
 -- dungeons abreviated Text
 L["The Vortex Pinnacle"] = "ВС"
