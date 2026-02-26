@@ -82,6 +82,12 @@ end
 --L["Liberation of Undermine"] = "LOU"
 --L["Eco-Dome Al'dani"] = "EDA"
 --L["Manaforge Omega"] = "MO"
+--L["Windrunner Spire"] = "SPIRE"
+--L["Maisara Caverns"] = "CAVERN"
+--L["Nexus-Point Xenas"] = "XENAS"
+--L["Magisters' Terrace"] = "MT"
+--L["Seat of the Triumvirate"] = "SOTT"
+--L["Pit of Saron"] = "PIT"
 
 -- expansion abreviated Text
 --L["Cataclysm"] = "CATA"
@@ -99,6 +105,8 @@ end
 --L["Season 2"] = "S2"
 --L["Season 3"] = "S3"
 --L["Season 4"] = "S4"
+--L["Midnight"] = "MN"
+--L["Midnight Raids"] = "MN R"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
@@ -114,7 +122,7 @@ end
 --L["Orgrimmar"] = "ORG"
 --L["Undercity"] = "UC"
 --L["Thunder Bluff"] = "TB"
---L["Silvermoon"] = "SM"
+--L["Silvermoon"] = "SM-BC"
 --L["Stonard"] = "STO"
 --L["Warspear"] = "WS"
 --L["Dazar'alor"] = "DAZ"
@@ -130,6 +138,7 @@ end
 --L["Dalaran - Ancient"] = "D-AP"
 --L["Hall of the Guardian"] = "HotG"
 --L["Dornogal"] = "DG"
+--L["Silvermoon City"] = "SM"
 
 -- Options
 --L["Opening Options Menu"] = "Opening Options Menu"

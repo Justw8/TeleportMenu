@@ -36,6 +36,8 @@ local shortNames = {
 	[410080] = L["The Vortex Pinnacle"],
 	[424142] = L["Throne of the Tides"],
 	[445424] = L["Grim Batol"],
+	-- WLK
+	[1254555] = L["Pit of Saron"],	-- Midnight S1
 	-- MoP
 	[131204] = L["Temple of the Jade Serpentl"],
 	[131205] = L["Stormstout Brewery"],
@@ -55,6 +57,7 @@ local shortNames = {
 	[159897] = L["Auchindoun"],
 	[159898] = L["Skyreach"],
 	[159902] = L["Upper Blackrock Spire"],
+	[1254557] = L["Skyreach"], -- Midnight S1	
 	-- Legion
 	[393764] = L["Halls of Valor"],
 	[410078] = L["Neltharion's Lair"],
@@ -62,6 +65,7 @@ local shortNames = {
 	[373262] = L["Karazhan"],
 	[424153] = L["Black Rook Hold"],
 	[424163] = L["Darkheart Thicket"],
+	[1254551] = L["Seat of the Triumvirate"], -- Midnight S1
 	-- BFA
 	[410071] = L["Freehold"],
 	[410074] = L["The Underrot"],
@@ -90,7 +94,7 @@ local shortNames = {
 	[393256] = L["Ruby Life Pools"],
 	[393262] = L["The Nokhud Offensive"],
 	[393267] = L["Brackenhide Hollow"],
-	[393273] = L["Algeth'ar Academy"],
+	[393273] = L["Algeth'ar Academy"],  -- Midnight S1
 	[393276] = L["Neltharus"],
 	[393279] = L["The Azure Vault"],
 	[393283] = L["Halls of Infusion"],
@@ -114,6 +118,12 @@ local shortNames = {
 	-- TWW R
 	[1226482] = L["Liberation of Undermine"],
 	[1239155] = L["Manaforge Omega"],
+	-- Midnight	
+	[1254400] = L["Windrunner Spire"], -- Midnight S1
+	[1254559] = L["Maisara Caverns"], -- Midnight S1
+	[1254563] = L["Nexus-Point Xenas"], -- Midnight S1
+	[1254572] = L["Magisters' Terrace"], -- Midnight S1
+	-- Midnight R	
 	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
@@ -169,6 +179,7 @@ local shortNames = {
 	[344597] = L["Oribos"],
 	[395289] = L["Valdrakken"],
 	[446534] = L["Dornogal"],
+	[1259194] = L["Silvermoon City"], -- Midnight	
 }
 
 local tpTable = {
@@ -208,6 +219,8 @@ local tpTable = {
 	{ id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path" }, -- Hero's Path: Dragonflight Raids
 	{ id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path" }, -- Hero's Path: The War Within
 	{ id = 242, type = "flyout", iconId = 6997112, name = L["The War Within Raids"], subtype = "path", currentExpansion=true }, -- Hero's Path: The War Within Raids
+	{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight"], subtype = "path" }, -- Hero's Path: Midnight
+	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path" }, -- Hero's Path: Midnight Raids
 }
 
 local GetItemCount = C_Item.GetItemCount
@@ -635,16 +648,16 @@ function tpm:UpdateAvailableSeasonalTeleports()
 	local motherlode = factionData.motherlode
 
 	local seasonalTeleports = {
-		-- TWW S1
+		-- Midnight S1
 		[1] = {
-			[353] = siegeOfBoralus, -- Siege of Boralus has two spells one for alliance and one for horde
-			[375] = 354464, -- Mists
-			[376] = 354462, -- Necrotic Wake
-			[501] = 445269, -- Stonevault
-			[502] = 445416, -- City of Threads
-			[503] = 445417, -- Ara Ara
-			[505] = 445414, -- The Dawnbreaker
-			[507] = 445424, -- Grim Batol
+			[161] = 1254557, -- Skyreach
+			[402] = 393273, -- Algeth'ar Academy
+			[556] = 1254555, -- Pit of Saron
+			[557] = 1254400, -- Windrunner Spire
+			[558] = 1254572, -- Magisters' Terrace
+			[559] = 1254563, -- Nexus-Point Xenas
+			[560] = 1254559, -- Maisara Caverns
+			[583] = 1254551, -- Seat of the Triumvirate
 		},
 		-- TWW S2
 		[2] = {
@@ -1155,7 +1168,7 @@ function events:ADDON_LOADED(...)
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
-		tpm.settings.current_season = 3
+		tpm.settings.current_season = 1
 
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")

@@ -80,6 +80,12 @@ L["Operation: Floodgate"] = "수문"
 L["Liberation of Undermine"] = "언더 마인"
 L["Eco-Dome Al'dani"] = "알다니"
 --L["Manaforge Omega"] = "MO"
+L["Windrunner Spire"] = "첨탑"
+L["Maisara Caverns"] = "마이사라"
+L["Nexus-Point Xenas"] = "제나스"
+-L["Magisters' Terrace"] = "정원"
+L["Seat of the Triumvirate"] = "삼두정"
+L["Pit of Saron"] = "사론"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "대격변"
@@ -97,6 +103,8 @@ L["Season 1"] = "시즌 1"
 L["Season 2"] = "시즌 2"
 L["Season 3"] = "시즌 3"
 L["Season 4"] = "시즌 4"
+--L["Midnight"] = "MN"
+--L["Midnight Raids"] = "MN R"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
@@ -112,7 +120,7 @@ L["Boralus"] = "보랄"
 L["Orgrimmar"] = "오그"
 L["Undercity"] = "언더"
 L["Thunder Bluff"] = "썬더"
-L["Silvermoon"] = "실버문"
+L["Silvermoon"] = "실버문-BC"
 L["Stonard"] = "스토나드"
 L["Warspear"] = "전쟁의 창"
 L["Dazar'alor"] = "다자알로"
@@ -128,6 +136,7 @@ L["Valdrakken"] = "발드라켄"
 L["Dalaran - Ancient"] = "달라란\n고대"
 L["Hall of the Guardian"] = "수호자의 전당"
 L["Dornogal"] = "도르노갈"
+L["Silvermoon City"] = "실버문"
 
 -- Options
 L["Opening Options Menu"] = "옵션 메뉴 열기"
