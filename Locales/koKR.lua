@@ -104,7 +104,7 @@ L["Season 2"] = "시즌 2"
 L["Season 3"] = "시즌 3"
 L["Season 4"] = "시즌 4"
 --L["Midnight"] = "MN"
---L["Midnight Raids"] = "Mn R"
+--L["Midnight Raids"] = "MN R"
 
 -- Mage teleport/portal abreviated text
 -- Alliance
