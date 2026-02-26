@@ -123,7 +123,7 @@ L["Thunder Bluff"] = "雷霆"
 L["Silvermoon"] = "銀月\n燃燒\n"
 L["Stonard"] = "斯通"
 L["Warspear"] = "戰矛"
-L["Dazar'alor"] = "達薩""
+L["Dazar'alor"] = "達薩"
 
 -- Shared
 L["Shattrath"] = "撒塔斯"

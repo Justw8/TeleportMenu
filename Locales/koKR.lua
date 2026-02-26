@@ -83,7 +83,7 @@ L["Eco-Dome Al'dani"] = "알다니"
 L["Windrunner Spire"] = "첨탑"
 L["Maisara Caverns"] = "마이사라"
 L["Nexus-Point Xenas"] = "제나스"
--L["Magisters' Terrace"] = "정원"
+L["Magisters' Terrace"] = "정원"
 L["Seat of the Triumvirate"] = "삼두정"
 L["Pit of Saron"] = "사론"
 
