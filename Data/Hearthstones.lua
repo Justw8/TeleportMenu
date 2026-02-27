@@ -1,6 +1,6 @@
 local _, tpm = ...
 
-AvailableHearthstones = {}
+local AvailableHearthstones = {}
 local covenantsMaxed = nil
 local function GetCovenantData(id) -- the id is the achievement criteria index from Re-Re-Re-Renowned
 	if covenantsMaxed then

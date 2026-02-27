@@ -53,9 +53,9 @@ local function createCooldownFrame(frame)
 		end
 
 		local cdInfo = C_Housing.GetVisitCooldownInfo()
-		start = cdInfo.startTime
-		duration = cdInfo.duration
-		enabled = cdInfo.isEnabled
+		local start = cdInfo.startTime
+		local duration = cdInfo.duration
+		local enabled = cdInfo.isEnabled
 		if enabled and not tpm:IsSecret(duration) and duration > 0 then
 			self:SetCooldown(start, duration)
 		else
