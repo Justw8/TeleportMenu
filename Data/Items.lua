@@ -62,6 +62,7 @@ tpm.ItemTeleports = {
 	[132120] = UnitFactionGroup("player") == "Alliance", -- Stormwind Portal Stone
 	[132517] = true, -- Intra-Dalaran Wormhole Generator
 	[132523] = true, -- Reaves Battery
+	[136849] = UnitClass("player") == "DRUID", -- Nature's Beacon (Druid Toy)
 	[138448] = true, -- Emblem of Margoss
 	[139590] = true, -- Scroll of Teleport: Ravenholdt
 	[139599] = true, -- Empowered Ring of the Kirin Tor
