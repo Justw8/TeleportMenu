@@ -123,8 +123,9 @@ tpm.ItemTeleports = {
 	[234393] = true, -- Gallagio Loyalty Rewards Card: Diamond
 	[234394] = true, -- Gallagio Loyalty Rewards Card: Legendary
 	[238727] = true, -- Nostwin's Voucher
-	[243056] = true, -- Delver's Mana-Bound Ethergate	
+	[243056] = true, -- Delver's Mana-Bound Ethergate
 	[249699] = true, -- Shadowguard Translocator
+	[253629] = true, -- Personal Key to the Arcantina
 }
 
 function tpm:GetAvailableItemTeleports()
