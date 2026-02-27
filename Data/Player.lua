@@ -1,6 +1,6 @@
 local _, tpm = ...
 
-local push, sort = table.insert, sort
+local push, sort = table.insert, table.sort
 
 --- @alias Item { id: integer, name: string, icon: integer }
 --- @class Player
@@ -25,11 +25,14 @@ function tpm:AddItemToPossession(item_id)
 				end)
 			end
 
-			tpm.player.items_to_be_obtained[key] = nil
-			tpm.settings.scroll_box_views["items_to_be_obtained"]:SetDataProvider(CreateDataProvider(tpm.player.items_to_be_obtained))
-			tpm.settings.scroll_box_views["items_in_possession"]:SetDataProvider(CreateDataProvider(tpm.player.items_in_possession))
+			table.remove(tpm.player.items_to_be_obtained, key)
+			local viewObtained  = tpm.settings.scroll_box_views["items_to_be_obtained"]
+			local viewPossession = tpm.settings.scroll_box_views["items_in_possession"]
+			if viewObtained  then viewObtained:SetDataProvider(CreateDataProvider(tpm.player.items_to_be_obtained)) end
+			if viewPossession then viewPossession:SetDataProvider(CreateDataProvider(tpm.player.items_in_possession)) end
 			tpm:UpdateAvailableItemTeleports()
 			tpm:ReloadFrames()
+			break
 		end
 	end
 end
@@ -48,11 +51,14 @@ function tpm:RemoveItemFromPossession(item_id)
 				end)
 			end
 
-			tpm.player.items_in_possession[key] = nil
-			tpm.settings.scroll_box_views["items_to_be_obtained"]:SetDataProvider(CreateDataProvider(tpm.player.items_to_be_obtained))
-			tpm.settings.scroll_box_views["items_in_possession"]:SetDataProvider(CreateDataProvider(tpm.player.items_in_possession))
+			table.remove(tpm.player.items_in_possession, key)
+			local viewObtained  = tpm.settings.scroll_box_views["items_to_be_obtained"]
+			local viewPossession = tpm.settings.scroll_box_views["items_in_possession"]
+			if viewObtained  then viewObtained:SetDataProvider(CreateDataProvider(tpm.player.items_to_be_obtained)) end
+			if viewPossession then viewPossession:SetDataProvider(CreateDataProvider(tpm.player.items_in_possession)) end
 			tpm:UpdateAvailableItemTeleports()
 			tpm:ReloadFrames()
+			break
 		end
 	end
 end

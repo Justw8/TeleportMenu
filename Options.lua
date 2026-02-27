@@ -288,7 +288,7 @@ function tpm:LoadOptions()
 				SetEnabledIndicator(frame)
 			end
 
-			if elementData.icon and elementData.icon ~= nil then
+			if elementData.icon then
 				frame.ItemIcon:SetText("|T" .. elementData.icon .. ":13:13|t ")
 			else
 				frame.ItemIcon:SetText("")
