@@ -39,7 +39,7 @@ local shortNames = {
 	-- WLK
 	[1254555] = L["Pit of Saron"],	-- Midnight S1
 	-- MoP
-	[131204] = L["Temple of the Jade Serpentl"],
+	[131204] = L["Temple of the Jade Serpent"],
 	[131205] = L["Stormstout Brewery"],
 	[131206] = L["Shado-Pan Monastery"],
 	[131222] = L["Mogu'shan Palace"],
@@ -49,7 +49,7 @@ local shortNames = {
 	[131231] = L["Scarlet Halls"],
 	[131232] = L["Scholomance"],
 	-- WoD
-	[159901] = L["The Everblooml"],
+	[159901] = L["The Everbloom"],
 	[159899] = L["Shadowmoon Burial Grounds"],
 	[159900] = L["Grimrail Depot"],
 	[159896] = L["Iron Docks"],
@@ -218,8 +218,8 @@ local tpTable = {
 	{ id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path" }, -- Hero's Path: Dragonflight
 	{ id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path" }, -- Hero's Path: Dragonflight Raids
 	{ id = 232, type = "flyout", iconId = 5872031, name = L["The War Within"], subtype = "path" }, -- Hero's Path: The War Within
-	{ id = 242, type = "flyout", iconId = 6997112, name = L["The War Within Raids"], subtype = "path", currentExpansion=true }, -- Hero's Path: The War Within Raids
-	{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight"], subtype = "path" }, -- Hero's Path: Midnight
+	{ id = 242, type = "flyout", iconId = 6997112, name = L["The War Within Raids"], subtype = "path" }, -- Hero's Path: The War Within Raids
+	{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight"], subtype = "path", currentExpansion=true }, -- Hero's Path: Midnight
 	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path" }, -- Hero's Path: Midnight Raids
 }
 
@@ -303,14 +303,14 @@ local function createCooldownFrame(frame)
 	local cooldownFrame = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate")
 	cooldownFrame:SetAllPoints()
 
-	function cooldownFrame:CheckCooldown(id, type)
-		if type ~= "housing" and not id then
+	function cooldownFrame:CheckCooldown(id, buttonType)
+		if buttonType ~= "housing" and not id then
 			return
 		end
 		local start, duration, enabled
-		if type == "toy" or type == "item" then
+		if buttonType == "toy" or buttonType == "item" then
 			start, duration, enabled = C_Item.GetItemCooldown(id)
-		elseif type == "housing" then
+		elseif buttonType == "housing" then
 			local cdInfo = C_Housing.GetVisitCooldownInfo()
 			start = cdInfo.startTime
 			duration = cdInfo.duration
@@ -433,7 +433,7 @@ local function createFlyOutFrame(side)
 	if next(flyOutFramesPool) then
 		flyOutFrame = table.remove(flyOutFramesPool)
 	else
-		flyOutFrame = CreateFrame("Frame", "FlyOutFrame" .. #flyOutFrames + 1)
+		flyOutFrame = CreateFrame("Frame", nil)
 
 		function flyOutFrame:Recycle()
 			self:ClearAllPoints()
@@ -544,14 +544,14 @@ local function CreateSecureButton(frame, buttonType, text, id, hearthstone)
 		end)
 
 		button:SetScript("PostClick", function(self)
-			if self.buttonType == "item" and C_Item.IsEquippableItem(id) then
+			if self.buttonType == "item" and C_Item.IsEquippableItem(self.id) then
 				C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
-					if IsItemEquipped(id) then
+					if IsItemEquipped(self.id) then
 						ClearAllInvalidHighlights()
 						self:Highlight()
 					end
 				end)
-				if IsItemEquipped(id) then
+				if IsItemEquipped(self.id) then
 					tpm:CloseMainMenu()
 				end
 			else
@@ -730,7 +730,7 @@ function tpm:CreateFlyout(flyoutData, side)
 		start, endLoop, step = spells, 1, -1
 	end
 	for i = start, endLoop, step do
-		local spellId = select(1, GetFlyoutSlotInfo(flyoutData.id, i))
+		local spellId = (GetFlyoutSlotInfo(flyoutData.id, i))
 		if IsSpellKnown(spellId) then
 			if flyoutsCreated == db["Flyout:Max_Per_Row"] then
 				flyoutsCreated = 0
@@ -854,11 +854,11 @@ end
 
 function tpm:updateHearthstone()
 	local hearthstoneButton = TeleportMeButtonsFrameLeft.hearthstoneButton
-	if MasqueGroup then
-		MasqueGroup:RemoveButton(hearthstoneButton)
-	end
 	if not hearthstoneButton then
 		return
+	end
+	if MasqueGroup then
+		MasqueGroup:RemoveButton(hearthstoneButton)
 	end
 
 	if db["Teleports:Hearthstone"] == "rng" then
@@ -945,27 +945,37 @@ local function createAnchors()
 	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight - 1, -buttonFrameYOffset + 1)
 	buttonsFrameRight:SetPoint("TOPLEFT", GameMenuFrame,  "TOPRIGHT", 0, -buttonFrameYOffset + 1)
 
+	if C_Housing and C_Housing.HasHousingExpansionAccess() and not tpm.Housing:HasAPlot() and not tpm._housing_reload_scheduled then
+		tpm._housing_reload_scheduled = true
+		C_Timer.After(2, function()
+			tpm._housing_reload_scheduled = false
+			tpm:ReloadFrames()
+		end)
+	end
+
 	for _, teleport in ipairs(tpTable) do
 		local showHearthstone = db["Teleports:Hearthstone"] ~= "disabled"
 		local texture
 		local known
+		local tpType = teleport.type
+		local tpId = teleport.id
 
 		-- Checks and overwrites
 		if showHearthstone and teleport.hearthstone and db["Teleports:Hearthstone"] ~= "none" then -- Overwrite main HS with user set HS
 			tpm:DebugPrint("Overwriting main HS with user set HS")
-			teleport.type = "toy"
+			tpType = "toy"
 			known = true
 			if db["Teleports:Hearthstone"] == "rng" then
 				texture = 1669494 -- misc_rune_pvp_random
-				teleport.id = tpm:GetRandomHearthstone()
+				tpId = tpm:GetRandomHearthstone()
 			else
-				teleport.id = db["Teleports:Hearthstone"]
+				tpId = db["Teleports:Hearthstone"]
 			end
-			tpm:DebugPrint("Overwrite Info:", known, teleport.id, teleport.type, texture)
-		elseif teleport.type == "item" and C_Item.GetItemCount(teleport.id) > 0 then
+			tpm:DebugPrint("Overwrite Info:", known, tpId, tpType, texture)
+		elseif tpType == "item" and C_Item.GetItemCount(tpId) > 0 then
 			known = true
 		elseif
-			teleport.type == "toy" and PlayerHasToy(teleport.id --[[@as integer]])
+			tpType == "toy" and PlayerHasToy(tpId --[[@as integer]])
 		then
 			if teleport.quest then
 				known = tpm:checkQuestCompletion(teleport.quest)
@@ -973,7 +983,7 @@ local function createAnchors()
 				known = true
 			end
 		elseif
-			teleport.type == "spell" and IsSpellKnown(teleport.id --[[@as integer]])
+			tpType == "spell" and IsSpellKnown(tpId --[[@as integer]])
 		then
 			known = true
 		end
@@ -983,9 +993,9 @@ local function createAnchors()
 		end
 
 		-- Create Stuff
-		if known and (teleport.type == "toy" or teleport.type == "item" or teleport.type == "spell" or (showHearthstone and teleport.hearthstone)) then
+		if known and (tpType == "toy" or tpType == "item" or tpType == "spell" or (showHearthstone and teleport.hearthstone)) then
 			tpm:DebugPrint(teleport.hearthstone)
-			local button = CreateSecureButton(buttonsFrameLeft, teleport.type, nil, teleport.id --[[@as integer]], teleport.hearthstone)
+			local button = CreateSecureButton(buttonsFrameLeft, tpType, nil, tpId --[[@as integer]], teleport.hearthstone)
 			local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
 			button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
 			if teleport.hearthstone then -- store to replace item later
@@ -993,13 +1003,15 @@ local function createAnchors()
 			end
 			buttonsFrameLeft:IncrementButtons()
 		elseif teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
-			local playerFaction = UnitFactionGroup("player")
-			if tpm.Housing:HasAPlot() and tpm.Housing:GetActiveHousingButtons() == 0 and (#houseData == 1 or playerFaction == teleport.faction) then -- only 1 house for now, fix more
-				local button = tpm.Housing:CreateSecureHousingButton(teleport.faction)
-				button:SetParent(buttonsFrameLeft)
-				local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
-				button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
-				buttonsFrameLeft:IncrementButtons()
+			if tpm.Housing:HasAPlot() and tpm.Housing:GetActiveHousingButtons() == 0 then
+				local playerFaction = UnitFactionGroup("player")
+				if tpm.Housing:HasSinglePlot() or playerFaction == teleport.faction then
+					local button = tpm.Housing:CreateSecureHousingButton(teleport.faction)
+					button:SetParent(buttonsFrameLeft)
+					local yOffset = -globalHeight * buttonsFrameLeft:GetButtonAmount()
+					button:SetPoint("LEFT", buttonsFrameLeft, "TOPRIGHT", 0, yOffset)
+					buttonsFrameLeft:IncrementButtons()
+				end
 			end
 		elseif teleport.type == "wormholes" then
 			local created = tpm:CreateWormholeFlyout(teleport)
@@ -1032,12 +1044,10 @@ local function createAnchors()
 end
 
 function tpm:ReloadFrames()
-	if not GameMenuFrame:IsShown() then
-		return
-	end
-	if InCombatLockdown() then
-		return
-	end
+	if tpm._reload_in_progress then return end
+	if not GameMenuFrame:IsShown() then return end
+	if InCombatLockdown() then return end
+	tpm._reload_in_progress = true
 	if db["Button:Size"] then
 		globalWidth = db["Button:Size"]
 		globalHeight = db["Button:Size"]
@@ -1065,6 +1075,7 @@ function tpm:ReloadFrames()
 	-- housingButtons = {}
 
 	createAnchors()
+	tpm._reload_in_progress = nil
 end
 
 function tpm:CloseMainMenu()
@@ -1150,7 +1161,7 @@ function tpm:Setup()
 		tpm:updateHearthstone()
 	end
 
-	hooksecurefunc("ToggleGameMenu", tpm.ReloadFrames)
+	hooksecurefunc("ToggleGameMenu", function() tpm:ReloadFrames() end)
 end
 
 -- Event Handlers

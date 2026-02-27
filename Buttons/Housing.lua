@@ -17,6 +17,7 @@ local MasqueGroup = MSQ and MSQ:Group(L["ADDON_NAME"])
 
 local housingButtonsPool = {}
 local activeHousingButtons = {}
+local houseData = {}
 
 --------------------------------------
 -- Functions
@@ -53,9 +54,9 @@ local function createCooldownFrame(frame)
 		end
 
 		local cdInfo = C_Housing.GetVisitCooldownInfo()
-		start = cdInfo.startTime
-		duration = cdInfo.duration
-		enabled = cdInfo.isEnabled
+		local start = cdInfo.startTime
+		local duration = cdInfo.duration
+		local enabled = cdInfo.isEnabled
 		if enabled and not tpm:IsSecret(duration) and duration > 0 then
 			self:SetCooldown(start, duration)
 		else
@@ -66,10 +67,10 @@ local function createCooldownFrame(frame)
 	return cooldownFrame
 end
 
-function Housing:CreateSecureHousingButton(tpInfo)
+function Housing:CreateSecureHousingButton(faction)
 	local button, houseInfo = nil, nil
 
-	if #houseData == 1 or tpInfo.faction == "alliance" then
+	if #houseData == 1 or faction == "Alliance" then
 		houseInfo = houseData[1]
 	else -- horde if 2
 		houseInfo = houseData[2]
@@ -169,7 +170,11 @@ function Housing:GetActiveHousingButtons()
 end
 
 function Housing:HasAPlot()
-	return #houseData > 0
+	return houseData ~= nil and #houseData > 0
+end
+
+function Housing:HasSinglePlot()
+	return #houseData == 1
 end
 
 --------------------------------------
@@ -184,7 +189,8 @@ end)
 
 function events:PLAYER_HOUSE_LIST_UPDATED(housingInfo)
 	f:UnregisterEvent("PLAYER_HOUSE_LIST_UPDATED")
-	houseData = housingInfo
+	houseData = housingInfo or {}
+	tpm:ReloadFrames()
 end
 
 function tpm:LoadHouses()

@@ -1,6 +1,6 @@
 local _, tpm = ...
 
-AvailableHearthstones = {}
+local AvailableHearthstones = {}
 local covenantsMaxed = nil
 local function GetCovenantData(id) -- the id is the achievement criteria index from Re-Re-Re-Renowned
 	if covenantsMaxed then
@@ -127,20 +127,15 @@ end
 
 do
 	local lastRandomHearthstone = nil
-	function tpm:GetRandomHearthstone(retry)
-		if #tpm.AvailableHearthstones == 0 then
-			return
-		end
-		if #tpm.AvailableHearthstones == 1 then
-			return tpm.AvailableHearthstones[1]
-		end -- Don't even bother
-		local randomHs = tpm.AvailableHearthstones[math.random(#tpm.AvailableHearthstones)]
-		if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
-			randomHs = self:GetRandomHearthstone(true) --[[@as integer]]
-		end
-		if not retry then
-			lastRandomHearthstone = randomHs
-		end
-		return randomHs
+	function tpm:GetRandomHearthstone()
+		local list = tpm.AvailableHearthstones
+		if #list == 0 then return end
+		if #list == 1 then return list[1] end -- Don't even bother
+		local idx
+		repeat
+			idx = math.random(#list)
+		until list[idx] ~= lastRandomHearthstone
+		lastRandomHearthstone = list[idx]
+		return list[idx]
 	end
 end
