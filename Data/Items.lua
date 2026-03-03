@@ -127,6 +127,7 @@ tpm.ItemTeleports = {
 	[243056] = true, -- Delver's Mana-Bound Ethergate
 	[249699] = true, -- Shadowguard Translocator
 	[253629] = true, -- Personal Key to the Arcantina
+	[266370] = true, -- Dundun's Abundant Travel Method
 }
 
 function tpm:GetAvailableItemTeleports()
