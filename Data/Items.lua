@@ -66,6 +66,7 @@ tpm.ItemTeleports = {
 	[138448] = true, -- Emblem of Margoss
 	[139590] = true, -- Scroll of Teleport: Ravenholdt
 	[139599] = true, -- Empowered Ring of the Kirin Tor
+	[140324] = true, -- Mobile Telemancy Beacon
 	[140493] = true, -- Adept's Guide to Dimensional Rifting
 	[141013] = true, -- Scroll of Town Portal: Shala'nir
 	[141014] = true, -- Scroll of Town Portal: Sashj'tar
