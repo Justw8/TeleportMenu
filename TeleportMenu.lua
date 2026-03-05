@@ -57,7 +57,7 @@ local shortNames = {
 	[159897] = L["Auchindoun"],
 	[159898] = L["Skyreach"],
 	[159902] = L["Upper Blackrock Spire"],
-	[1254557] = L["Skyreach"], -- Midnight S1	
+	[1254557] = L["Skyreach"], -- Midnight S1
 	-- Legion
 	[393764] = L["Halls of Valor"],
 	[410078] = L["Neltharion's Lair"],
@@ -118,12 +118,12 @@ local shortNames = {
 	-- TWW R
 	[1226482] = L["Liberation of Undermine"],
 	[1239155] = L["Manaforge Omega"],
-	-- Midnight	
+	-- Midnight
 	[1254400] = L["Windrunner Spire"], -- Midnight S1
 	[1254559] = L["Maisara Caverns"], -- Midnight S1
 	[1254563] = L["Nexus-Point Xenas"], -- Midnight S1
 	[1254572] = L["Magisters' Terrace"], -- Midnight S1
-	-- Midnight R	
+	-- Midnight R
 	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
@@ -179,7 +179,7 @@ local shortNames = {
 	[344597] = L["Oribos"],
 	[395289] = L["Valdrakken"],
 	[446534] = L["Dornogal"],
-	[1259194] = L["Silvermoon City"], -- Midnight	
+	[1259194] = L["Silvermoon City"], -- Midnight
 }
 
 local tpTable = {
@@ -206,6 +206,7 @@ local tpTable = {
 	{ id = 312370, type = "spell" }, -- Make Camp (Vulpera)
 	{ id = 312372, type = "spell" }, -- Return to Camp (Vulpera)
 	{ id = 265225, type = "spell" }, -- Mole Machine (Dark Iron Dwarf)
+	{ id = 1238686, type = "spell" }, -- Rootwalking (Haranir)
 
 	-- Dungeon/Raid Teleports
 	{ id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path" }, -- Hero's Path: Cataclysm
