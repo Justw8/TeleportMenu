@@ -92,6 +92,7 @@ tpm.Hearthstones = {
 	[246565] = true, -- Cosmic Hearthstone
 	[257736] = true, -- Lightcalled Hearthstone 12.0
 	[263489] = true, -- Naaru's Enfold
+	[263933] = true, -- Preyseeker's Hearthstone 12.0
 	[265100] = true, -- Corewarden's Hearthstone 12.0
 }
 
