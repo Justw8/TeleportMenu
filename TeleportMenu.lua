@@ -658,7 +658,7 @@ function tpm:UpdateAvailableSeasonalTeleports()
 			[558] = 1254572, -- Magisters' Terrace
 			[559] = 1254563, -- Nexus-Point Xenas
 			[560] = 1254559, -- Maisara Caverns
-			[583] = 1254551, -- Seat of the Triumvirate
+			[239] = 1254551, -- Seat of the Triumvirate
 		},
 		-- TWW S2
 		[2] = {
