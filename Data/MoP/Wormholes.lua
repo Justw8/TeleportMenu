@@ -1,0 +1,37 @@
+local _, tpm = ...
+local push = table.insert
+
+--- @type { [integer]: boolean }
+tpm.Wormholes = {
+	[30542] = true, -- Dimensional Ripper - Area 52
+	[18984] = true, -- Dimensional Ripper - Everlook
+	[18986] = true, -- Ultrasafe Transporter: Gadgetzan
+	[30544] = true, -- Ultrasafe Transporter: Toshley's Station
+	[48933] = true, -- Wormhole Generator: Northrend
+	[87215] = true, -- Wormhole Generator: Pandaria
+}
+
+function tpm:UpdateAvailableWormholes()
+	local availableWormholes = {}
+	for id, _ in pairs(tpm.Wormholes) do
+		if PlayerHasToy(id) then
+			push(availableWormholes, id)
+		end
+	end
+
+	tpm.AvailableWormholes = availableWormholes
+	tpm.AvailableWormholes.GetUsable = function()
+		if #tpm.AvailableWormholes == 0 then
+			return {}
+		end
+
+		local usableWormholes = {}
+		for _, wormholeId in ipairs(availableWormholes) do
+			if C_ToyBox.IsToyUsable(wormholeId) then
+				table.insert(usableWormholes, wormholeId)
+			end
+		end
+		table.sort(usableWormholes)
+		return usableWormholes
+	end
+end
