@@ -18,7 +18,12 @@ local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 local globalWidth, globalHeight = 40, 40 -- defaults
 tpm.TEXTURE_SCALE = 0
 
+local tocNumber = select(4, GetBuildInfo())
+local isClassic =  tocNumber <= 50504
+local isRetail =  not isClassic
+
 local IsSpellKnown = C_SpellBook.IsSpellKnown
+local GetItemCooldown = isRetail and C_Item.UpdateAvailableSeasonalTeleports or C_Container.GetItemCooldown
 
 local issecretvalue = issecretvalue or function() return false end
 function tpm:IsSecret(value)
@@ -31,23 +36,13 @@ end
 
 local availableSeasonalTeleports = {}
 
-local shortNames = {
+local shortNamesPostClassic = {
 	-- CATA
 	[410080] = L["The Vortex Pinnacle"],
 	[424142] = L["Throne of the Tides"],
 	[445424] = L["Grim Batol"],
 	-- WLK
 	[1254555] = L["Pit of Saron"],	-- Midnight S1
-	-- MoP
-	[131204] = L["Temple of the Jade Serpentl"],
-	[131205] = L["Stormstout Brewery"],
-	[131206] = L["Shado-Pan Monastery"],
-	[131222] = L["Mogu'shan Palace"],
-	[131225] = L["Gate of the Setting Sun"],
-	[131228] = L["Siege of Niuzao Temple"],
-	[131229] = L["Scarlet Monastery"],
-	[131231] = L["Scarlet Halls"],
-	[131232] = L["Scholomance"],
 	-- WoD
 	[159901] = L["The Everblooml"],
 	[159899] = L["Shadowmoon Burial Grounds"],
@@ -125,6 +120,39 @@ local shortNames = {
 	[1254572] = L["Magisters' Terrace"], -- Midnight S1
 	-- Midnight R
 	-- Mage teleports
+	[176242] = L["Warspear"],
+	[176248] = L["Stormshield"],
+	[193759] = L["Hall of the Guardian"],
+	[224869] = L["Dalaran - Broken Isles"],
+	[281403] = L["Boralus"],
+	[281404] = L["Dazar'alor"],
+	[344587] = L["Oribos"],
+	[395277] = L["Valdrakken"],
+	[446540] = L["Dornogal"],
+	-- Mage portals
+	[176244] = L["Warspear"],
+	[176246] = L["Stormshield"],
+	[224871] = L["Dalaran - Broken Isles"],
+	[281400] = L["Boralus"],
+	[281402] = L["Dazar'alor"],
+	[344597] = L["Oribos"],
+	[395289] = L["Valdrakken"],
+	[446534] = L["Dornogal"],
+	[1259194] = L["Silvermoon City"], -- Midnight
+}
+
+local shortNames = {
+	-- MoP
+	[131204] = L["Temple of the Jade Serpentl"],
+	[131205] = L["Stormstout Brewery"],
+	[131206] = L["Shado-Pan Monastery"],
+	[131222] = L["Mogu'shan Palace"],
+	[131225] = L["Gate of the Setting Sun"],
+	[131228] = L["Siege of Niuzao Temple"],
+	[131229] = L["Scarlet Monastery"],
+	[131231] = L["Scarlet Halls"],
+	[131232] = L["Scholomance"],
+	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
 	[3563] = L["Undercity"],
@@ -143,15 +171,6 @@ local shortNames = {
 	[120145] = L["Dalaran - Ancient"],
 	[132621] = L["Vale of Eternal Blossoms"], -- Alliance
 	[132627] = L["Vale of Eternal Blossoms"], -- Horde
-	[176242] = L["Warspear"],
-	[176248] = L["Stormshield"],
-	[193759] = L["Hall of the Guardian"],
-	[224869] = L["Dalaran - Broken Isles"],
-	[281403] = L["Boralus"],
-	[281404] = L["Dazar'alor"],
-	[344587] = L["Oribos"],
-	[395277] = L["Valdrakken"],
-	[446540] = L["Dornogal"],
 	-- Mage portals
 	[10059] = L["Stormwind"],
 	[11416] = L["Ironforge"],
@@ -171,16 +190,13 @@ local shortNames = {
 	[120146] = L["Dalaran - Ancient"],
 	[132620] = L["Vale of Eternal Blossoms"], -- Alliance
 	[132626] = L["Vale of Eternal Blossoms"], -- Horde
-	[176244] = L["Warspear"],
-	[176246] = L["Stormshield"],
-	[224871] = L["Dalaran - Broken Isles"],
-	[281400] = L["Boralus"],
-	[281402] = L["Dazar'alor"],
-	[344597] = L["Oribos"],
-	[395289] = L["Valdrakken"],
-	[446534] = L["Dornogal"],
-	[1259194] = L["Silvermoon City"], -- Midnight
 }
+
+if isRetail then
+	for id, name in pairs(shortNamesPostClassic) do
+		shortNames[id] = name
+	end
+end
 
 local tpTable = {
 	-- Hearthstones
@@ -223,6 +239,26 @@ local tpTable = {
 	{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight"], subtype = "path" }, -- Hero's Path: Midnight
 	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path" }, -- Hero's Path: Midnight Raids
 }
+
+if isClassic then
+	local keepIds = {
+		[6948] = true,
+		[1] = true,
+		[8] = true,
+		[11] = true,
+		[12] = true,
+		[126892] = true,
+		[50977] = true,
+		[18960] = true,
+		[84] = true,
+	}
+
+	for i = #tpTable, 1, -1 do
+		if tpTable[i].id and not keepIds[tpTable[i].id] then
+			table.remove(tpTable, i)
+		end
+	end
+end
 
 local GetItemCount = C_Item.GetItemCount
 
@@ -272,9 +308,16 @@ local function setToolTip(self, tpType, id, hs)
 		local name = GetFlyoutInfo(id)
 		GameTooltip:SetText(name, 1, 1, 1)
 	elseif tpType == "profession" then
-		local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
-		if professionInfo then
-			GameTooltip:SetText(professionInfo.professionName, 1, 1, 1)
+		local professionName 
+		if isRetail then 
+			local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
+			professionName = professionInfo.professionName
+		else 
+			professionName = C_TradeSkillUI.GetTradeSkillDisplayName(id)
+		end
+
+		if professionName then
+			GameTooltip:SetText(professionName, 1, 1, 1)
 		end
 	elseif tpType == "seasonalteleport" then
 		local currExpID = GetExpansionLevel()
@@ -310,8 +353,8 @@ local function createCooldownFrame(frame)
 		end
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
-			start, duration, enabled = C_Item.GetItemCooldown(id)
-		elseif type == "housing" then
+				start, duration, enabled = GetItemCooldown(id)
+		elseif isRetail and type == "housing"   then
 			local cdInfo = C_Housing.GetVisitCooldownInfo()
 			start = cdInfo.startTime
 			duration = cdInfo.duration
@@ -637,6 +680,8 @@ function tpm:GetIconText(spellId)
 end
 
 function tpm:UpdateAvailableSeasonalTeleports()
+	if isClassic then return end
+
 	availableSeasonalTeleports = {}
 
 	local factionTeleports = {
@@ -864,7 +909,7 @@ function tpm:updateHearthstone()
 
 	if db["Teleports:Hearthstone"] == "rng" then
 		local rng = math.random(#tpm.AvailableHearthstones)
-		hearthstoneButton.icon:SetTexture(1669494) -- misc_rune_pvp_random
+		hearthstoneButton.icon:SetTexture(isRetail and 1669494 or 237284) -- misc_rune_pvp_random or inv_misc_dice_01
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", tpm.AvailableHearthstones[rng])
 	elseif db["Teleports:Hearthstone"] == "disabled" then
@@ -957,7 +1002,7 @@ local function createAnchors()
 			teleport.type = "toy"
 			known = true
 			if db["Teleports:Hearthstone"] == "rng" then
-				texture = 1669494 -- misc_rune_pvp_random
+				texture = isRetail and 1669494 or 237284 -- misc_rune_pvp_random or inv_misc_dice_01
 				teleport.id = tpm:GetRandomHearthstone()
 			else
 				teleport.id = db["Teleports:Hearthstone"]
@@ -993,7 +1038,7 @@ local function createAnchors()
 				buttonsFrameLeft.hearthstoneButton = button
 			end
 			buttonsFrameLeft:IncrementButtons()
-		elseif teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
+		elseif isRetail and teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
 			local playerFaction = UnitFactionGroup("player")
 			if tpm.Housing:HasAPlot() and tpm.Housing:GetActiveHousingButtons() == 0 and (#houseData == 1 or playerFaction == teleport.faction) then -- only 1 house for now, fix more
 				local button = tpm.Housing:CreateSecureHousingButton(teleport.faction)
@@ -1055,8 +1100,9 @@ function tpm:ReloadFrames()
 	for _, secureButton in ipairs(secureButtons) do
 		secureButton:Recycle()
 	end
-	tpm.Housing:RecycleHousingButtons()
-
+	if isRetail then 
+		tpm.Housing:RecycleHousingButtons()
+	end
 	if TeleportMeButtonsFrameRight then
 		TeleportMeButtonsFrameRight.reload = true
 	end
@@ -1086,7 +1132,7 @@ SlashCmdList["TPMENU"] = function(msg)
 		Settings.OpenToCategory(tpm:GetOptionsCategory())
 	elseif msg == "filters" then
 		Settings.OpenToCategory(tpm:GetOptionsCategory(msg))
-	elseif msg == "housing" then
+	elseif isRetail and msg == "housing" then
 		tpm.Housing:DumpHouseData()
 	else
 		print(APPEND .. " unknown command: " .. msg)
@@ -1117,7 +1163,7 @@ local function checkItemsLoaded(self)
 	local function OnItemsLoaded()
 		if allLoaded then
 			tpm:Setup()
-			tpm:LoadOptions()
+			tpm:LoadOptions(isRetail)
 			self:UnregisterEvent("ADDON_LOADED")
 		else
 			checkItemsLoaded(self)
@@ -1137,7 +1183,7 @@ function tpm:Setup()
 	tpm:UpdateAvailableWormholes()
 	tpm:UpdateAvailableSeasonalTeleports()
 	tpm:UpdateAvailableItemTeleports()
-	tpm:LoadHouses()
+	if isRetail then tpm:LoadHouses() end
 
 	if
 		db["Teleports:Hearthstone"]
