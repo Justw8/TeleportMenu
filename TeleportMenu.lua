@@ -23,7 +23,8 @@ local isClassic =  tocNumber <= 50504
 local isRetail =  not isClassic
 
 local IsSpellKnown = C_SpellBook.IsSpellKnown
-local GetItemCooldown = isRetail and C_Item.UpdateAvailableSeasonalTeleports or C_Container.GetItemCooldown
+local GetItemCooldown = isRetail and C_Item.GetItemCooldown or C_Container.GetItemCooldown
+local GetItemCount = C_Item.GetItemCount
 
 local issecretvalue = issecretvalue or function() return false end
 function tpm:IsSecret(value)
