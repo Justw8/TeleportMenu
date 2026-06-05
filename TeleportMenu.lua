@@ -37,13 +37,23 @@ end
 
 local availableSeasonalTeleports = {}
 
-local shortNamesPostClassic = {
+local shortNames = {
 	-- CATA
 	[410080] = L["The Vortex Pinnacle"],
 	[424142] = L["Throne of the Tides"],
 	[445424] = L["Grim Batol"],
 	-- WLK
 	[1254555] = L["Pit of Saron"],	-- Midnight S1
+	-- MoP
+	[131204] = L["Temple of the Jade Serpentl"],
+	[131205] = L["Stormstout Brewery"],
+	[131206] = L["Shado-Pan Monastery"],
+	[131222] = L["Mogu'shan Palace"],
+	[131225] = L["Gate of the Setting Sun"],
+	[131228] = L["Siege of Niuzao Temple"],
+	[131229] = L["Scarlet Monastery"],
+	[131231] = L["Scarlet Halls"],
+	[131232] = L["Scholomance"],
 	-- WoD
 	[159901] = L["The Everblooml"],
 	[159899] = L["Shadowmoon Burial Grounds"],
@@ -121,39 +131,6 @@ local shortNamesPostClassic = {
 	[1254572] = L["Magisters' Terrace"], -- Midnight S1
 	-- Midnight R
 	-- Mage teleports
-	[176242] = L["Warspear"],
-	[176248] = L["Stormshield"],
-	[193759] = L["Hall of the Guardian"],
-	[224869] = L["Dalaran - Broken Isles"],
-	[281403] = L["Boralus"],
-	[281404] = L["Dazar'alor"],
-	[344587] = L["Oribos"],
-	[395277] = L["Valdrakken"],
-	[446540] = L["Dornogal"],
-	-- Mage portals
-	[176244] = L["Warspear"],
-	[176246] = L["Stormshield"],
-	[224871] = L["Dalaran - Broken Isles"],
-	[281400] = L["Boralus"],
-	[281402] = L["Dazar'alor"],
-	[344597] = L["Oribos"],
-	[395289] = L["Valdrakken"],
-	[446534] = L["Dornogal"],
-	[1259194] = L["Silvermoon City"], -- Midnight
-}
-
-local shortNames = {
-	-- MoP
-	[131204] = L["Temple of the Jade Serpentl"],
-	[131205] = L["Stormstout Brewery"],
-	[131206] = L["Shado-Pan Monastery"],
-	[131222] = L["Mogu'shan Palace"],
-	[131225] = L["Gate of the Setting Sun"],
-	[131228] = L["Siege of Niuzao Temple"],
-	[131229] = L["Scarlet Monastery"],
-	[131231] = L["Scarlet Halls"],
-	[131232] = L["Scholomance"],
-	-- Mage teleports
 	[3561] = L["Stormwind"],
 	[3562] = L["Ironforge"],
 	[3563] = L["Undercity"],
@@ -172,6 +149,15 @@ local shortNames = {
 	[120145] = L["Dalaran - Ancient"],
 	[132621] = L["Vale of Eternal Blossoms"], -- Alliance
 	[132627] = L["Vale of Eternal Blossoms"], -- Horde
+	[176242] = L["Warspear"],
+	[176248] = L["Stormshield"],
+	[193759] = L["Hall of the Guardian"],
+	[224869] = L["Dalaran - Broken Isles"],
+	[281403] = L["Boralus"],
+	[281404] = L["Dazar'alor"],
+	[344587] = L["Oribos"],
+	[395277] = L["Valdrakken"],
+	[446540] = L["Dornogal"],
 	-- Mage portals
 	[10059] = L["Stormwind"],
 	[11416] = L["Ironforge"],
@@ -191,13 +177,16 @@ local shortNames = {
 	[120146] = L["Dalaran - Ancient"],
 	[132620] = L["Vale of Eternal Blossoms"], -- Alliance
 	[132626] = L["Vale of Eternal Blossoms"], -- Horde
+	[176244] = L["Warspear"],
+	[176246] = L["Stormshield"],
+	[224871] = L["Dalaran - Broken Isles"],
+	[281400] = L["Boralus"],
+	[281402] = L["Dazar'alor"],
+	[344597] = L["Oribos"],
+	[395289] = L["Valdrakken"],
+	[446534] = L["Dornogal"],
+	[1259194] = L["Silvermoon City"], -- Midnight
 }
-
-if isRetail then
-	for id, name in pairs(shortNamesPostClassic) do
-		shortNames[id] = name
-	end
-end
 
 local tpTable = {
 	-- Hearthstones
@@ -240,28 +229,6 @@ local tpTable = {
 	{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight"], subtype = "path" }, -- Hero's Path: Midnight
 	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path" }, -- Hero's Path: Midnight Raids
 }
-
-if isClassic then
-	local keepIds = {
-		[6948] = true,
-		[1] = true,
-		[8] = true,
-		[11] = true,
-		[12] = true,
-		[126892] = true,
-		[50977] = true,
-		[18960] = true,
-		[84] = true,
-	}
-
-	for i = #tpTable, 1, -1 do
-		if tpTable[i].id and not keepIds[tpTable[i].id] then
-			table.remove(tpTable, i)
-		end
-	end
-end
-
-local GetItemCount = C_Item.GetItemCount
 
 --------------------------------------
 -- Texture Stuff
