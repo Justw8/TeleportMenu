@@ -230,6 +230,16 @@ local tpTable = {
 	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path" }, -- Hero's Path: Midnight Raids
 }
 
+
+if isClassic then
+	-- Removing flyouts which is not existing in classic
+	for i = #tpTable, 1, -1 do
+		if tpTable[i].type == "flyout" and tpTable[i].id > 84  then
+			table.remove(tpTable, i)
+		end
+	end
+end
+
 --------------------------------------
 -- Texture Stuff
 --------------------------------------
