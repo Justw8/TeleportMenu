@@ -208,7 +208,7 @@ local tpTable = {
 	{ id = 110560, type = "toy", quest = { 34378, 34586 } }, -- Garrison Hearthstone
 	{ id = 140192, type = "toy", quest = { 44184, 44663 } }, -- Dalaran Hearthstone
 	-- Engineering
-	{ type = "wormholes", iconId = 4620673 }, -- Engineering Wormholes
+	{ type = "wormholes", iconId = isRetail and 4620673 or 136243 }, -- Engineering Wormholes
 	{ type = "item_teleports", iconId = 133655 }, -- Item Teleports
 	-- Class Teleports
 	{ id = 1, type = "flyout", iconId = 237509, subtype = "mage" }, -- Teleport (Mage) (Horde)
