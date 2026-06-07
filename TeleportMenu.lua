@@ -331,7 +331,7 @@ local function createCooldownFrame(frame)
 		end
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
-				start, duration, enabled = GetItemCooldown(id)
+			start, duration, enabled = GetItemCooldown(id)
 		elseif isRetail and type == "housing"   then
 			local cdInfo = C_Housing.GetVisitCooldownInfo()
 			start = cdInfo.startTime
