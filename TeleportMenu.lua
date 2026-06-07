@@ -267,7 +267,7 @@ end
 
 local function setToolTip(self, tpType, id, hs)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
-	local yOffset = globalHeight / 2
+	local yOffset = isClassic and globalHeight or globalHeight / 2
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 	if hs and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
 		local bindLocation = GetBindLocation()
