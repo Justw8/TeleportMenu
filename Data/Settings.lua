@@ -1,7 +1,7 @@
 local _, tpm = ...
 local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 
-local GetItemCount, GetItemNameByID, GetItemIconByID, sort, push = C_Item.GetItemCount, C_Item.GetItemNameByID, C_Item.GetItemIconByID, sort, table.insert
+local GetItemCount, GetItemNameByID, GetItemIconByID, sort, push = C_Item.GetItemCount, C_Item.GetItemNameByID, C_Item.GetItemIconByID, table.sort, table.insert
 
 --- @type { [string|integer]: boolean|string|integer }
 tpm.SettingsBase = {
@@ -71,11 +71,11 @@ function tpm:SourceItemTeleportScrollBoxes(onSourceComplete)
 				end)
 			end
 		end
-	end)
 
-	if onSourceComplete then
-		onSourceComplete()
-	end
+		if onSourceComplete then
+			onSourceComplete()
+		end
+	end)
 end
 
 tpm.SettingsBase = setmetatable(tpm.SettingsBase, {
