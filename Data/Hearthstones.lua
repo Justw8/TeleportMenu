@@ -95,7 +95,6 @@ tpm.Hearthstones = {
 	[263933] = true, -- Preyseeker's Hearthstone 12.0
 	[264367] = true, -- Mycomancer's Hearthspore 12.0.7
 	[265100] = true, -- Corewarden's Hearthstone 12.0
-	[276371] = true, -- Lightveil Recall Beacon 12.0.7
 }
 
 function tpm:GetAvailableHearthstoneToys()

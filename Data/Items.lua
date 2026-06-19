@@ -129,6 +129,7 @@ tpm.ItemTeleports = {
 	[249699] = true, -- Shadowguard Translocator
 	[253629] = true, -- Personal Key to the Arcantina
 	[266370] = true, -- Dundun's Abundant Travel Method
+	[276371] = true, -- Lightveil Recall Beacon 12.0.7	
 }
 
 function tpm:GetAvailableItemTeleports()
