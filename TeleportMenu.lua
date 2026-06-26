@@ -76,6 +76,8 @@ local shortNames = {
 	[464256] = L["Siege of Boralus"],
 	[467553] = L["The MOTHERLODE!!"],
 	[467555] = L["The MOTHERLODE!!"],
+	[1286828] = L["Temple of Sethraliss"], -- Midnight S2
+	[1286831] = L["Kings' Rest"], -- Midnight S2
 	-- SL
 	[354462] = L["The Necrotic Wake"],
 	[354463] = L["Plaguefall"],
@@ -123,6 +125,11 @@ local shortNames = {
 	[1254559] = L["Maisara Caverns"], -- Midnight S1
 	[1254563] = L["Nexus-Point Xenas"], -- Midnight S1
 	[1254572] = L["Magisters' Terrace"], -- Midnight S1
+	[1286801] = L["The Blinding Vale"], -- Midnight S2
+	[1286804] = L["Voidscar Arena"], -- Midnight S2
+	[1286807] = L["Den of Nalorakk"], -- Midnight S2
+	[1286809] = L["Murder Row"], -- Midnight S2
+	[1286812] = L["Altar of Fangs"], -- Midnight S2
 	-- Midnight R
 	-- Mage teleports
 	[3561] = L["Stormwind"],
@@ -660,16 +667,16 @@ function tpm:UpdateAvailableSeasonalTeleports()
 			[560] = 1254559, -- Maisara Caverns
 			[239] = 1254551, -- Seat of the Triumvirate
 		},
-		-- TWW S2
+		-- Midnight S2
 		[2] = {
-			[247] = motherlode, -- The MOTHERLODE!!
-			[370] = 373274, -- Operation: Mechagon - Workshop
-			[382] = 354467, -- Theater of Pain
-			[499] = 445444, -- Priory of the Sacred Flame
-			[500] = 445443, -- The Rookery
-			[504] = 445441, -- Darkflame Cleft
-			[506] = 445440, -- Cinderbrew Meadery
-			[525] = 1216786, -- Operation: Floodgate
+			[249] = 1286831, -- King's Rest
+			[250] = 1286828, -- Temple of Sethraliss
+			[399] = 393256, -- Ruby Life Pools
+			[584] = 1286801, -- The Blinding Vale
+			[585] = 1286804, -- Voidscar Arena
+			[586] = 1286807, -- Den of Nalorakk
+			[587] = 1286809, -- Murder Row
+			[588] = 1286812, -- Altar of Fangs
 		},
 		-- TWW S3
 		[3] = {
