@@ -60,7 +60,7 @@ function tpm:GetOptionsCategory(category)
 	end
 end
 
-function tpm:LoadOptions()
+function tpm:LoadOptions(isRetail)
 	local db = tpm:GetOptions()
 	local defaults = tpm.SettingsBase
 	local ACTIVE_CONTRIBUTORS = { "Creator: Justw8", "Contributor(s): Mythi" }
@@ -96,7 +96,7 @@ function tpm:LoadOptions()
 			local container = Settings.CreateControlTextContainer()
 			container:Add("none", L["None"])
 			container:Add("disabled", L["Disabled"])
-			container:Add("rng", "|T1669494:16:16:0:0:64:64:4:60:4:60|t " .. L["Random"])
+			container:Add("rng", string.format("|T%d:16:16:0:0:64:64:4:60:4:60|t ", isRetail and 1669494 or 237284) .. L["Random"])
 			local hearthstones = tpm:GetAvailableHearthstoneToys()
 			for id, hearthstoneInfo in pairs(hearthstones) do
 				container:Add(tostring(id), "|T" .. hearthstoneInfo.texture .. ":16:16:0:0:64:64:4:60:4:60|t " .. hearthstoneInfo.name)
