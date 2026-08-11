@@ -10,7 +10,7 @@ L["Random Hearthstone Location"] = "\n\124cFF34B7EBLieu de la pierre de foyer :\
 L["No Hearthtone In Bags"] = "Vous n'avez pas de pierre de foyer dans vos sacs et aucune n'est définie. Utilisez /tpm pour les commandes de configuration."
 L["Hearthone Reset Error"] = "Votre pierre de foyer a été réinitialisée par défaut car le jouet avec l'itemID : %s n'est pas dans votre collection."
 
--- Abréviations de donjons
+-- dungeons abreviated Text
 L["The Vortex Pinnacle"] = "VP"
 L["Throne of the Tides"] = "ToTT"
 L["Grim Batol"] = "GB"
@@ -86,6 +86,13 @@ L["Nexus-Point Xenas"] = "NP"
 L["Magisters' Terrace"] = "MT"
 L["Seat of the Triumvirate"] = "SEAT"
 L["Pit of Saron"] = "PIT"
+--L["Temple of Sethraliss"] = "TEMPLE"
+--L["Kings' Rest"] = "REST"
+--L["The Blinding Vale"] = "VALE"
+--L["Voidscar Arena"] = "ARENA"
+--L["Den of Nalorakk"] = "DEN"
+--L["Murder Row"] = "MURDER"
+--L["Altar of Fangs"] = "ALTAR"
 
 -- Abréviations d'extensions
 L["Cataclysm"] = "CATA"

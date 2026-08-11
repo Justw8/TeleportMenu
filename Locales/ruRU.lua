@@ -86,6 +86,13 @@ L["Nexus-Point Xenas"] = "УНЗ"
 L["Magisters' Terrace"] = "ТМ"
 L["Seat of the Triumvirate"] = "ПТ"
 L["Pit of Saron"] = "ЯС"
+--L["Temple of Sethraliss"] = "TEMPLE"
+--L["Kings' Rest"] = "REST"
+--L["The Blinding Vale"] = "VALE"
+--L["Voidscar Arena"] = "ARENA"
+--L["Den of Nalorakk"] = "DEN"
+--L["Murder Row"] = "MURDER"
+--L["Altar of Fangs"] = "ALTAR"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "КАТ"
