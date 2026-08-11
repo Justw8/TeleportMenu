@@ -86,6 +86,13 @@ L["Nexus-Point Xenas"] = "节点"
 L["Magisters' Terrace"] = "魔导师"
 L["Seat of the Triumvirate"] = "执政团"
 L["Pit of Saron"] = "萨隆"
+L["Temple of Sethraliss"] = "神庙"
+L["Kings' Rest"] = "诸王"
+L["The Blinding Vale"] = "夺目谷"
+L["Voidscar Arena"] = "竞技场"
+L["Den of Nalorakk"] = "洞穴"
+L["Murder Row"] = "密谋"
+L["Altar of Fangs"] = "毒牙"
 
 -- expansion abreviated Text
 L["Cataclysm"] = "大裂变"
