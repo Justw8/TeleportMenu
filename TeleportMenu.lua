@@ -678,17 +678,6 @@ function tpm:UpdateAvailableSeasonalTeleports()
 			[587] = 1286809, -- Murder Row
 			[588] = 1286812, -- Altar of Fangs
 		},
-		-- TWW S3
-		[3] = {
-			[499] = 445444, -- Priory of the Sacred Flame
-			[542] = 1237215, -- Eco-Dome Al'dani
-			[378] = 354465, -- Halls of Atonement
-			[525] = 1216786, -- Operation: Floodgate
-			[503] = 445417, -- Ara-Kara, City of Echoes
-			[392] = 367416, -- Tazavesh: So'leah's Gambit
-			-- [391] = 367416, -- Tazavesh: Streets of Wonder
-			[505] = 445414, -- The Dawnbreaker
-		},
 	}
 
 	for _, mapId in ipairs(C_ChallengeMode.GetMapTable()) do
@@ -1176,7 +1165,7 @@ function events:ADDON_LOADED(...)
 
 	if addOnName == "TeleportMenu" then
 		db = tpm:GetOptions()
-		tpm.settings.current_season = 1
+		tpm.settings.current_season = 2
 
 		db.debug = false
 		f:UnregisterEvent("ADDON_LOADED")
