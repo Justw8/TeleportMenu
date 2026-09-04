@@ -3,6 +3,7 @@
 	<Script file="Player.lua" />
 	<Script file="Hearthstones.lua"/>
 	<Script file="Items.lua"/>
+	<Script file="ItemsFunctions.lua"/>
 	<Script file="Wormholes.lua" />
 	<Script file="Settings.lua" />
 </Ui>

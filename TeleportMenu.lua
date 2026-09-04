@@ -18,7 +18,13 @@ local DEFAULT_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 local globalWidth, globalHeight = 40, 40 -- defaults
 tpm.TEXTURE_SCALE = 0
 
+local tocNumber = select(4, GetBuildInfo())
+local isClassic =  tocNumber <= 50504
+local isRetail =  not isClassic
+
 local IsSpellKnown = C_SpellBook.IsSpellKnown
+local GetItemCooldown = isRetail and C_Item.GetItemCooldown or C_Container.GetItemCooldown
+local GetItemCount = C_Item.GetItemCount
 
 local issecretvalue = issecretvalue or function() return false end
 function tpm:IsSecret(value)
@@ -198,7 +204,7 @@ local tpTable = {
 	{ id = 110560, type = "toy", quest = { 34378, 34586 } }, -- Garrison Hearthstone
 	{ id = 140192, type = "toy", quest = { 44184, 44663 } }, -- Dalaran Hearthstone
 	-- Engineering
-	{ type = "wormholes", iconId = 4620673 }, -- Engineering Wormholes
+	{ type = "wormholes", iconId = isRetail and 4620673 or 136243 }, -- Engineering Wormholes
 	{ type = "item_teleports", iconId = 133655 }, -- Item Teleports
 	-- Class Teleports
 	{ id = 1, type = "flyout", iconId = 237509, subtype = "mage" }, -- Teleport (Mage) (Horde)
@@ -231,7 +237,15 @@ local tpTable = {
 	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path", currentExpansion = true }, -- Hero's Path: Midnight Raids
 }
 
-local GetItemCount = C_Item.GetItemCount
+
+if isClassic then
+	-- Removing flyouts which is not existing in classic
+	for i = #tpTable, 1, -1 do
+		if tpTable[i].type == "flyout" and tpTable[i].id > 84  then
+			table.remove(tpTable, i)
+		end
+	end
+end
 
 --------------------------------------
 -- Texture Stuff
@@ -260,7 +274,7 @@ end
 
 local function setToolTip(self, tpType, id, hs)
 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
-	local yOffset = globalHeight / 2
+	local yOffset = isClassic and globalHeight or globalHeight / 2
 	GameTooltip:SetPoint("BOTTOMLEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 	if hs and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
 		local bindLocation = GetBindLocation()
@@ -279,9 +293,16 @@ local function setToolTip(self, tpType, id, hs)
 		local name = GetFlyoutInfo(id)
 		GameTooltip:SetText(name, 1, 1, 1)
 	elseif tpType == "profession" then
-		local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
-		if professionInfo then
-			GameTooltip:SetText(professionInfo.professionName, 1, 1, 1)
+		local professionName 
+		if isRetail then 
+			local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
+			professionName = professionInfo.professionName
+		else 
+			professionName = C_TradeSkillUI.GetTradeSkillDisplayName(id)
+		end
+
+		if professionName then
+			GameTooltip:SetText(professionName, 1, 1, 1)
 		end
 	elseif tpType == "seasonalteleport" then
 		local currExpID = GetExpansionLevel()
@@ -317,8 +338,8 @@ local function createCooldownFrame(frame)
 		end
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
-			start, duration, enabled = C_Item.GetItemCooldown(id)
-		elseif type == "housing" then
+			start, duration, enabled = GetItemCooldown(id)
+		elseif isRetail and type == "housing"   then
 			local cdInfo = C_Housing.GetVisitCooldownInfo()
 			start = cdInfo.startTime
 			duration = cdInfo.duration
@@ -644,6 +665,8 @@ function tpm:GetIconText(spellId)
 end
 
 function tpm:UpdateAvailableSeasonalTeleports()
+	if isClassic then return end
+
 	availableSeasonalTeleports = {}
 
 	local factionTeleports = {
@@ -860,7 +883,7 @@ function tpm:updateHearthstone()
 
 	if db["Teleports:Hearthstone"] == "rng" then
 		local rng = math.random(#tpm.AvailableHearthstones)
-		hearthstoneButton.icon:SetTexture(1669494) -- misc_rune_pvp_random
+		hearthstoneButton.icon:SetTexture(isRetail and 1669494 or 237284) -- misc_rune_pvp_random or inv_misc_dice_01
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", tpm.AvailableHearthstones[rng])
 	elseif db["Teleports:Hearthstone"] == "disabled" then
@@ -953,7 +976,7 @@ local function createAnchors()
 			teleport.type = "toy"
 			known = true
 			if db["Teleports:Hearthstone"] == "rng" then
-				texture = 1669494 -- misc_rune_pvp_random
+				texture = isRetail and 1669494 or 237284 -- misc_rune_pvp_random or inv_misc_dice_01
 				teleport.id = tpm:GetRandomHearthstone()
 			else
 				teleport.id = db["Teleports:Hearthstone"]
@@ -989,7 +1012,7 @@ local function createAnchors()
 				buttonsFrameLeft.hearthstoneButton = button
 			end
 			buttonsFrameLeft:IncrementButtons()
-		elseif teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
+		elseif isRetail and teleport.type == "housing" and C_Housing and C_Housing.HasHousingExpansionAccess() then
 			local playerFaction = UnitFactionGroup("player")
 			if tpm.Housing:HasAPlot() and tpm.Housing:GetActiveHousingButtons() == 0 and (#houseData == 1 or playerFaction == teleport.faction) then -- only 1 house for now, fix more
 				local button = tpm.Housing:CreateSecureHousingButton(teleport.faction)
@@ -1051,8 +1074,9 @@ function tpm:ReloadFrames()
 	for _, secureButton in ipairs(secureButtons) do
 		secureButton:Recycle()
 	end
-	tpm.Housing:RecycleHousingButtons()
-
+	if isRetail then 
+		tpm.Housing:RecycleHousingButtons()
+	end
 	if TeleportMeButtonsFrameRight then
 		TeleportMeButtonsFrameRight.reload = true
 	end
@@ -1082,7 +1106,7 @@ SlashCmdList["TPMENU"] = function(msg)
 		Settings.OpenToCategory(tpm:GetOptionsCategory())
 	elseif msg == "filters" then
 		Settings.OpenToCategory(tpm:GetOptionsCategory(msg))
-	elseif msg == "housing" then
+	elseif isRetail and msg == "housing" then
 		tpm.Housing:DumpHouseData()
 	else
 		print(APPEND .. " unknown command: " .. msg)
@@ -1113,7 +1137,7 @@ local function checkItemsLoaded(self)
 	local function OnItemsLoaded()
 		if allLoaded then
 			tpm:Setup()
-			tpm:LoadOptions()
+			tpm:LoadOptions(isRetail)
 			self:UnregisterEvent("ADDON_LOADED")
 		else
 			checkItemsLoaded(self)
@@ -1133,7 +1157,7 @@ function tpm:Setup()
 	tpm:UpdateAvailableWormholes()
 	tpm:UpdateAvailableSeasonalTeleports()
 	tpm:UpdateAvailableItemTeleports()
-	tpm:LoadHouses()
+	if isRetail then tpm:LoadHouses() end
 
 	if
 		db["Teleports:Hearthstone"]
