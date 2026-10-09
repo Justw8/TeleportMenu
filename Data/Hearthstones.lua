@@ -176,6 +176,11 @@ end
 do
 	local lastRandomHearthstone = nil
 	function tpm:GetRandomHearthstone(retry)
+		if #tpm.AvailableHearthstones == 0 then
+			-- Toy data can be unavailable for a while (e.g. after a loading screen) without a
+			-- TOYS_UPDATED afterwards, so check the toys again instead of staying empty.
+			tpm:UpdateAvailableHearthstones()
+		end
 		local pool = tpm:GetRandomHearthstonePool()
 		if #pool == 0 then
 			return

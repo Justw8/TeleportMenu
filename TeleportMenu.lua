@@ -308,6 +308,13 @@ function tpm:checkQuestCompletion(quest)
 	end
 end
 
+function tpm:SetRandomHearthstoneOnButton(button)
+	local randomHearthstone = tpm:GetRandomHearthstone()
+	button.id = randomHearthstone
+	button:SetAttribute("toy", randomHearthstone)
+	button:CheckCooldown()
+end
+
 function tpm:updateHearthstone()
 	local hearthstoneButton = TeleportMeButtonsFrameLeft.hearthstoneButton
 	if MasqueGroup then
@@ -321,7 +328,7 @@ function tpm:updateHearthstone()
 		hearthstoneButton.pendingIconItem = nil -- Drop any pending toy icon load so it can't overwrite the random icon
 		hearthstoneButton.icon:SetTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
-		hearthstoneButton:SetAttribute("toy", tpm:GetRandomHearthstone())
+		tpm:SetRandomHearthstoneOnButton(hearthstoneButton)
 	elseif db["Teleports:Hearthstone"] == "disabled" then
 		hearthstoneButton:Hide()
 		return
@@ -382,9 +389,8 @@ local function createAnchors()
 			TeleportMeButtonsFrameLeft:Hide()
 			return
 		end
-		if TeleportMeButtonsFrameLeft:IsVisible() and db["Teleports:Hearthstone"] and db["Teleports:Hearthstone"] == "rng" then
-			local rng = tpm:GetRandomHearthstone()
-			TeleportMeButtonsFrameLeft.hearthstoneButton:SetAttribute("toy", rng)
+		if TeleportMeButtonsFrameLeft:IsVisible() and db["Teleports:Hearthstone"] == "rng" and TeleportMeButtonsFrameLeft.hearthstoneButton then
+			tpm:SetRandomHearthstoneOnButton(TeleportMeButtonsFrameLeft.hearthstoneButton)
 		end
 		tpm.SecureButton:ClearAllInvalidHighlights()
 		return
@@ -401,6 +407,8 @@ local function createAnchors()
 	buttonsFrameLeft:SetPoint("TOPRIGHT", GameMenuFrame,  "TOPLEFT", -globalHeight - 1, -buttonFrameYOffset + 1)
 	buttonsFrameRight:SetPoint("TOPLEFT", GameMenuFrame,  "TOPRIGHT", 0, -buttonFrameYOffset + 1)
 
+	buttonsFrameLeft.hearthstoneButton = nil -- The previous one was recycled; set again below if created
+
 	for _, teleport in ipairs(tpTable) do
 		local showHearthstone = db["Teleports:Hearthstone"] ~= "disabled"
 		local texture
@@ -414,6 +422,9 @@ local function createAnchors()
 			if db["Teleports:Hearthstone"] == "rng" then
 				texture = 1669494 -- misc_rune_pvp_random
 				teleport.id = tpm:GetRandomHearthstone()
+				-- Toy data can briefly be unavailable (e.g. during a loading screen), leaving nothing to
+				-- pick from. Skip the button then; it's rebuilt on the next TOYS_UPDATED.
+				known = teleport.id ~= nil
 			else
 				teleport.id = db["Teleports:Hearthstone"]
 			end
@@ -434,7 +445,7 @@ local function createAnchors()
 			known = true
 		end
 
-		if showHearthstone and not known and teleport.hearthstone then -- Player has no HS in bags and not set a custom TP.
+		if showHearthstone and not known and teleport.hearthstone and db["Teleports:Hearthstone"] == "none" then -- Player has no HS in bags and not set a custom TP.
 			print(APPEND .. L["No Hearthtone In Bags"])
 		end
 

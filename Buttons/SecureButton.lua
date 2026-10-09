@@ -54,6 +54,14 @@ local function createCooldownFrame(frame)
 		end
 		local start, duration, enabled
 		if type == "toy" or type == "item" then
+			if not C_Item.IsItemDataCachedByID(id) then
+				-- The cooldown can read as none until the item is loaded, so check again once it is
+				Item:CreateFromItemID(tonumber(id)):ContinueOnItemLoad(function()
+					if self:GetParent().id == id then -- The button may show something else by now
+						self:CheckCooldown(id, type)
+					end
+				end)
+			end
 			start, duration, enabled = C_Item.GetItemCooldown(id)
 		elseif type == "housing" then
 			local cdInfo = C_Housing.GetVisitCooldownInfo()
