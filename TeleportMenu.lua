@@ -42,7 +42,7 @@ local shortNames = {
 	-- WLK
 	[1254555] = L["Pit of Saron"],	-- Midnight S1
 	-- MoP
-	[131204] = L["Temple of the Jade Serpentl"],
+	[131204] = L["Temple of the Jade Serpent"],
 	[131205] = L["Stormstout Brewery"],
 	[131206] = L["Shado-Pan Monastery"],
 	[131222] = L["Mogu'shan Palace"],
@@ -52,7 +52,7 @@ local shortNames = {
 	[131231] = L["Scarlet Halls"],
 	[131232] = L["Scholomance"],
 	-- WoD
-	[159901] = L["The Everblooml"],
+	[159901] = L["The Everbloom"],
 	[159899] = L["Shadowmoon Burial Grounds"],
 	[159900] = L["Grimrail Depot"],
 	[159896] = L["Iron Docks"],
