@@ -97,10 +97,25 @@ function SecureButton:UpdateEquippedHighlights()
 	end
 end
 
-local equipmentEvents = CreateFrame("Frame")
-equipmentEvents:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-equipmentEvents:SetScript("OnEvent", function()
-	SecureButton:UpdateEquippedHighlights()
+-- Rechecks the cooldown of every visible button, so it updates while the menu stays open
+function SecureButton:UpdateCooldowns()
+	for _, button in ipairs(secureButtons) do
+		if button:IsVisible() then
+			button:CheckCooldown()
+		end
+	end
+end
+
+local buttonEvents = CreateFrame("Frame")
+buttonEvents:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+buttonEvents:RegisterEvent("SPELL_UPDATE_COOLDOWN") -- Spells and toys
+buttonEvents:RegisterEvent("BAG_UPDATE_COOLDOWN") -- Items
+buttonEvents:SetScript("OnEvent", function(_, event)
+	if event == "PLAYER_EQUIPMENT_CHANGED" then
+		SecureButton:UpdateEquippedHighlights()
+	else
+		SecureButton:UpdateCooldowns()
+	end
 end)
 
 ---@param frame Frame
