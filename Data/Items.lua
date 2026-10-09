@@ -24,12 +24,12 @@ tpm.ItemTeleports = {
 	[51560] = true, -- Runed Band of the Kirin Tor
 	[52251] = true, -- Jaina's Locket
 	-- Faction Cloaks
-	[63206] = UnitFactionGroup("player") == "Alliance", -- Wrap of Unity: Stormwind
-	[63207] = UnitFactionGroup("player") == "Horde", -- Wrap of Unity: Orgrimmar
-	[63352] = UnitFactionGroup("player") == "Alliance", -- Shroud of Cooperation: Stormwind
-	[63353] = UnitFactionGroup("player") == "Horde", -- Shroud of Cooperation: Orgrimmar
-	[65274] = UnitFactionGroup("player") == "Horde", -- Cloak of Coordination: Orgrimmar
-	[65360] = UnitFactionGroup("player") == "Alliance", -- Cloak of Coordination: Stormwind
+	[63206] = true, -- Wrap of Unity: Stormwind
+	[63207] = true, -- Wrap of Unity: Orgrimmar
+	[63352] = true, -- Shroud of Cooperation: Stormwind
+	[63353] = true, -- Shroud of Cooperation: Orgrimmar
+	[65274] = true, -- Cloak of Coordination: Orgrimmar
+	[65360] = true, -- Cloak of Coordination: Stormwind
 	-- Other items
 	[43824] = true, -- The Schools of Arcane Magic - Mastery
 	[46874] = true, -- Argent Crusader's Tabard
@@ -43,26 +43,26 @@ tpm.ItemTeleports = {
 	[68809] = true, -- Veteran's Hearthstone
 	[87548] = true, -- Lorewalker's Lodestone
 	[92510] = true, -- Vol'jin's Hearthstone
-	[95050] = UnitFactionGroup("player") == "Horde", -- The Brassiest Knuckle (Brawl'gar Arena)
-	[95051] = UnitFactionGroup("player") == "Alliance", -- The Brassiest Knuckle (Bizmo's Brawlpub)
-	[95567] = UnitFactionGroup("player") == "Alliance", -- Kirin Tor Beacon
-	[95568] = UnitFactionGroup("player") == "Horde", -- Sunreaver Beacon
+	[95050] = true, -- The Brassiest Knuckle (Brawl'gar Arena)
+	[95051] = true, -- The Brassiest Knuckle (Bizmo's Brawlpub)
+	[95567] = true, -- Kirin Tor Beacon
+	[95568] = true, -- Sunreaver Beacon
 	[103678] = true, -- Time-Lost Artifact
 	[117389] = true, -- Draenor Archaeologist's Lodestone
 	[118662] = true, -- Bladespire Relic
 	[118663] = true, -- Relic of Karabor
-	[118907] = UnitFactionGroup("player") == "Alliance", -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
-	[118908] = UnitFactionGroup("player") == "Horde", -- Pit Fighter's Punching Ring (Brawl'gar Arena)
+	[118907] = true, -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
+	[118908] = true, -- Pit Fighter's Punching Ring (Brawl'gar Arena)
 	[119183] = true, -- Scroll of Risky Recall
 	[128353] = true, -- Admiral's Compass
 	[128502] = true, -- Hunter's Seeking Crystal
 	[128503] = true, -- Master Hunter's Seeking Crystal
 	[129276] = true, -- Beginner's Guide to Dimensional Rifting
-	[132119] = UnitFactionGroup("player") == "Horde", -- Orgrimmar Portal Stone
-	[132120] = UnitFactionGroup("player") == "Alliance", -- Stormwind Portal Stone
+	[132119] = true, -- Orgrimmar Portal Stone
+	[132120] = true, -- Stormwind Portal Stone
 	[132517] = true, -- Intra-Dalaran Wormhole Generator
 	[132523] = true, -- Reaves Battery
-	[136849] = UnitClass("player") == "DRUID", -- Nature's Beacon (Druid Toy)
+	[136849] = true, -- Nature's Beacon (Druid Toy)
 	[138448] = true, -- Emblem of Margoss
 	[139590] = true, -- Scroll of Teleport: Ravenholdt
 	[139599] = true, -- Empowered Ring of the Kirin Tor
@@ -79,8 +79,8 @@ tpm.ItemTeleports = {
 	[142469] = true, -- Violet Seal of the Grand Magus
 	[142543] = true, -- Scroll of Town Portal (Diablo 3 event)
 	[144341] = true, -- Rechargeable Reaves Battery
-	[144391] = UnitFactionGroup("player") == "Alliance", -- Pugilist's Powerful Punching Ring (Alliance)
-	[144392] = UnitFactionGroup("player") == "Horde", -- Pugilist's Powerful Punching Ring (Horde)
+	[144391] = true, -- Pugilist's Powerful Punching Ring (Alliance)
+	[144392] = true, -- Pugilist's Powerful Punching Ring (Horde)
 	[150733] = true, -- Scroll of Town Portal (Ar'gorok in Arathi)
 	[151016] = true, -- Fractured Necrolyte Skull
 	[159224] = true, -- Zuldazar Hearthstone
@@ -91,7 +91,7 @@ tpm.ItemTeleports = {
 	[167075] = true, -- Ultrasafe Transporter: Mechagon
 	[168862] = true, -- G.E.A.R. Tracking Beacon
 	[169064] = true, -- Montebank's Colorful Cloak
-	[169297] = UnitFactionGroup("player") == "Alliance", -- Stormpike Insignia
+	[169297] = true, -- Stormpike Insignia
 	[172203] = true, -- Cracked Hearthstone
 	[173373] = true, -- Faol's Hearthstone
 	[173430] = true, -- Nexus Teleport Scroll
@@ -116,7 +116,7 @@ tpm.ItemTeleports = {
 	[205255] = true, -- Niffen Diggin' Mitts
 	[205456] = true, -- Lost Dragonscale (1)
 	[205458] = true, -- Lost Dragonscale (2)
-	[211788] = UnitRace("player") == "Worgen", -- Tess's Peacebloom
+	[211788] = true, -- Tess's Peacebloom
 	[230850] = true, -- Delve-O-Bot 7001
 	[234389] = true, -- Gallagio Loyalty Rewards Card: Silver
 	[234390] = true, -- Gallagio Loyalty Rewards Card: Gold
@@ -129,8 +129,47 @@ tpm.ItemTeleports = {
 	[249699] = true, -- Shadowguard Translocator
 	[253629] = true, -- Personal Key to the Arcantina
 	[266370] = true, -- Dundun's Abundant Travel Method
-	[276371] = true, -- Lightveil Recall Beacon 12.0.7	
+	[276371] = true, -- Lightveil Recall Beacon 12.0.7
 }
+
+local itemRequirements = {
+	[63206] = { faction = "Alliance" }, -- Wrap of Unity: Stormwind
+	[63207] = { faction = "Horde" }, -- Wrap of Unity: Orgrimmar
+	[63352] = { faction = "Alliance" }, -- Shroud of Cooperation: Stormwind
+	[63353] = { faction = "Horde" }, -- Shroud of Cooperation: Orgrimmar
+	[65274] = { faction = "Horde" }, -- Cloak of Coordination: Orgrimmar
+	[65360] = { faction = "Alliance" }, -- Cloak of Coordination: Stormwind
+	[95050] = { faction = "Horde" }, -- The Brassiest Knuckle (Brawl'gar Arena)
+	[95051] = { faction = "Alliance" }, -- The Brassiest Knuckle (Bizmo's Brawlpub)
+	[95567] = { faction = "Alliance" }, -- Kirin Tor Beacon
+	[95568] = { faction = "Horde" }, -- Sunreaver Beacon
+	[118907] = { faction = "Alliance" }, -- Pit Fighter's Punching Ring (Bizmo's Brawlpub)
+	[118908] = { faction = "Horde" }, -- Pit Fighter's Punching Ring (Brawl'gar Arena)
+	[132119] = { faction = "Horde" }, -- Orgrimmar Portal Stone
+	[132120] = { faction = "Alliance" }, -- Stormwind Portal Stone
+	[136849] = { class = "DRUID" }, -- Nature's Beacon (Druid Toy)
+	[144391] = { faction = "Alliance" }, -- Pugilist's Powerful Punching Ring (Alliance)
+	[144392] = { faction = "Horde" }, -- Pugilist's Powerful Punching Ring (Horde)
+	[169297] = { faction = "Alliance" }, -- Stormpike Insignia
+	[211788] = { race = "Worgen" }, -- Tess's Peacebloom
+}
+
+function tpm:CanUseItemTeleport(id)
+	local requirement = itemRequirements[id]
+	if not requirement then
+		return true
+	end
+	if requirement.faction and UnitFactionGroup("player") ~= requirement.faction then
+		return false
+	end
+	if requirement.class and select(2, UnitClass("player")) ~= requirement.class then
+		return false
+	end
+	if requirement.race and select(2, UnitRace("player")) ~= requirement.race then
+		return false
+	end
+	return true
+end
 
 function tpm:GetAvailableItemTeleports()
 	return tpm.AvailableItemTeleports
@@ -151,7 +190,7 @@ function tpm:UpdateAvailableItemTeleports()
 
 	for id, _ in pairs(tpm.ItemTeleports) do
 		local isToy = select(1, C_ToyBox.GetToyInfo(id)) ~= nil
-		if tpm:IsItemTeleportOwned(id) and TeleportMenuDB[id] == true then
+		if tpm:IsItemTeleportOwned(id) and tpm:CanUseItemTeleport(id) and TeleportMenuDB[id] == true then
 			cachedToys[id] = isToy
 			table.insert(AvailableItemTeleports, id)
 		end
