@@ -1,4 +1,4 @@
-## Interface: 120100, 120007
+## Interface: 120100
 ## Title: Teleport Menu
 ## Notes: Hearthstone and teleport buttons attached to the game menu.
 ## Notes-frFR: Ajoute des boutons de pierre de foyer et de téléportation au menu de jeu.
