@@ -141,14 +141,17 @@ function tpm:IsToyTeleport(id)
 	return cachedToys[id] or false
 end
 
+-- An item teleport is owned when it's in the bags or learned as a toy
+function tpm:IsItemTeleportOwned(id)
+	return (C_Item.GetItemCount(id) or 0) > 0 or PlayerHasToy(id)
+end
+
 function tpm:UpdateAvailableItemTeleports()
 	local AvailableItemTeleports = {}
 
 	for id, _ in pairs(tpm.ItemTeleports) do
-		local hasItem = (C_Item.GetItemCount(id) or 0) > 0
 		local isToy = select(1, C_ToyBox.GetToyInfo(id)) ~= nil
-		local usableToy = isToy and PlayerHasToy(id)
-		if (hasItem or usableToy) and TeleportMenuDB[id] == true then
+		if tpm:IsItemTeleportOwned(id) and TeleportMenuDB[id] == true then
 			cachedToys[id] = isToy
 			table.insert(AvailableItemTeleports, id)
 		end

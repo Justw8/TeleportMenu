@@ -1,7 +1,7 @@
 local _, tpm = ...
 local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 
-local GetItemCount, GetItemNameByID, GetItemIconByID, sort, push = C_Item.GetItemCount, C_Item.GetItemNameByID, C_Item.GetItemIconByID, sort, table.insert
+local GetItemNameByID, GetItemIconByID, sort, push = C_Item.GetItemNameByID, C_Item.GetItemIconByID, sort, table.insert
 
 --- @type { [string|integer]: boolean|string|integer }
 tpm.SettingsBase = {
@@ -58,7 +58,7 @@ function tpm:SourceItemTeleportScrollBoxes(onSourceComplete)
 
 	ContinuableContainer:ContinueOnLoad(function()
 		for id, _ in pairs(tpm.ItemTeleports) do
-			local items = (GetItemCount(id) > 0 and items_in_possession) or items_to_be_obtained
+			local items = (tpm:IsItemTeleportOwned(id) and items_in_possession) or items_to_be_obtained
 			push(items, {
 				id = id,
 				name = GetItemNameByID(id),
@@ -71,11 +71,16 @@ function tpm:SourceItemTeleportScrollBoxes(onSourceComplete)
 				end)
 			end
 		end
-	end)
 
-	if onSourceComplete then
-		onSourceComplete()
-	end
+		-- The lists may already be on screen, so refresh them now that they're filled
+		for items_key, view in pairs(tpm.settings.scroll_box_views) do
+			view:SetDataProvider(CreateDataProvider(tpm.player[items_key]))
+		end
+
+		if onSourceComplete then
+			onSourceComplete()
+		end
+	end)
 end
 
 tpm.SettingsBase = setmetatable(tpm.SettingsBase, {

@@ -354,6 +354,7 @@ function tpm:LoadOptions()
 
 			tpm.settings.scroll_box_views[items_key] = view
 
+			ScrollBox:SetDataProvider(CreateDataProvider(tpm.player[items_key]))
 			return ScrollBoxContainer
 		end
 

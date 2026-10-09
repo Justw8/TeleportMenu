@@ -234,8 +234,6 @@ local tpTable = {
 	--{ id = 246, type = "flyout", iconId = 7266215, name = L["Midnight Raids"], subtype = "path", currentExpansion = true }, -- Hero's Path: Midnight Raids
 }
 
-local GetItemCount = C_Item.GetItemCount
-
 --------------------------------------
 -- Functions
 --------------------------------------
@@ -643,30 +641,12 @@ function events:PLAYER_LOGIN()
 end
 
 function events:TOYS_UPDATED()
+	tpm:SyncItemPossession()
 	tpm:RefreshAvailableTeleports()
 end
 
 function events:BAG_UPDATE_DELAYED()
-	--- @type Item[]
-	local items_in_possession = CopyTable(tpm.player.items_in_possession)
-
-	--- @type Item[]
-	local items_to_be_obtained = CopyTable(tpm.player.items_to_be_obtained)
-
-	-- Scan bags for items supposedly in possession
-	for _, item in pairs(items_in_possession) do
-		if GetItemCount(item.id) == 0 then
-			tpm:RemoveItemFromPossession(item.id)
-		end
-	end
-
-	-- Scan bags for items supposedly NOT in possession
-	for _, item in pairs(items_to_be_obtained) do
-		if GetItemCount(item.id) > 0 then
-			tpm:AddItemToPossession(item.id)
-		end
-	end
-
+	tpm:SyncItemPossession()
 	tpm:RefreshAvailableTeleports()
 end
 
