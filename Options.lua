@@ -42,7 +42,7 @@ root.logo:Show()
 local rootCategory = Settings.RegisterCanvasLayoutCategory(root, L["ADDON_NAME"])
 local generalOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["GENERAL"])
 local buttonOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["BUTTON_SETTINGS"])
-local teleportsOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["TELEPORT_SETTINGS"])
+local hearthstoneOptions = Settings.RegisterVerticalLayoutSubcategory(rootCategory, L["HEARTHSTONE_SETTINGS"])
 local teleportFiltersFrame = CreateFrame("Frame", "TeleportFiltersFramePanel", InterfaceOptionsFramePanelContainer)
 teleportFiltersFrame.title = teleportFiltersFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
 teleportFiltersFrame.title:SetPoint("TOPLEFT", 7, -22)
@@ -51,7 +51,7 @@ teleportFiltersFrame.divider = teleportFiltersFrame:CreateTexture(nil, "ARTWORK"
 teleportFiltersFrame.divider:SetAtlas("Options_HorizontalDivider", true)
 teleportFiltersFrame.divider:SetPoint("TOP", 0, -50)
 
-local teleportFilters = Settings.RegisterCanvasLayoutSubcategory(teleportsOptions, teleportFiltersFrame, L["Teleports:Items:Filters"])
+local teleportFilters = Settings.RegisterCanvasLayoutSubcategory(rootCategory, teleportFiltersFrame, L["Teleports:Items:Filters"])
 function tpm:GetOptionsCategory(category)
 	if not category or category == "root" then
 		return rootCategory:GetID()
@@ -104,8 +104,8 @@ function tpm:LoadOptions()
 			return container:GetData()
 		end
 
-		local setting = Settings.RegisterAddOnSetting(teleportsOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Hearthstone Toy"], defaults[optionsKey])
-		Settings.CreateDropdown(teleportsOptions, setting, GetOptions, tooltip)
+		local setting = Settings.RegisterAddOnSetting(hearthstoneOptions, optionsKey, optionsKey, db, type(defaults[optionsKey]), L["Hearthstone Toy"], defaults[optionsKey])
+		Settings.CreateDropdown(hearthstoneOptions, setting, GetOptions, tooltip)
 		Settings.SetOnValueChangedCallback(optionsKey, OnSettingChanged)
 	end
 
@@ -370,6 +370,6 @@ function tpm:LoadOptions()
 	Settings.RegisterAddOnCategory(rootCategory)
 	Settings.RegisterAddOnCategory(generalOptions)
 	Settings.RegisterAddOnCategory(buttonOptions)
-	Settings.RegisterAddOnCategory(teleportsOptions)
+	Settings.RegisterAddOnCategory(hearthstoneOptions)
 	Settings.RegisterAddOnCategory(teleportFilters)
 end
