@@ -240,7 +240,12 @@ local GetItemCount = C_Item.GetItemCount
 local function SetTextureByItemId(frame, itemId)
 	frame.icon:SetTexture(DEFAULT_ICON) -- Temp while loading
 	local item = Item:CreateFromItemID(tonumber(itemId))
+	frame.pendingIconItem = item
 	item:ContinueOnItemLoad(function()
+		if frame.pendingIconItem ~= item then
+			return -- A newer texture was set while this item was loading
+		end
+		frame.pendingIconItem = nil
 		local icon = item:GetItemIcon()
 		frame.icon:SetTexture(icon)
 	end)
@@ -507,6 +512,7 @@ local function CreateSecureButton(frame, buttonType, text, id, hearthstone)
 			self.buttonType = nil
 			self.id = nil
 			self.hearthstone = nil
+			self.pendingIconItem = nil
 
 			self:ClearHighlightTexture()
 			self:SetParent(nil)
@@ -860,6 +866,7 @@ function tpm:updateHearthstone()
 
 	if db["Teleports:Hearthstone"] == "rng" then
 		local rng = math.random(#tpm.AvailableHearthstones)
+		hearthstoneButton.pendingIconItem = nil -- Drop any pending toy icon load so it can't overwrite the random icon
 		hearthstoneButton.icon:SetTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
 		hearthstoneButton:SetAttribute("toy", tpm.AvailableHearthstones[rng])
