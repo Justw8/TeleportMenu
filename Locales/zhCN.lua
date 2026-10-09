@@ -146,7 +146,6 @@ L["Dornogal"] = "多恩岛"
 L["Silvermoon City"] = "银月"
 
 -- Options
-L["Opening Options Menu"] = "打开选项菜单"
 L["Enabled"] = "启用"
 L["Enable Tooltip"] = "启用/禁用传送菜单"
 L["Auto Close"] = "自动关闭"
@@ -178,11 +177,9 @@ L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "物品信息"
 
 -- Settings
 L["ADDON_NAME"] = "TeleportMenu"
-L["TITLE"] = "TeleportMenu设置"
 L["GENERAL"] = "通用设置"
 L["BUTTON_SETTINGS"] = "按键设置"
 L["TELEPORT_SETTINGS"] = "传送设置"
-L["HEARTHSTONE_SETTINGS"] = "炉石设置"
 L["BUTTON_FONT_SIZE"] = "按键字体大小"
 L["BUTTON_FONT_SIZE_TOOLTIP"] = "选择传送缩写的大小"
 L["Teleports:Items:Filters"] = "物品过滤器"

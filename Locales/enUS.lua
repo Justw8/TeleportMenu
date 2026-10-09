@@ -145,7 +145,6 @@ L["Dornogal"] = "DG"
 L["Silvermoon City"] = "SM"
 
 -- Options
-L["Opening Options Menu"] = "Opening Options Menu"
 L["Enabled"] = "Enabled"
 L["Enable Tooltip"] = "Enable/Disable the Teleport Menu."
 L["Auto Close"] = "Auto Close"
@@ -177,11 +176,9 @@ L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Unavailable items"
 
 -- Settings
 L["ADDON_NAME"] = "Teleport Menu"
-L["TITLE"] = "Teleport Menu Settings"
 L["GENERAL"] = "General Settings"
 L["BUTTON_SETTINGS"] = "Button Settings"
 L["TELEPORT_SETTINGS"] = "Teleport Settings"
-L["HEARTHSTONE_SETTINGS"] = "Hearthstone Settings"
 L["BUTTON_FONT_SIZE"] = "Button Font Size"
 L["BUTTON_FONT_SIZE_TOOLTIP"] = "Changing this setting controls the size of the abbreviated teleport names"
 L["Teleports:Items:Filters"] = "Item Filters"

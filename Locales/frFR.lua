@@ -146,7 +146,6 @@ L["Dornogal"] = "DG"
 L["Silvermoon City"] = "SM"
 
 -- Options
-L["Opening Options Menu"] = "Ouverture du menu des options"
 L["Enabled"] = "Activé"
 L["Enable Tooltip"] = "Activer/Désactiver le menu de téléportation."
 L["Auto Close"] = "Fermeture auto"
@@ -178,11 +177,9 @@ L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Objets non obtenus"
 
 -- Paramètres
 L["ADDON_NAME"] = "Teleport Menu"
-L["TITLE"] = "Paramètres de Teleport Menu"
 L["GENERAL"] = "Paramètres généraux"
 L["BUTTON_SETTINGS"] = "Paramètres des boutons"
 L["TELEPORT_SETTINGS"] = "Paramètres de téléportation"
-L["HEARTHSTONE_SETTINGS"] = "Paramètres de la pierre de foyer"
 L["BUTTON_FONT_SIZE"] = "Taille de la police"
 L["BUTTON_FONT_SIZE_TOOLTIP"] = "Ce paramètre contrôle la taille des noms abrégés de téléportation."
 L["Teleports:Items:Filters"] = "Filtres d'objets"

@@ -146,7 +146,6 @@ L["Dornogal"] = "도르노갈"
 L["Silvermoon City"] = "실버문"
 
 -- Options
-L["Opening Options Menu"] = "옵션 메뉴 열기"
 L["Enabled"] = "사용함"
 L["Enable Tooltip"] = "텔레포트 메뉴를 활성화/비활성화합니다."
 --L["Auto Close"] = "Auto Close"
@@ -178,11 +177,9 @@ L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "획득하지 않은 아이�
 
 -- Settings
 L["ADDON_NAME"] = "텔레포트 메뉴"
-L["TITLE"] = "텔레포트 메뉴 설정"
 L["GENERAL"] = "일반 설정"
 L["BUTTON_SETTINGS"] = "버튼 설정"
 L["TELEPORT_SETTINGS"] = "텔레포트 설정"
-L["HEARTHSTONE_SETTINGS"] = "귀환석 설정"
 L["BUTTON_FONT_SIZE"] = "버튼 글꼴 크기"
 L["BUTTON_FONT_SIZE_TOOLTIP"] = "이 설정은 텔레포트 이름 축약형의 글꼴 크기를 조절합니다."
 L["Teleports:Items:Filters"] = "아이템 필터"

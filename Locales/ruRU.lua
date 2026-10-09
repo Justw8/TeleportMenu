@@ -146,7 +146,6 @@ L["Dornogal"] = "ДР"
 L["Silvermoon City"] = "ЛУ"
 
 -- Options
-L["Opening Options Menu"] = "Открытие меню настроек"
 L["Enabled"] = "Включено"
 L["Enable Tooltip"] = "Включить/отключить меню телепорта."
 L["Auto Close"] = "Автозакрытие"
@@ -178,11 +177,9 @@ L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Недоступные пр
 
 -- Settings
 L["ADDON_NAME"] = "Меню телепорта"
-L["TITLE"] = "Настройки меню телепорта"
 L["GENERAL"] = "Общие настройки"
 L["BUTTON_SETTINGS"] = "Настройки кнопок"
 L["TELEPORT_SETTINGS"] = "Настройки телепортов"
-L["HEARTHSTONE_SETTINGS"] = "Настройки камня возвращения"
 L["BUTTON_FONT_SIZE"] = "Размер шрифта кнопок"
 L["BUTTON_FONT_SIZE_TOOLTIP"] = "Изменение этого параметра регулирует размер сокращенных названий телепортов."
 L["Teleports:Items:Filters"] = "Фильтры предметов"
