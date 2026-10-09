@@ -318,11 +318,10 @@ function tpm:updateHearthstone()
 	end
 
 	if db["Teleports:Hearthstone"] == "rng" then
-		local rng = math.random(#tpm.AvailableHearthstones)
 		hearthstoneButton.pendingIconItem = nil -- Drop any pending toy icon load so it can't overwrite the random icon
 		hearthstoneButton.icon:SetTexture(1669494) -- misc_rune_pvp_random
 		hearthstoneButton:SetAttribute("type", "toy")
-		hearthstoneButton:SetAttribute("toy", tpm.AvailableHearthstones[rng])
+		hearthstoneButton:SetAttribute("toy", tpm:GetRandomHearthstone())
 	elseif db["Teleports:Hearthstone"] == "disabled" then
 		hearthstoneButton:Hide()
 		return
@@ -584,6 +583,9 @@ function tpm:RefreshAvailableTeleports()
 	tpm:UpdateAvailableHearthstones()
 	tpm:UpdateAvailableWormholes()
 	tpm:UpdateAvailableItemTeleports()
+	if tpm.RefreshHearthstoneOptions then -- Set once the options are loaded
+		tpm:RefreshHearthstoneOptions()
+	end
 	tpm:ReloadFrames()
 end
 

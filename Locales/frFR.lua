@@ -174,6 +174,8 @@ L["Item Teleports"] = "Téléportations par objet"
 L["Item Teleports Tooltip"] = "\124cFF34B7EBTous les objets de téléportation en votre possession.\124r\n\n\124cFFFF0000Certains objets comme les capes de faction nécessitent un double-clic !\124r"
 L["Teleports:Items:Filters:Held_Items"] = "Objets possédés"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Objets non obtenus"
+--L["Teleports:Hearthstone:Random:Pool"] = "Random hearthstones"
+--L["Reset Page Confirm"] = "Reset all options on the %s page to their defaults?"
 
 -- Paramètres
 L["ADDON_NAME"] = "Teleport Menu"

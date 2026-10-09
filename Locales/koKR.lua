@@ -174,6 +174,8 @@ L["Item Teleports"] = "아이템 텔레포트"
 L["Item Teleports Tooltip"] = "\124cFF34B7EB소지 중인 모든 텔레포트 아이템\124r\n\n\124cFFFF0000진영 망토처럼 두 번 클릭해야 하는 아이템도 있습니다!\124r"
 L["Teleports:Items:Filters:Held_Items"] = "보유 중인 아이템"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "획득하지 않은 아이템"
+--L["Teleports:Hearthstone:Random:Pool"] = "Random hearthstones"
+--L["Reset Page Confirm"] = "Reset all options on the %s page to their defaults?"
 
 -- Settings
 L["ADDON_NAME"] = "텔레포트 메뉴"

@@ -174,6 +174,8 @@ L["Item Teleports"] = "传送物品"
 L["Item Teleports Tooltip"] = "\124cFF34B7EB已拥有的全部传送物品\124r\n\n\124cFFFF0000注意：阵营披风等物品需点击两次！\124r"
 L["Teleports:Items:Filters:Held_Items"] = "背包内物品"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "物品信息"
+--L["Teleports:Hearthstone:Random:Pool"] = "Random hearthstones"
+--L["Reset Page Confirm"] = "Reset all options on the %s page to their defaults?"
 
 -- Settings
 L["ADDON_NAME"] = "TeleportMenu"

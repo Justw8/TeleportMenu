@@ -128,16 +128,62 @@ function tpm:UpdateAvailableHearthstones()
 	tpm.AvailableHearthstones = AvailableHearthstones
 end
 
+--------------------------------------
+-- Random Hearthstone Pool
+--------------------------------------
+
+local RANDOM_EXCLUDED_KEY = "Teleports:Hearthstone:Random:Excluded"
+
+-- Hearthstones the player excluded from the random pick, as { [toyId] = true }.
+-- Stored as exclusions so newly collected hearthstones are included by default.
+function tpm:GetRandomHearthstoneExclusions()
+	local db = tpm:GetOptions()
+	local excluded = rawget(db, RANDOM_EXCLUDED_KEY)
+	if type(excluded) ~= "table" then
+		excluded = {}
+		db[RANDOM_EXCLUDED_KEY] = excluded
+	end
+	return excluded
+end
+
+function tpm:IsHearthstoneInRandomPool(id)
+	return not tpm:GetRandomHearthstoneExclusions()[id]
+end
+
+function tpm:SetHearthstoneInRandomPool(id, included)
+	tpm:GetRandomHearthstoneExclusions()[id] = (not included) or nil
+end
+
+function tpm:ResetRandomHearthstonePool()
+	wipe(tpm:GetRandomHearthstoneExclusions())
+end
+
+-- Available hearthstones that may be picked at random. Falls back to all of them
+-- when everything is excluded, so the random button keeps working.
+function tpm:GetRandomHearthstonePool()
+	local pool = {}
+	for _, id in ipairs(tpm.AvailableHearthstones) do
+		if tpm:IsHearthstoneInRandomPool(id) then
+			table.insert(pool, id)
+		end
+	end
+	if #pool == 0 then
+		return tpm.AvailableHearthstones
+	end
+	return pool
+end
+
 do
 	local lastRandomHearthstone = nil
 	function tpm:GetRandomHearthstone(retry)
-		if #tpm.AvailableHearthstones == 0 then
+		local pool = tpm:GetRandomHearthstonePool()
+		if #pool == 0 then
 			return
 		end
-		if #tpm.AvailableHearthstones == 1 then
-			return tpm.AvailableHearthstones[1]
+		if #pool == 1 then
+			return pool[1]
 		end -- Don't even bother
-		local randomHs = tpm.AvailableHearthstones[math.random(#tpm.AvailableHearthstones)]
+		local randomHs = pool[math.random(#pool)]
 		if lastRandomHearthstone == randomHs then -- Don't fully randomize, always a new one
 			randomHs = self:GetRandomHearthstone(true) --[[@as integer]]
 		end

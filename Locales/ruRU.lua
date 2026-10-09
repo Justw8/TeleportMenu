@@ -174,6 +174,8 @@ L["Item Teleports"] = "Телепорты предметов"
 L["Item Teleports Tooltip"] = "\124cFF34B7EBВсе предметы с телепортами, которые у Вас есть.\124r\n\n\124cFFFF0000Для таких предметов, как плащи фракций, требуется двойной клик!\124r"
 L["Teleports:Items:Filters:Held_Items"] = "Имеющиеся предметы"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "Недоступные предметы"
+--L["Teleports:Hearthstone:Random:Pool"] = "Random hearthstones"
+--L["Reset Page Confirm"] = "Reset all options on the %s page to their defaults?"
 
 -- Settings
 L["ADDON_NAME"] = "Меню телепорта"
