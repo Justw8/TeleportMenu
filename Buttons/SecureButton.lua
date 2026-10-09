@@ -139,6 +139,7 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 		-- Icon
 		button.icon = button:CreateTexture(nil, "BACKGROUND")
 		button.icon:SetAllPoints()
+		button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD") -- Hover highlight
 
 		-- Cooldown Frame
 		button.cooldownFrame = createCooldownFrame(button)
@@ -243,7 +244,7 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 	button:SetFrameLevel(102) -- This needs to be lower than the flyout frame
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(button, { Icon = button.icon, Cooldown = button.cooldownFrame })
+		MasqueGroup:AddButton(button, { Icon = button.icon, Cooldown = button.cooldownFrame, Highlight = button:GetHighlightTexture() })
 	end
 
 	button:Show()

@@ -358,7 +358,7 @@ function tpm:updateHearthstone()
 	hearthstoneButton.icon:SetTexCoord(offset, 1-offset, offset, 1-offset)
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(hearthstoneButton, { Icon = hearthstoneButton.icon, Cooldown = hearthstoneButton.cooldownFrame })
+		MasqueGroup:AddButton(hearthstoneButton, { Icon = hearthstoneButton.icon, Cooldown = hearthstoneButton.cooldownFrame, Highlight = hearthstoneButton:GetHighlightTexture() })
 	end
 
 	hearthstoneButton:Show()

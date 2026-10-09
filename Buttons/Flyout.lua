@@ -64,6 +64,7 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 		-- Icon
 		flyOutButton.icon = flyOutButton:CreateTexture(nil, "BACKGROUND")
 		flyOutButton.icon:SetAllPoints()
+		flyOutButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD") -- Hover highlight
 
 		-- Frame Levels
 		flyOutButton:SetFrameStrata("HIGH")
@@ -118,7 +119,7 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 	flyOutButton:Show()
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(flyOutButton, { Icon = flyOutButton.icon })
+		MasqueGroup:AddButton(flyOutButton, { Icon = flyOutButton.icon, Highlight = flyOutButton:GetHighlightTexture() })
 	end
 
 	return flyOutButton

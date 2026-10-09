@@ -119,6 +119,7 @@ function Housing:CreateSecureHousingButton(tpInfo)
 		-- Icon
 		button.icon = button:CreateTexture(nil, "BACKGROUND")
 		button.icon:SetAllPoints()
+		button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD") -- Hover highlight
 	end
 
 	-- Textures
@@ -152,7 +153,7 @@ function Housing:CreateSecureHousingButton(tpInfo)
 	button:Show()
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(button, { Icon = button.icon, Cooldown = button.cooldownFrame })
+		MasqueGroup:AddButton(button, { Icon = button.icon, Cooldown = button.cooldownFrame, Highlight = button:GetHighlightTexture() })
 	end
 	return button
 end
