@@ -1123,16 +1123,25 @@ local function checkItemsLoaded(self)
 	allLoaded = self.continuableContainer:ContinueOnLoad(OnItemsLoaded)
 end
 
+-- Recomputes which toy/item-gated teleports are currently available and
+-- redraws frames. Called on login and whenever toy/bag data that these
+-- checks depend on changes, since PlayerHasToy/GetItemCount can still be
+-- stale right after PLAYER_LOGIN.
+function tpm:RefreshAvailableTeleports()
+	tpm:UpdateAvailableHearthstones()
+	tpm:UpdateAvailableWormholes()
+	tpm:UpdateAvailableItemTeleports()
+	tpm:ReloadFrames()
+end
+
 function tpm:Setup()
 	if db["Button:Size"] then
 		globalWidth = db["Button:Size"]
 		globalHeight = db["Button:Size"]
 	end
 
-	tpm:UpdateAvailableHearthstones()
-	tpm:UpdateAvailableWormholes()
+	tpm:RefreshAvailableTeleports()
 	tpm:UpdateAvailableSeasonalTeleports()
-	tpm:UpdateAvailableItemTeleports()
 	tpm:LoadHouses()
 
 	if
@@ -1156,6 +1165,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("BAG_UPDATE_DELAYED")
+f:RegisterEvent("TOYS_UPDATED")
 f:SetScript("OnEvent", function(self, event, ...)
 	events[event](self, ...)
 end)
@@ -1175,6 +1185,10 @@ end
 function events:PLAYER_LOGIN()
 	checkItemsLoaded(f)
 	f:UnregisterEvent("PLAYER_LOGIN")
+end
+
+function events:TOYS_UPDATED()
+	tpm:RefreshAvailableTeleports()
 end
 
 function events:BAG_UPDATE_DELAYED()
@@ -1197,6 +1211,8 @@ function events:BAG_UPDATE_DELAYED()
 			tpm:AddItemToPossession(item.id)
 		end
 	end
+
+	tpm:RefreshAvailableTeleports()
 end
 
 -- Debug Functions

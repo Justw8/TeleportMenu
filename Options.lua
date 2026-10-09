@@ -280,8 +280,7 @@ function tpm:LoadOptions()
 		local function InitializeScrollBoxElement(frame, elementData)
 			local function SetValue(value)
 				TeleportMenuDB[elementData.id] = value
-				tpm:UpdateAvailableItemTeleports()
-				tpm:ReloadFrames()
+				tpm:RefreshAvailableTeleports()
 			end
 			if not frame.ItemIcon then
 				SetItemIcon(frame)
