@@ -148,6 +148,8 @@ L["Silvermoon City"] = "銀月"
 -- Options
 L["Enabled"] = "啟用"
 L["Enable Tooltip"] = "啟用/停用 此傳送選單。"
+--L["Character Settings"] = "Character-specific settings"
+--L["Character Settings Tooltip"] = "Use separate settings for this character.\n\nThe first time you turn this on, your current settings are copied to this character. Turning it off switches back to the shared settings."
 L["Auto Close"] = "自動關閉"
 L["Auto Close Tooltip"] = "在點擊使用爐石後自動關閉遊戲主選單介面"
 L["Hearthstone Toy"] = "爐石玩具"

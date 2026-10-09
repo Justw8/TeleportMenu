@@ -190,7 +190,7 @@ function tpm:UpdateAvailableItemTeleports()
 
 	for id, _ in pairs(tpm.ItemTeleports) do
 		local isToy = select(1, C_ToyBox.GetToyInfo(id)) ~= nil
-		if tpm:IsItemTeleportOwned(id) and tpm:CanUseItemTeleport(id) and TeleportMenuDB[id] == true then
+		if tpm:IsItemTeleportOwned(id) and tpm:CanUseItemTeleport(id) and tpm:GetOptions()[id] == true then
 			cachedToys[id] = isToy
 			table.insert(AvailableItemTeleports, id)
 		end

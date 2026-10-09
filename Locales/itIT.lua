@@ -148,6 +148,8 @@ if not L then return end
 -- Options
 --L["Enabled"] = "Enabled"
 --L["Enable Tooltip"] = "Enable/Disable the Teleport Menu."
+--L["Character Settings"] = "Character-specific settings"
+--L["Character Settings Tooltip"] = "Use separate settings for this character.\n\nThe first time you turn this on, your current settings are copied to this character. Turning it off switches back to the shared settings."
 --L["Auto Close"] = "Auto Close"
 --L["Auto Close Tooltip"] = "Auto Close The Game Menu When Clicking A Teleport"
 --L["Hearthstone Toy"] = "Hearthstone Toy"

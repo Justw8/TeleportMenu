@@ -148,6 +148,8 @@ L["Silvermoon City"] = "ЛУ"
 -- Options
 L["Enabled"] = "Включено"
 L["Enable Tooltip"] = "Включить/отключить меню телепорта."
+--L["Character Settings"] = "Character-specific settings"
+--L["Character Settings Tooltip"] = "Use separate settings for this character.\n\nThe first time you turn this on, your current settings are copied to this character. Turning it off switches back to the shared settings."
 L["Auto Close"] = "Автозакрытие"
 L["Auto Close Tooltip"] = "Автозакрытие игрового меню при нажатии на телепорт."
 L["Hearthstone Toy"] = "Игрушка камня возвращения"

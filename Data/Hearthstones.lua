@@ -137,11 +137,11 @@ local RANDOM_EXCLUDED_KEY = "Teleports:Hearthstone:Random:Excluded"
 -- Hearthstones the player excluded from the random pick, as { [toyId] = true }.
 -- Stored as exclusions so newly collected hearthstones are included by default.
 function tpm:GetRandomHearthstoneExclusions()
-	local db = tpm:GetOptions()
-	local excluded = rawget(db, RANDOM_EXCLUDED_KEY)
+	local settingsDB = tpm:GetSettingsDB()
+	local excluded = settingsDB[RANDOM_EXCLUDED_KEY]
 	if type(excluded) ~= "table" then
 		excluded = {}
-		db[RANDOM_EXCLUDED_KEY] = excluded
+		settingsDB[RANDOM_EXCLUDED_KEY] = excluded
 	end
 	return excluded
 end

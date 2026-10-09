@@ -148,6 +148,8 @@ L["Silvermoon City"] = "SM"
 -- Options
 L["Enabled"] = "Activé"
 L["Enable Tooltip"] = "Activer/Désactiver le menu de téléportation."
+--L["Character Settings"] = "Character-specific settings"
+--L["Character Settings Tooltip"] = "Use separate settings for this character.\n\nThe first time you turn this on, your current settings are copied to this character. Turning it off switches back to the shared settings."
 L["Auto Close"] = "Fermeture auto"
 L["Auto Close Tooltip"] = "Ferme automatiquement le menu de jeu lors de l'utilisation d'une téléportation."
 L["Hearthstone Toy"] = "Jouet Pierre de foyer"

@@ -10,14 +10,44 @@ local L = LibStub("AceLocale-3.0"):GetLocale("TeleportMenu")
 -- Locales
 --------------------------------------
 
--- Get all options and verify them
-local RawSettings
+function tpm:GetSettingsDB()
+	TeleportMenuDB = TeleportMenuDB or {}
+	TeleportMenuCharDB = TeleportMenuCharDB or {}
+	if TeleportMenuCharDB.useCharacterSettings and TeleportMenuCharDB.settings then
+		return TeleportMenuCharDB.settings
+	end
+	return TeleportMenuDB
+end
+
+local options = setmetatable({}, {
+	__index = function(_, key)
+		local value = tpm:GetSettingsDB()[key]
+		if value == nil then
+			return tpm.SettingsBase[key]
+		end
+		return value
+	end,
+	__newindex = function(_, key, value)
+		tpm:GetSettingsDB()[key] = value
+	end,
+})
+
 function tpm:GetOptions()
-	TeleportMenuDB = setmetatable(TeleportMenuDB or {}, {
-		__index = tpm.SettingsBase
-	})
-	RawSettings = TeleportMenuDB
-	return RawSettings
+	return options
+end
+
+function tpm:IsUsingCharacterSettings()
+	return TeleportMenuCharDB and TeleportMenuCharDB.useCharacterSettings == true
+end
+
+-- The first time a character switches to its own settings, they start as a copy of the
+-- account settings. After that the character keeps its own, even when switching back and forth.
+function tpm:SetUsingCharacterSettings(enabled)
+	TeleportMenuCharDB = TeleportMenuCharDB or {}
+	if enabled and not TeleportMenuCharDB.settings then
+		TeleportMenuCharDB.settings = CopyTable(TeleportMenuDB or {})
+	end
+	TeleportMenuCharDB.useCharacterSettings = enabled
 end
 
 local root = CreateFrame("Frame", ADDON_NAME, InterfaceOptionsFramePanelContainer)
@@ -134,13 +164,12 @@ local function CreateCanvasPage(name, title)
 		return row
 	end
 
-	function frame:AddCheckbox(optionsKey, text, tooltip)
+	function frame:AddToggle(text, tooltip, getValue, setValue)
 		local row = self:AddRow(text, tooltip)
 		local checkbox = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
 		checkbox:SetPoint("LEFT", row.label, "LEFT", CONTROL_OFFSET - 4, 0)
 		checkbox:SetScript("OnClick", function(s)
-			TeleportMenuDB[optionsKey] = s:GetChecked()
-			tpm:ReloadFrames()
+			setValue(s:GetChecked())
 		end)
 		checkbox:HookScript("OnEnter", function(s)
 			ShowTooltip(s, text, tooltip)
@@ -148,7 +177,16 @@ local function CreateCanvasPage(name, title)
 		checkbox:HookScript("OnLeave", HideTooltip)
 
 		self:AddRefresher(function()
-			checkbox:SetChecked(TeleportMenuDB[optionsKey] == true)
+			checkbox:SetChecked(getValue() == true)
+		end)
+	end
+
+	function frame:AddCheckbox(optionsKey, text, tooltip)
+		self:AddToggle(text, tooltip, function()
+			return options[optionsKey]
+		end, function(checked)
+			options[optionsKey] = checked
+			tpm:ReloadFrames()
 		end)
 	end
 
@@ -166,13 +204,13 @@ local function CreateCanvasPage(name, title)
 			if refreshing then -- Init also fires this; don't save values we only displayed
 				return
 			end
-			TeleportMenuDB[optionsKey] = value
+			options[optionsKey] = value
 			tpm:ReloadFrames()
 		end, slider)
 
 		self:AddRefresher(function()
 			refreshing = true
-			slider:Init(TeleportMenuDB[optionsKey], minValue, maxValue, steps, formatters)
+			slider:Init(options[optionsKey], minValue, maxValue, steps, formatters)
 			refreshing = false
 		end)
 	end
@@ -306,13 +344,21 @@ function tpm:LoadOptions()
 
 	do -- General page
 		local keys = { "Enabled", "Teleports:Mage:Reverse", "General:AutoClose", "Teleports:Seasonal:Only" }
+		-- Character Settings are not reset by Defaults: it chooses where settings are stored, it isn't a setting itself
+		generalFrame:AddToggle(L["Character Settings"], L["Character Settings Tooltip"], function()
+			return tpm:IsUsingCharacterSettings()
+		end, function(checked)
+			tpm:SetUsingCharacterSettings(checked)
+			generalFrame:Refresh() -- Other pages refresh when opened
+			tpm:RefreshAvailableTeleports()
+		end)
 		generalFrame:AddCheckbox("Enabled", L["Enabled"], L["Enable Tooltip"])
 		generalFrame:AddCheckbox("Teleports:Mage:Reverse", L["Reverse Mage Flyouts"], L["Reverse Mage Flyouts Tooltip"])
 		generalFrame:AddCheckbox("General:AutoClose", L["Auto Close"], L["Auto Close Tooltip"])
 		generalFrame:AddCheckbox("Teleports:Seasonal:Only", L["Seasonal Teleports"], L["Seasonal Teleports Toggle Tooltip"])
 		generalFrame:AddDefaultsButton(function()
 			for _, key in ipairs(keys) do
-				TeleportMenuDB[key] = nil
+				options[key] = nil
 			end
 		end)
 		generalFrame:Refresh()
@@ -335,7 +381,7 @@ function tpm:LoadOptions()
 		end)
 		buttonFrame:AddDefaultsButton(function()
 			for _, key in ipairs(keys) do
-				TeleportMenuDB[key] = nil
+				options[key] = nil
 			end
 		end)
 		buttonFrame:Refresh()
@@ -385,7 +431,7 @@ function tpm:LoadOptions()
 		end
 
 		local function SetSelected(value)
-			TeleportMenuDB[optionsKey] = value
+			options[optionsKey] = value
 			tpm:ReloadFrames()
 			Refresh()
 		end
@@ -410,7 +456,7 @@ function tpm:LoadOptions()
 		end
 		hearthstoneFrame:AddRefresher(Refresh)
 		hearthstoneFrame:AddDefaultsButton(function()
-			TeleportMenuDB[optionsKey] = nil
+			options[optionsKey] = nil
 			tpm:ResetRandomHearthstonePool()
 		end)
 		hearthstoneFrame:Refresh()
@@ -440,7 +486,7 @@ function tpm:LoadOptions()
 		end
 
 		local function SetItemEnabled(id, value)
-			TeleportMenuDB[id] = value
+			options[id] = value
 			tpm:RefreshAvailableTeleports()
 		end
 
@@ -472,7 +518,7 @@ function tpm:LoadOptions()
 		end)
 		teleportFiltersFrame:AddDefaultsButton(function()
 			for id in pairs(tpm.ItemTeleports) do
-				TeleportMenuDB[id] = nil
+				options[id] = nil
 			end
 		end)
 	end

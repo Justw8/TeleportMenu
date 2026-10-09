@@ -16,6 +16,7 @@ globals = {
 
 	-- Addon Globals
 	"TeleportMenuDB",
+	"TeleportMenuCharDB",
 	"TeleportMeButtonsFrame",
 	"SLASH_TPMENU1",
 	"SLASH_TPMENU2",

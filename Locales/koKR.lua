@@ -148,6 +148,8 @@ L["Silvermoon City"] = "실버문"
 -- Options
 L["Enabled"] = "사용함"
 L["Enable Tooltip"] = "텔레포트 메뉴를 활성화/비활성화합니다."
+--L["Character Settings"] = "Character-specific settings"
+--L["Character Settings Tooltip"] = "Use separate settings for this character.\n\nThe first time you turn this on, your current settings are copied to this character. Turning it off switches back to the shared settings."
 --L["Auto Close"] = "Auto Close"
 --L["Auto Close Tooltip"] = "Auto Close The Game Menu When Clicking A Teleport"
 L["Hearthstone Toy"] = "귀환석 장난감"
