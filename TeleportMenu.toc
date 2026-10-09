@@ -28,5 +28,8 @@ embeds.xml
 Locales\Locales.xml
 Data\Data.xml
 Options.lua
+Buttons\Tooltip.lua
+Buttons\SecureButton.lua
+Buttons\Flyout.lua
 Buttons\Housing.lua
 TeleportMenu.lua
