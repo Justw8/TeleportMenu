@@ -58,6 +58,7 @@ tpm.ItemTeleports = {
 	[128502] = true, -- Hunter's Seeking Crystal
 	[128503] = true, -- Master Hunter's Seeking Crystal
 	[129276] = true, -- Beginner's Guide to Dimensional Rifting
+	[129929] = true, -- Ever-Shifting Mirror
 	[132119] = true, -- Orgrimmar Portal Stone
 	[132120] = true, -- Stormwind Portal Stone
 	[132517] = true, -- Intra-Dalaran Wormhole Generator
