@@ -358,7 +358,7 @@ function tpm:updateHearthstone()
 	hearthstoneButton.icon:SetTexCoord(offset, 1-offset, offset, 1-offset)
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(hearthstoneButton, { Icon = hearthstoneButton.icon })
+		MasqueGroup:AddButton(hearthstoneButton, { Icon = hearthstoneButton.icon, Cooldown = hearthstoneButton.cooldownFrame })
 	end
 
 	hearthstoneButton:Show()
@@ -392,7 +392,7 @@ local function createAnchors()
 		if TeleportMeButtonsFrameLeft:IsVisible() and db["Teleports:Hearthstone"] == "rng" and TeleportMeButtonsFrameLeft.hearthstoneButton then
 			tpm:SetRandomHearthstoneOnButton(TeleportMeButtonsFrameLeft.hearthstoneButton)
 		end
-		tpm.SecureButton:ClearAllInvalidHighlights()
+		tpm.SecureButton:UpdateEquippedHighlights()
 		return
 	end
 	if not db["Enabled"] then
@@ -512,6 +512,10 @@ function tpm:ReloadFrames()
 
 	tpm.TEXTURE_SCALE = db["Button:Texture:Zoom"] or 0
 
+	-- Rebuilding closes all flyouts. Remember the open one, e.g. when equipping an item from
+	-- a flyout triggers a bag update and with it a rebuild.
+	local openFlyoutKey = tpm.Flyout:GetOpenFlyoutKey()
+
 	tpm.Flyout:RecycleAll()
 	tpm.SecureButton:RecycleAll()
 	tpm.Housing:RecycleHousingButtons()
@@ -525,6 +529,7 @@ function tpm:ReloadFrames()
 	-- housingButtons = {}
 
 	createAnchors()
+	tpm.Flyout:ReopenFlyout(openFlyoutKey)
 end
 
 function tpm:CloseMainMenu()

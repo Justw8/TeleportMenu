@@ -90,18 +90,18 @@ local function IsItemEquipped(id)
 	return C_Item.IsEquippableItem(id) and C_Item.IsEquippedItem(id)
 end
 
-function SecureButton:ClearAllInvalidHighlights()
-	for _, button in pairs(secureButtons) do
-		button:ClearHighlightTexture()
-
-		if button:GetAttribute("item") ~= nil then
-			local id = string.match(button:GetAttribute("item"), "%d+")
-			if IsItemEquipped(id) then
-				button:Highlight()
-			end
-		end
+-- Shows the equipped border on every item button whose item is currently worn
+function SecureButton:UpdateEquippedHighlights()
+	for _, button in ipairs(secureButtons) do
+		button:UpdateEquipped()
 	end
 end
+
+local equipmentEvents = CreateFrame("Frame")
+equipmentEvents:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+equipmentEvents:SetScript("OnEvent", function()
+	SecureButton:UpdateEquippedHighlights()
+end)
 
 ---@param frame Frame
 ---@param buttonType string
@@ -125,7 +125,7 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 			self.hearthstone = nil
 			self.pendingIconItem = nil
 
-			self:ClearHighlightTexture()
+			self.equippedBorder:Hide()
 			self:SetParent(nil)
 			self:ClearAllPoints()
 			self:Hide()
@@ -152,11 +152,17 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 		button.text:SetPoint("BOTTOM", button, "BOTTOM", 0, 5)
 		button.text:SetTextColor(1, 1, 1, 1)
 
-		-- Highlighting
-		function button:Highlight()
-			self:SetHighlightAtlas("talents-node-choiceflyout-square-green")
+		-- Equipped border, like the action bars use for equipped items
+		button.equippedBorder = button:CreateTexture(nil, "OVERLAY")
+		button.equippedBorder:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
+		button.equippedBorder:SetBlendMode("ADD")
+		button.equippedBorder:SetVertexColor(0, 1, 0, 0.7)
+		button.equippedBorder:SetPoint("CENTER")
+		button.equippedBorder:Hide()
+
+		function button:UpdateEquipped()
+			self.equippedBorder:SetShown(self.buttonType == "item" and self.id ~= nil and IsItemEquipped(self.id))
 		end
-		button:LockHighlight()
 
 		-- Mouse Interaction
 		button:EnableMouse(true)
@@ -168,18 +174,15 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 			GameTooltip:Hide()
 		end)
 
+		-- Clicking an equippable item that isn't worn equips it instead of using it. Keep the
+		-- menu open then, so it can be clicked again to teleport once it's equipped. Checked
+		-- before the click, since equipping changes the state.
+		button:SetScript("PreClick", function(self)
+			self.equipsOnClick = self.buttonType == "item" and C_Item.IsEquippableItem(self.id) and not C_Item.IsEquippedItem(self.id)
+		end)
+
 		button:SetScript("PostClick", function(self)
-			if self.buttonType == "item" and C_Item.IsEquippableItem(id) then
-				C_Timer.After(0.25, function() -- Slight delay due to equipping the item not being instant.
-					if IsItemEquipped(id) then
-						SecureButton:ClearAllInvalidHighlights()
-						self:Highlight()
-					end
-				end)
-				if IsItemEquipped(id) then
-					tpm:CloseMainMenu()
-				end
-			else
+			if not self.equipsOnClick then
 				tpm:CloseMainMenu()
 			end
 		end)
@@ -227,9 +230,6 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 	button:SetAttribute("type", buttonType)
 	if buttonType == "item" then
 		button:SetAttribute(buttonType, "item:" .. id)
-		if C_Item.IsEquippableItem(id) and IsItemEquipped(id) then
-			button:Highlight()
-		end
 	else
 		button:SetAttribute(buttonType, id)
 	end
@@ -237,11 +237,13 @@ function SecureButton:Create(frame, buttonType, text, id, hearthstone)
 	-- Positioning/Size
 	button:SetParent(frame)
 	button:SetSize(globalWidth, globalHeight)
+	button.equippedBorder:SetSize(globalWidth * 62 / 36, globalHeight * 62 / 36) -- The border texture is 62px for a 36px button
+	button:UpdateEquipped()
 	button:SetFrameStrata("HIGH")
 	button:SetFrameLevel(102) -- This needs to be lower than the flyout frame
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(button, { Icon = button.icon })
+		MasqueGroup:AddButton(button, { Icon = button.icon, Cooldown = button.cooldownFrame })
 	end
 
 	button:Show()

@@ -152,7 +152,7 @@ function Housing:CreateSecureHousingButton(tpInfo)
 	button:Show()
 
 	if MasqueGroup then
-		MasqueGroup:AddButton(button, { Icon = button.icon })
+		MasqueGroup:AddButton(button, { Icon = button.icon, Cooldown = button.cooldownFrame })
 	end
 	return button
 end

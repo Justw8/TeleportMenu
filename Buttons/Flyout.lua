@@ -124,7 +124,8 @@ local function createFlyOutButton(flyOutFrame, flyoutData, tooltipData, side) --
 	return flyOutButton
 end
 
-local function createFlyOutFrame(side)
+-- key identifies the flyout (e.g. "wormholes") so it can be reopened after a rebuild
+local function createFlyOutFrame(side, key)
 	local flyOutFrame
 	if next(flyOutFramesPool) then
 		flyOutFrame = table.remove(flyOutFramesPool)
@@ -132,6 +133,7 @@ local function createFlyOutFrame(side)
 		flyOutFrame = CreateFrame("Frame", "FlyOutFrame" .. #flyOutFrames + 1)
 
 		function flyOutFrame:Recycle()
+			self.key = nil
 			self:ClearAllPoints()
 			self:Hide()
 			table.insert(flyOutFramesPool, self)
@@ -151,6 +153,7 @@ local function createFlyOutFrame(side)
 		table.insert(flyOutFrames, flyOutFrame)
 	end
 
+	flyOutFrame.key = key
 	flyOutFrame:SetParent(side == "LEFT" and TeleportMeButtonsFrameLeft or TeleportMeButtonsFrameRight)
 	flyOutFrame:Hide()
 
@@ -175,7 +178,7 @@ function Flyout:Create(flyoutData, side)
 	end
 
 	local yOffset = -globalHeight * ButtonFrame:GetButtonAmount()
-	local flyOutFrame = createFlyOutFrame(side)
+	local flyOutFrame = createFlyOutFrame(side, "flyout:" .. flyoutData.id)
 	flyOutFrame:SetPoint(side == "LEFT" and "RIGHT" or "LEFT", ButtonFrame, side == "LEFT" and "TOPLEFT" or "TOPRIGHT", side == "LEFT" and globalWidth or 0, yOffset)
 
 	-- Flyout Main Button
@@ -227,7 +230,7 @@ function Flyout:CreateSeasonal()
 	local seasonalFlyOutData = { id = -1, name = L["Season " .. tpm.settings.current_season], iconId = 5927657 }
 	local yOffset = -globalHeight * TeleportMeButtonsFrameRight:GetButtonAmount()
 
-	local flyOutFrame = createFlyOutFrame()
+	local flyOutFrame = createFlyOutFrame(nil, "seasonal")
 	flyOutFrame:SetPoint("LEFT", TeleportMeButtonsFrameRight, "TOPRIGHT", 0, yOffset)
 
 	local button = createFlyOutButton(flyOutFrame, seasonalFlyOutData, tooltipData, "RIGHT")
@@ -263,7 +266,7 @@ function Flyout:CreateWormholes(flyoutData)
 	local globalWidth, globalHeight = tpm:GetButtonSize()
 	local yOffset = -globalHeight * TeleportMeButtonsFrameLeft:GetButtonAmount()
 
-	local flyOutFrame = createFlyOutFrame("LEFT")
+	local flyOutFrame = createFlyOutFrame("LEFT", "wormholes")
 	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", globalWidth, yOffset)
 
 	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "profession", id = 202 }, "LEFT")
@@ -295,7 +298,7 @@ function Flyout:CreateItemTeleports(flyoutData)
 	local globalWidth, globalHeight = tpm:GetButtonSize()
 	local yOffset = -globalHeight * TeleportMeButtonsFrameLeft:GetButtonAmount()
 
-	local flyOutFrame = createFlyOutFrame("LEFT")
+	local flyOutFrame = createFlyOutFrame("LEFT", "item_teleports")
 	flyOutFrame:SetPoint("RIGHT", TeleportMeButtonsFrameLeft, "TOPLEFT", globalWidth, yOffset)
 
 	local button = createFlyOutButton(flyOutFrame, flyoutData, { type = "item_teleports" }, "LEFT")
@@ -318,6 +321,27 @@ function Flyout:CreateItemTeleports(flyoutData)
 	flyOutFrame:SetSize(frameWidth, globalHeight * rowNr)
 
 	return button
+end
+
+-- The key of the flyout that's currently open, if any
+function Flyout:GetOpenFlyoutKey()
+	for _, frame in ipairs(flyOutFrames) do
+		if frame:IsShown() and frame.key then
+			return frame.key
+		end
+	end
+end
+
+function Flyout:ReopenFlyout(key)
+	if not key then
+		return
+	end
+	for _, frame in ipairs(flyOutFrames) do
+		if frame.key == key then
+			frame:Show()
+			return
+		end
+	end
 end
 
 function Flyout:RecycleAll()
