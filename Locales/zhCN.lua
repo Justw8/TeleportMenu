@@ -177,7 +177,7 @@ L["Item Teleports Tooltip"] = "\124cFF34B7EB已拥有的全部传送物品\124r\
 L["Teleports:Items:Filters:Held_Items"] = "背包内物品"
 L["Teleports:Items:Filters:Items_To_Be_Obtained"] = "物品信息"
 L["Teleports:Hearthstone:Random:Pool"] = "随机炉石"
-L["Reset Page Confirm"] = "是否将 %s 页面上的所有选项重置为默认值？"
+L["Reset Page Confirm"] = "是否将 %s 上的所有选项重置为默认值？"
 
 -- Settings
 L["ADDON_NAME"] = "TeleportMenu"
