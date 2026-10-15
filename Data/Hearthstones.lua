@@ -95,6 +95,7 @@ tpm.Hearthstones = {
 	[263933] = true, -- Preyseeker's Hearthstone
 	[264367] = true, -- Mycomancer's Hearthspore
 	[265100] = true, -- Corewarden's Hearthstone
+	[281136] = true, -- Hiveborne Hearthstone
 	[281615] = true, -- Shadeweaver's Hearthstone
 }
 
