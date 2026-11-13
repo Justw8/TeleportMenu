@@ -219,12 +219,13 @@ local tpTable = {
 	{ id = 1238686, type = "spell" }, -- Rootwalking (Haranir)
 
 	-- Dungeon/Raid Teleports
+	{ id = 274, type = "flyout", iconId = 236798, name = L["Wrath of the Lich King"], subtype = "path" }, -- Hero's Path: Wrath of the Lich King
 	{ id = 230, type = "flyout", iconId = 574788, name = L["Cataclysm"], subtype = "path" }, -- Hero's Path: Cataclysm
 	{ id = 84, type = "flyout", iconId = 328269, name = L["Mists of Pandaria"], subtype = "path" }, -- Hero's Path: Mists of Pandaria
 	{ id = 96, type = "flyout", iconId = 1413856, name = L["Warlords of Draenor"], subtype = "path" }, -- Hero's Path: Warlords of Draenor
 	{ id = 224, type = "flyout", iconId = 1260827, name = L["Legion"], subtype = "path" }, -- Hero's Path: Legion
 	{ id = 223, type = "flyout", iconId = 1869493, name = L["Battle for Azeroth"], subtype = "path" }, -- Hero's Path: Battle for Azeroth
-	{ id = 220, type = "flyout", iconId = 236798, name = L["Shadowlands"], subtype = "path" }, -- Hero's Path: Shadowlands
+	{ id = 220, type = "flyout", iconId = 3257863, name = L["Shadowlands"], subtype = "path" }, -- Hero's Path: Shadowlands
 	{ id = 222, type = "flyout", iconId = 4062765, name = L["Shadowlands Raids"], subtype = "path" }, -- Hero's Path: Shadowlands Raids
 	{ id = 227, type = "flyout", iconId = 4640496, name = L["Dragonflight"], subtype = "path" }, -- Hero's Path: Dragonflight
 	{ id = 231, type = "flyout", iconId = 5342925, name = L["Dragonflight Raids"], subtype = "path" }, -- Hero's Path: Dragonflight Raids
