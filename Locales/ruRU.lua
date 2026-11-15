@@ -95,6 +95,7 @@ L["Murder Row"] = "ЗД"
 L["Altar of Fangs"] = "АК"
 
 -- expansion abreviated Text
+L["Wrath of the Lich King"] = "ЛК"
 L["Cataclysm"] = "КАТ"
 L["Mists of Pandaria"] = "ТП"
 L["Warlords of Draenor"] = "ВД"

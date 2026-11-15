@@ -95,6 +95,7 @@ L["Pit of Saron"] = "PIT"
 --L["Altar of Fangs"] = "ALTAR"
 
 -- Abréviations d'extensions
+L["Wrath of the Lich King"] = "WLK"
 L["Cataclysm"] = "CATA"
 L["Mists of Pandaria"] = "MoP"
 L["Warlords of Draenor"] = "WoD"

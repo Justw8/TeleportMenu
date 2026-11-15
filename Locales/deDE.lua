@@ -97,6 +97,7 @@ end
 --L["Altar of Fangs"] = "ALTAR"
 
 -- expansion abreviated Text
+--L["Wrath of the Lich King"] = "WLK"
 --L["Cataclysm"] = "CATA"
 --L["Mists of Pandaria"] = "MoP"
 --L["Warlords of Draenor"] = "WoD"

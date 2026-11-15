@@ -95,6 +95,7 @@ L["Pit of Saron"] = "사론"
 --L["Altar of Fangs"] = "ALTAR"
 
 -- expansion abreviated Text
+L["Wrath of the Lich King"] = "리치 왕의 분노"
 L["Cataclysm"] = "대격변"
 L["Mists of Pandaria"] = "판다리아"
 L["Warlords of Draenor"] = "드레노어"
