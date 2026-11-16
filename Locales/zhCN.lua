@@ -96,9 +96,9 @@ L["Altar of Fangs"] = "毒牙"
 
 -- expansion abreviated Text
 L["Wrath of the Lich King"] = "巫妖\n王\n"
-L["Cataclysm"] = "大裂变"
-L["Mists of Pandaria"] = "熊猫人"
-L["Warlords of Draenor"] = "德拉诺"
+L["Cataclysm"] = "大\n裂变\n"
+L["Mists of Pandaria"] = "熊猫\n人\n"
+L["Warlords of Draenor"] = "德\n拉诺\n"
 L["Legion"] = "军团"
 L["Battle for Azeroth"] = "争霸"
 L["Shadowlands"] = "暗影"
