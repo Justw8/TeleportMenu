@@ -95,7 +95,7 @@ L["Murder Row"] = "兇殺路"
 L["Altar of Fangs"] = "毒牙"
 
 -- expansion abreviated Text
-L["Wrath of the Lich King"] = "巫妖王之怒"
+L["Wrath of the Lich King"] = "巫妖\n王\n"
 L["Cataclysm"] = "浩劫\n重生\n"
 L["Mists of Pandaria"] = "潘達\n利亞\n"
 L["Warlords of Draenor"] = "德拉\n諾\n"
